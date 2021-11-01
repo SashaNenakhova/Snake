@@ -5,8 +5,8 @@ import datetime
 class snake:
     
     ## координаты головы змеи
-    x = 0 # left, right
-    y = 10 # up, down
+    x = 15 # left, right
+    y = 15 # up, down
 
     screen = None
 
@@ -22,9 +22,8 @@ class snake:
 
         ## create matrix and a snake
         self.matrix = [[ 0 for i in range(30)] for _ in range(30)]
-        self.snake = [[2]] #[ [0, 0, 0],
-        #                [2, 2, 2],
-        #                [0, 0, 0] ]
+        self.snake_head = [[0]]
+        self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 5)}
 
         self.color=2
 
@@ -86,6 +85,8 @@ class snake:
             self.draw_menu()
         elif self.scene == 'game':
             self.draw_game()
+        elif self.scene == 'game over':
+            self.draw_game_over()
 
 
         self.screen.refresh()
@@ -96,8 +97,8 @@ class snake:
         self.screen.addstr(0, 17, str(self.y) + ' y')
         self.screen.addstr(1, 17, str(self.x) + ' x')
         self.screen.addstr(0, 25, self.direction)
+        self.screen.addstr(1, 25, str(self.snake_body))
 
-        
 
     ### draw menu
     def draw_menu(self):
@@ -109,7 +110,6 @@ class snake:
 
     ### draw game
     def draw_game(self):
-
         ## draw matrix
         for i in range(len(self.matrix)):
             for j in range(len(self.matrix[i])):
@@ -119,40 +119,52 @@ class snake:
                 elif self.matrix[i][j]==1:
                     self.screen.addstr('  ', curses.color_pair(1))
 
+        ## draw snake
+        for i in range(2, len(self.snake_body)+1):
+            self.screen.move(self.top_corner+self.snake_body[i][1], self.left_corner+self.snake_body[i][0]*2)
+            self.screen.addstr('  ', curses.color_pair(2))
+
         ## draw snake head
-        for i in range(len(self.snake)):
-            for j in range(len(self.snake[i])):
+        for i in range(len(self.snake_head)):
+            for j in range(len(self.snake_head[i])):
                 self.screen.move(self.top_corner+self.y, self.left_corner+self.x*2)
-                if self.snake[i][j]==2:
-                    self.screen.addstr('  ', curses.color_pair(2))
+                self.screen.addstr('  ', curses.color_pair(3))
 
+    ### game over
+    def draw_game_over(self):
+        # box1 = curses.newwin(6, 21, self.top_corner+10, self.left_corner+28)
+        # box1.box()
+        # box1.bkgd(' ', curses.color_pair(16))    
 
+        # box1.addstr(1, 6, 'Game over', curses.color_pair(16))
+        # box1.addstr(3, 1, 'Type "y" to restart')
+        # box1.addstr(4, 3, 'or "n" to quit')
+        # box1.refresh()
+        pass
 
     ### rotate snake
     def rotate_snake(self, command):     ### изменяет направление змеи
         new_x, new_y=self.x, self.y
 
-        if command=='left':
+        if command=='left' and self.direction!='right':
             if self.__can_move(new_x-1, new_y) == True:
                 self.direction='left'
 
-        elif command=='right':
+        elif command=='right' and self.direction!='left':
             if self.__can_move(new_x+1, new_y) == True:
                 self.direction='right'
 
-        elif command=='down':
+        elif command=='down' and self.direction!='up':
             if self.__can_move(new_x, new_y+1) == True:
                 self.direction='down'
 
-        elif command=='up':
+        elif command=='up' and self.direction!='down':
             if self.__can_move(new_x, new_y-1) == True:
                 self.direction='up'
 
-        elif command=='tick':
-            pass
 
     ### move snake
-    def move_snake(self):
+    def move_head(self):
         if self.direction=='left':
             if self.__can_move(self.x-1, self.y):
                 self.x-=1
@@ -166,6 +178,11 @@ class snake:
             if self.__can_move(self.x, self.y-1):
                 self.y-=1   
 
+    ### move body
+    def move_body(self):
+        for i in range(len(self.snake_body), 1, -1):
+            self.snake_body[i]=self.snake_body[i-1]
+        self.snake_body[1]=[self.x, self.y]
 
     ### can move
     def __can_move(self, new_x, new_y): 
@@ -173,21 +190,14 @@ class snake:
             return True
         else:
             return False
-        
 
     ### tick
-    def tick(self):         ### двигает змею, стирает хвост
-
+    def tick(self):         ### двигает змею
         if self.scene == 'game':
-
-            if (datetime.datetime.now()-self.timer).microseconds>=500000:
+            if (datetime.datetime.now()-self.timer).microseconds>=400000:
                 self.timer=datetime.datetime.now()
-                self.move_snake()
-
-
-                
-
-
+                self.move_head()
+                self.move_body()
 
 
 
@@ -235,6 +245,9 @@ class snake:
                     self.screen.clear()
                     self.scene='records'
 
+            elif self.scene == 'game over':
+                pass
+
 
 
 
@@ -246,6 +259,7 @@ def run_game(screen):
     curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_WHITE) # borders
     curses.init_pair(10, curses.COLOR_BLACK, curses.COLOR_BLACK) # black
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_GREEN) # snake
+    curses.init_pair(3, 29, 29) # head
     curses.init_pair(6, curses.COLOR_BLACK, curses.COLOR_WHITE) # menu 
 
     snake.screen=screen
