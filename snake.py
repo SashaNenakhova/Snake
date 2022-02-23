@@ -126,12 +126,8 @@ class snake:
         self.screen.refresh()
 
         ## 
-        self.screen.addstr(0, 0, str(self.screen.getmaxyx()[0]) + ' height')
-        self.screen.addstr(1, 0, str(self.screen.getmaxyx()[1]) + ' width')
-        # self.screen.addstr(0, 17, str(self.y) + ' y')
-        # self.screen.addstr(1, 17, str(self.x) + ' x')
-        # self.screen.addstr(0, 25, self.direction)
-        # self.screen.addstr(1, 25, str(self.snake_body))
+        # self.screen.addstr(0, 0, str(self.screen.getmaxyx()[0]) + ' height')
+        # self.screen.addstr(1, 0, str(self.screen.getmaxyx()[1]) + ' width')
 
     ### draw menu
     def draw_menu(self):
@@ -166,8 +162,8 @@ class snake:
                 self.screen.addstr('  ', curses.color_pair(3))
 
         ## lenght
-        self.screen.addstr(self.top_corner+2, self.left_corner+len(self.matrix)*2+10, 'Lenght')
-        self.screen.addstr(self.top_corner+4, self.left_corner+len(self.matrix)*2+10, str(len(self.snake_body)))
+        self.screen.addstr(self.top_corner+2, self.left_corner+len(self.matrix)*2+10, 'Lenght', curses.color_pair(5))
+        self.screen.addstr(self.top_corner+4, self.left_corner+len(self.matrix)*2+12, str(len(self.snake_body)))
 
     ### game over
     def draw_game_over(self):
@@ -281,26 +277,26 @@ class snake:
 
  ### pause
     def pause(self):
-        pass
-        # self.screen.nodelay(False)
+        self.screen.nodelay(False)
 
-        # key=0
-        # while key!=ord('p'):
-        #     box2 = curses.newwin(3, 10, self.screen.getmaxyx()[0]//2, self.screen.getmaxyx()[1]//2)
-        #     box2.box()
-        #     box2.bkgd(' ', curses.color_pair(13))    
-        #     box2.addstr(1, 2, 'Paused', curses.color_pair(13))
-        #     box2.refresh()
+        key=0
+        while key!=ord('p'):
+            box2 = curses.newwin(3, 10, self.screen.getmaxyx()[0]//2, self.screen.getmaxyx()[1]//2)
+            box2.box()
+            box2.bkgd(' ', curses.color_pair(16))    
+            box2.addstr(1, 2, 'Paused', curses.color_pair(16))
+            box2.refresh()
+            self.screen.refresh()
 
-        #     key=self.screen.getch()
+            key=self.screen.getch()
 
-        #     self.draw()
+            self.draw()
 
-        # box2.bkgd(' ', curses.color_pair(0))
-        # box2.clear()
-        # box2.refresh()
+        box2.bkgd(' ', curses.color_pair(0))
+        box2.clear()
+        box2.refresh()
 
-        # self.screen.nodelay(True)
+        self.screen.nodelay(True)
 
     ### tick
     def tick(self):         ### двигает змею
@@ -330,7 +326,7 @@ class snake:
             elif key==curses.KEY_UP:
                 self.rotate_snake('up')
             elif key==ord('p'):
-                # self.pause()
+                self.pause()
                 pass
             elif key==ord('q'):
                 self.screen.clear()
@@ -381,6 +377,7 @@ def run_game(screen):
     curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_WHITE) # borders
     curses.init_pair(10, curses.COLOR_BLACK, curses.COLOR_BLACK) # black
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_GREEN) # snake
+    curses.init_pair(5, curses.COLOR_YELLOW, 0) # lenght
     curses.init_pair(3, 0, 10) # head 
     curses.init_pair(6, curses.COLOR_BLACK, curses.COLOR_WHITE) # menu 
     curses.init_pair(16, 15, 9) # game over
