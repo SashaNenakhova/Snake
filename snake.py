@@ -20,6 +20,8 @@ class snake:
     records_item=0
     new_name=''
 
+    robot_snake=False
+
     ### initiation
     def __init__(self):
         screen = None
@@ -38,17 +40,18 @@ class snake:
         self.direction = 'up'
         self.scene='menu'
         self.timer = datetime.datetime.now()
-        self.rabbit_count = 0
+        self.rabbit()
 
     ### new game
     def initiation(self):
         self.x = 15
         self.y = 15
         self.direction = 'up'
+        self.robot_snake=False
         self.scene='game'
         self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
-        self.rabbit_count = 0
         self.delete_rabbits()
+        self.rabbit()
 
 
 
@@ -229,6 +232,7 @@ class snake:
         if self.matrix[self.y][self.x]==2:
             self.snake_body[len(self.snake_body)+1]=self.snake_body[len(self.snake_body)]
             self.delete_rabbits()
+            self.rabbit()
         for i in range(len(self.snake_body), 1, -1):
             self.snake_body[i]=self.snake_body[i-1] 
 
@@ -275,7 +279,7 @@ class snake:
 
 
 
- ### pause
+    ### pause
     def pause(self):
         self.screen.nodelay(False)
 
@@ -298,6 +302,120 @@ class snake:
 
         self.screen.nodelay(True)
 
+    ### find path
+    def find_path(self, screen, matrix, x, y):
+        numbered_matrix=[[ 0 for i in range(30)] for _ in range(30)]
+        num = 1
+        pathfound = False
+        end_y, end_x = 0, 0
+        rabbit_exist=False
+
+        # set end x, end y, borders
+        for i in range(len(matrix)):
+            for j in range(len(matrix[i])):
+                if matrix[i][j]==1:
+                    numbered_matrix[i][j]=999 # border
+                elif matrix[i][j]==2: # rabbit
+                    end_y, end_x=i, j
+                    rabbit_exist=True
+
+        # set snake body
+        for i in range(1, len(self.snake_body)+1):
+            numbered_matrix[self.snake_body[i][1]][self.snake_body[i][0]]=999
+
+        # set snake head, rabbit
+        numbered_matrix[y][x]=1
+        numbered_matrix[end_y][end_x]=998
+
+
+
+        # num, end_x, end_y >>>> numbered matrix
+        while pathfound == False:
+            # проходим матрицу и заполняем её значениями дистанции от стартовой точки
+            for l in range(len(numbered_matrix)):
+                for j in range(len(numbered_matrix[l])):
+
+                    if (numbered_matrix[l][j] == 0 or numbered_matrix[l][j]==998):
+                        # надо определить, есть ли в ближайшем окружении заполненные ячейки, и, если есть, выбрать среди них наименьшую
+
+                        found = False
+                        value = 999
+
+                        if (numbered_matrix[l - 1][j] <= 998) and (numbered_matrix[l - 1][j] > 0):
+                            found = True
+                            if numbered_matrix[l - 1][j] < value:
+                                value = numbered_matrix[l - 1][j]
+
+                        if (numbered_matrix[l + 1][j] <= 998) and (numbered_matrix[l + 1][j] > 0):
+                            found = True
+                            if numbered_matrix[l + 1][j] < value:
+                                value = numbered_matrix[l + 1][j]
+
+                        if (numbered_matrix[l][j - 1] <= 998) and (numbered_matrix[l][j - 1] > 0):
+                            found = True
+                            if numbered_matrix[l][j - 1] < value:
+                                value = numbered_matrix[l][j - 1]
+
+                        if (numbered_matrix[l][j + 1] <= 998) and (numbered_matrix[l][j + 1] > 0):
+                            found = True
+                            if numbered_matrix[l][j + 1] < value:
+                                value = numbered_matrix[l][j + 1]
+
+                        # adding numbers to matrix
+                        if (found == True) and (value < num):
+                            numbered_matrix[l][j] = value + 1
+
+
+                        if numbered_matrix[l][j]==998 and found==True:
+                            pathfound = True
+            num += 1
+
+        # numbered matrix, end x, end y >>>> path
+        # path lenght = num
+        path, path_j, path_l= {}, end_x, end_y
+        for i in range(num-2, 0, -1):
+
+            a = []
+            l = []
+            if numbered_matrix[path_l - 1][path_j] != 0 and numbered_matrix[path_l - 1][path_j] < 999:
+                a.append(numbered_matrix[path_l - 1][path_j])
+                l.append([path_l - 1, path_j])
+            if numbered_matrix[path_l + 1][path_j] != 0 and numbered_matrix[path_l + 1][path_j] < 999:
+                a.append(numbered_matrix[path_l + 1][path_j])
+                l.append([path_l + 1, path_j])
+            if numbered_matrix[path_l][path_j - 1] != 0 and numbered_matrix[path_l][path_j - 1] < 999:
+                a.append(numbered_matrix[path_l][path_j - 1])
+                l.append([path_l, path_j - 1])
+            if numbered_matrix[path_l][path_j + 1] != 0 and numbered_matrix[path_l][path_j + 1] < 999:
+                a.append(numbered_matrix[path_l][path_j + 1])
+                l.append([path_l, path_j + 1])
+
+            path[i] = l[a.index(min(a))]
+            path_l = l[a.index(min(a))][0]
+            path_j = l[a.index(min(a))][1]
+
+            self.screen.addstr(5, 5, str(path)+'   '+str(self.x)+'   '+str(self.y))
+            # for i in range(len(numbered_matrix)):
+            #     self.screen.addstr(20+i, 40+i*2, str(numbered_matrix))
+            self.screen.refresh()
+        return path
+
+    ### auto snake
+    def auto_move_snake(self):
+            path=self.find_path(self.screen, self.matrix, self.x, self.y)
+
+            if path[1][1]<self.x:
+                self.rotate_snake('left')
+            elif path[1][1]>self.x:
+                self.rotate_snake('right')
+            elif path[1][0]<self.y:
+                self.rotate_snake('up')
+            elif path[1][0]>self.y:
+                self.rotate_snake('down')
+
+
+
+
     ### tick
     def tick(self):         ### двигает змею
         if self.scene == 'game':
@@ -305,10 +423,6 @@ class snake:
                 self.timer=datetime.datetime.now()
                 self.move_head()
                 self.move_body()
-                self.rabbit_count+=1
-                if self.rabbit_count>=20:
-                    self.rabbit_count=0
-                    self.rabbit()
 
 
     ### get input
@@ -317,26 +431,32 @@ class snake:
         
         if self.scene == 'game':
 
-            if key==curses.KEY_LEFT:
-                self.rotate_snake('left')
-            elif key==curses.KEY_RIGHT:
-                self.rotate_snake('right')
-            elif key==curses.KEY_DOWN:
-                self.rotate_snake('down')
-            elif key==curses.KEY_UP:
-                self.rotate_snake('up')
-            elif key==ord('p'):
+            if self.robot_snake==True:
+                self.auto_move_snake()
+                if key==ord('a'):
+                    self.robot_snake=False
+            else:
+                if key==curses.KEY_LEFT:
+                    self.rotate_snake('left')
+                elif key==curses.KEY_RIGHT:
+                    self.rotate_snake('right')
+                elif key==curses.KEY_DOWN:
+                    self.rotate_snake('down')
+                elif key==curses.KEY_UP:
+                    self.rotate_snake('up')
+
+                elif key==ord('a'):
+                    self.robot_snake=True
+
+            if key==ord('p'):
                 self.pause()
-                pass
             elif key==ord('q'):
                 self.screen.clear()
                 self.scene='menu'
 
         elif self.scene == 'menu':
 
-            if key==ord('q'):
-                pass
-            elif key==curses.KEY_UP:
+            if key==curses.KEY_UP:
                 self.menu_item-=1
                 if self.menu_item==0:
                     self.menu_item=3

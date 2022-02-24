@@ -133,7 +133,7 @@ def find_path(screen, matrix, x, y):
     # numbered matrix, end x, end y >>>> path
     # path lenght = num
     path, path_j, path_l= {}, end_x, end_y
-    for i in range(num - 1, 0, -1):
+    for i in range(num-2, 0, -1):
 
         a = []
         l = []
@@ -149,10 +149,17 @@ def find_path(screen, matrix, x, y):
         if numbered_matrix[path_l][path_j + 1] != 0 and numbered_matrix[path_l][path_j + 1] < 999:
             a.append(numbered_matrix[path_l][path_j + 1])
             l.append([path_l, path_j + 1])
+        if numbered_matrix[path_l][path_j] != 0 and numbered_matrix[path_l][path_j + 1] < 999:
+            a.append(numbered_matrix[path_l][path_j])
+            l.append([path_l, path_j])
 
         path[i] = l[a.index(min(a))]
         path_l = l[a.index(min(a))][0]
         path_j = l[a.index(min(a))][1]
+
+    screen.addstr(10, 10, str(path))
+    screen.refresh()
+    screen.getch()
 
     return path
 
