@@ -269,11 +269,11 @@ class snake:
     def rabbit(self):
         self.delete_rabbits()
 
-        r_y, r_x=random.randint(1, 28), random.randint(1, 28)
+        y, x=random.randint(1, 28), random.randint(1, 28)
         for i in range(1, len(self.snake_body)+1):
-            if self.snake_body[i]==[r_x, r_y]:
+            if self.snake_body[i]==[x, y]:
                 self.rabbit()
-        self.matrix[r_y][r_x]=2
+        self.matrix[y][x]=2
 
 
 
@@ -341,21 +341,22 @@ class snake:
                         found = False
                         value = 999
 
+                        # up
                         if (numbered_matrix[l - 1][j] <= 998) and (numbered_matrix[l - 1][j] > 0):
                             found = True
                             if numbered_matrix[l - 1][j] < value:
                                 value = numbered_matrix[l - 1][j]
-
+                        # down
                         if (numbered_matrix[l + 1][j] <= 998) and (numbered_matrix[l + 1][j] > 0):
                             found = True
                             if numbered_matrix[l + 1][j] < value:
                                 value = numbered_matrix[l + 1][j]
-
+                        # left
                         if (numbered_matrix[l][j - 1] <= 998) and (numbered_matrix[l][j - 1] > 0):
                             found = True
                             if numbered_matrix[l][j - 1] < value:
                                 value = numbered_matrix[l][j - 1]
-
+                        # right
                         if (numbered_matrix[l][j + 1] <= 998) and (numbered_matrix[l][j + 1] > 0):
                             found = True
                             if numbered_matrix[l][j + 1] < value:
@@ -365,18 +366,18 @@ class snake:
                         if (found == True) and (value < num):
                             numbered_matrix[l][j] = value + 1
 
-
-                        if numbered_matrix[l][j]==998 and found==True:
+                        # found rabbit
+                        if numbered_matrix[end_y][end_x]==value+1 and found==True:
                             pathfound = True
             num += 1
 
         # numbered matrix, end x, end y >>>> path
         # path lenght = num
         path, path_j, path_l= {}, end_x, end_y
-        for i in range(num-2, 0, -1):
+        for i in range(num-3, 0, -1):
 
-            a = []
-            l = []
+            a = [] # список значений из numbered matrix
+            l = [] # список соответствующих им координат
             if numbered_matrix[path_l - 1][path_j] != 0 and numbered_matrix[path_l - 1][path_j] < 999:
                 a.append(numbered_matrix[path_l - 1][path_j])
                 l.append([path_l - 1, path_j])
@@ -394,10 +395,32 @@ class snake:
             path_l = l[a.index(min(a))][0]
             path_j = l[a.index(min(a))][1]
 
-            self.screen.addstr(5, 5, str(path)+'   '+str(self.x)+'   '+str(self.y))
-            # for i in range(len(numbered_matrix)):
-            #     self.screen.addstr(20+i, 40+i*2, str(numbered_matrix))
-            self.screen.refresh()
+        if len(path)==0:
+            path[1]=[end_y, end_x]
+
+        self.screen.addstr(2, 5, str(path) + '   ' + str(self.x) + '   ' + str(self.y))
+        self.screen.addstr(10, 70, str(num) + '   num')
+        # for i in range(len(numbered_matrix)):
+        #     self.screen.addstr(20+i, 40+i*2, str(numbered_matrix))
+        self.screen.refresh()
+
+        ## draw matrix
+        for i in range(len(numbered_matrix)):
+            for j in range(len(numbered_matrix[i])):
+                self.screen.move(5 + i, 5 + j * 2)
+                if numbered_matrix[i][j] == 0:
+                    self.screen.addstr('  ', curses.color_pair(10))
+                elif numbered_matrix[i][j] == 999:
+                    self.screen.addstr('  ', curses.color_pair(1))
+                elif numbered_matrix[i][j] == 998:
+                    self.screen.addstr('  ', curses.color_pair(4))
+                else:
+                    self.screen.addstr(str(numbered_matrix[i][j])+' ')
+
+        ## draw path
+        for i in range(1, len(path)+1):
+            self.screen.move(5+path[i][0], 5+path[i][1]*2)
+            self.screen.addstr('  ', curses.color_pair(2))
         return path
 
     ### auto snake
@@ -406,13 +429,12 @@ class snake:
 
             if path[1][1]<self.x:
                 self.rotate_snake('left')
-            elif path[1][1]>self.x:
+            if path[1][1]>self.x:
                 self.rotate_snake('right')
-            elif path[1][0]<self.y:
+            if path[1][0]<self.y:
                 self.rotate_snake('up')
-            elif path[1][0]>self.y:
+            if path[1][0]>self.y:
                 self.rotate_snake('down')
-
 
 
 
