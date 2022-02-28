@@ -21,6 +21,7 @@ def draw(matrix, path, screen, x, y):
     screen.move(top_corner+y, left_corner+x*2)
     screen.addstr('  ', curses.color_pair(2))
 
+
     ## rabbit
     screen.move(top_corner+28, left_corner+3*2)
     screen.addstr('  ', curses.color_pair(4))
@@ -185,6 +186,9 @@ def main(screen):
     # start:
     head_x=15
     head_y=15
+
+    snake_body={i:[x, y+i-1] for i in range(1, 4)}
+
 
     # end:
     # rabbit_x, rabbit_y = 25, 25
