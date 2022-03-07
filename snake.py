@@ -313,8 +313,7 @@ class snake:
         # [1, 999] - wall
         # [3, 998] - rabbit
         # [2, 1] - snake head
-        # numbered_matrix[x][y]=value - rabbit, wall
-        # numbered_matrix[x][y]=value, value = [type, value] - empty, snake
+        # numbered_matrix[x][y]=[type, value]
 
         # set end x, end y, borders
         for i in range(len(matrix)):
@@ -334,15 +333,12 @@ class snake:
 
         ###  добавиь в numbered_matrix тип тело змеи со значениями path_snake_body
         for i in path_snake_body:
-            numbered_matrix[i[1]][i[2]]=[2, i]
-        #
+            numbered_matrix[i[1]][i[2]]=[2, i[0]+len(self.snake_body)]
 
 
         # set snake head, rabbit
-        numbered_matrix[y][x]=[2, 1]
-        numbered_matrix[end_y][end_x]=[3, 998]
-
-
+        numbered_matrix[y][x]=[2, 1] #head
+        numbered_matrix[end_y][end_x]=[3, 998] # rabbit
 
         # num, end_x, end_y >>>> numbered matrix
         while pathfound == False:
@@ -385,7 +381,6 @@ class snake:
                         # уменьшить значения змеи
                         if numbered_matrix[l][j][0]==2:
                             numbered_matrix[l][j][1]-=1
-                        ##
 
 
                         # found rabbit
@@ -452,7 +447,7 @@ class snake:
         ## draw snake body
         for i in range(0, len(path_snake_body)):
             self.screen.move(5  + path_snake_body[i][1], 5 + path_snake_body[i][2] * 2)
-            self.screen.addstr(str(path_snake_body[i][0]), curses.color_pair(16))
+            self.screen.addstr(str(path_snake_body[i][0]+2), curses.color_pair(16))
 
         self.screen.addstr(1, 1, str(path_snake_body))
 
@@ -464,13 +459,29 @@ class snake:
             path=self.find_path(self.screen, self.matrix, self.x, self.y)
 
             if path[1][1]<self.x:
-                self.rotate_snake('left')
+                if self.direction!='right':
+                    self.rotate_snake('left')
+                    self.screen.addstr(40, 10, 'left')
+                else:
+                    self.rotate_snake('down')
             if path[1][1]>self.x:
-                self.rotate_snake('right')
+                if self.direction!='left':
+                    self.rotate_snake('right')
+                    self.screen.addstr(40, 10, 'right')
+                else:
+                    self.rotate_snake('up')
             if path[1][0]<self.y:
-                self.rotate_snake('up')
+                if self.direction!='down':
+                    self.rotate_snake('up')
+                    self.screen.addstr(40, 10, 'up')
+                else:
+                    self.rotate_snake('left')
             if path[1][0]>self.y:
-                self.rotate_snake('down')
+                if self.direction!='up':
+                    self.rotate_snake('down')
+                    self.screen.addstr(40, 10, 'down')
+                else:
+                    self.rotate_snake('right')
 
 
 
@@ -562,20 +573,31 @@ def run_game(screen):
     curses.init_pair(16, 15, 9) # game over
     curses.init_pair(4, 0, 12*15) # rabbits
 
-    snake.screen=screen
-    snake.screen_dimensions=snake.screen.getmaxyx()
+    snake1.screen=screen
+    snake1.screen_dimensions=snake1.screen.getmaxyx()
+
+    snake2.screen=screen
+    snake2.screen_dimensions=snake2.screen.getmaxyx()
 
     screen.nodelay(True)
     while True:
-        snake.getinput()
-        snake.draw()
-        snake.tick()
+        snake1.getinput()
+        snake1.draw()
+        snake1.tick()
+
+        snake2.draw()
+        snake2.tick()
+
+        snake2.scene=snake1.scene
         
 
 
 
 
-snake = snake()
+snake1 = snake()
+
+snake2 = snake()
+snake2.robot_snake=True
 
 curses.wrapper(run_game)
 
