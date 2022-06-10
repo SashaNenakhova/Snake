@@ -20,6 +20,9 @@ class snake:
     records_item=0
     new_name=''
 
+    robot_snake=False
+    second_snake=False
+
     ### initiation
     def __init__(self):
         screen = None
@@ -49,13 +52,6 @@ class snake:
         self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
         self.rabbit_count = 0
         self.delete_rabbits()
-
-
-
-
-
-
-
 
 
 
@@ -110,17 +106,24 @@ class snake:
         self.top_corner = (self.screen.getmaxyx()[0])//2 - len(self.matrix)//2 # высота. (-14)
         self.has_screen_changed()
 
+
+
         ## draw scenes
-        if self.scene == 'menu':
-            self.draw_menu()
-        elif self.scene == 'game':
-            self.draw_game()
-        elif self.scene == 'game over':
-            self.draw_game_over()
-        elif self.scene == 'save record':
-            pass
-        elif self.scene == 'records':
-            pass
+        if self.second_snake==False:
+            ## draw scenes
+            if self.scene == 'menu':
+                self.draw_menu()
+            elif self.scene == 'game':
+                self.draw_game()
+            elif self.scene == 'game over':
+                self.draw_game_over()
+            elif self.scene == 'save record':
+                pass
+            elif self.scene == 'records':
+                pass
+        else:
+            if snake1.scene=="game":
+                self.draw_game()
 
 
         self.screen.refresh()
@@ -143,16 +146,23 @@ class snake:
 
     ### draw game
     def draw_game(self):
-        ## draw matrix
-        for i in range(len(self.matrix)):
-            for j in range(len(self.matrix[i])):
-                self.screen.move(self.top_corner+i, self.left_corner+j*2)
-                if self.matrix[i][j]==0:
-                    self.screen.addstr('  ', curses.color_pair(10))
-                elif self.matrix[i][j]==1:
-                    self.screen.addstr('  ', curses.color_pair(1))
-                elif self.matrix[i][j]==2:
-                    self.screen.addstr('  ', curses.color_pair(4))
+        if self.second_snake==False:
+            ## draw matrix
+            for i in range(len(self.matrix)):
+                for j in range(len(self.matrix[i])):
+                    self.screen.move(self.top_corner+i, self.left_corner+j*2)
+                    if self.matrix[i][j]==0:
+                        self.screen.addstr('  ', curses.color_pair(10))
+                    elif self.matrix[i][j]==1:
+                        self.screen.addstr('  ', curses.color_pair(1))
+                    elif self.matrix[i][j]==2:
+                        self.screen.addstr('  ', curses.color_pair(4))
+            ## lenght
+            self.screen.addstr(self.top_corner+2, self.left_corner+len(self.matrix)*2+10, 'Lenght', curses.color_pair(5))
+            self.screen.addstr(self.top_corner+4, self.left_corner+len(self.matrix)*2+12, str(len(self.snake_body)))
+            ## auto snake
+            if self.robot_snake==True:
+                self.screen.addstr(self.top_corner+7, self.left_corner+len(self.matrix)*2+7, ' Auto snake ', curses.color_pair(16))
 
         ## draw snake
         for i in range(2, len(self.snake_body)+1):
@@ -267,13 +277,16 @@ class snake:
 
     ### generate rabbits
     def rabbit(self):
-        self.delete_rabbits()
-
-        r_y, r_x=random.randint(1, 28), random.randint(1, 28)
-        for i in range(1, len(self.snake_body)+1):
-            if self.snake_body[i]==[r_x, r_y]:
-                self.rabbit()
-        self.matrix[r_y][r_x]=2
+        if self.second_snake==False:
+            self.delete_rabbits()
+            y, x=random.randint(1, 28), random.randint(1, 28)
+            for i in range(1, len(self.snake_body)+1):
+                if self.snake_body[i]==[x, y]:
+                    self.rabbit()
+            self.matrix[y][x]=2
+            if self.second_snake==True:
+                self.delete_rabbits()
+                self.matrix[y][x]=2
 
 
 
@@ -281,26 +294,176 @@ class snake:
 
  ### pause
     def pause(self):
-        pass
-        # self.screen.nodelay(False)
+        self.screen.nodelay(False)
 
-        # key=0
-        # while key!=ord('p'):
-        #     box2 = curses.newwin(3, 10, self.screen.getmaxyx()[0]//2, self.screen.getmaxyx()[1]//2)
-        #     box2.box()
-        #     box2.bkgd(' ', curses.color_pair(13))    
-        #     box2.addstr(1, 2, 'Paused', curses.color_pair(13))
-        #     box2.refresh()
+        key=0
+        while key!=ord('p'):
+            box = curses.newwin(3, 10, self.screen.getmaxyx()[0]//2, self.screen.getmaxyx()[1]//2)
+            box.box()
+            box.bkgd(' ', curses.color_pair(16))    
+            box.addstr(1, 2, 'Paused', curses.color_pair(16))
+            box.refresh()
 
-        #     key=self.screen.getch()
+            key=self.screen.getch()
 
-        #     self.draw()
+            self.draw()
 
-        # box2.bkgd(' ', curses.color_pair(0))
-        # box2.clear()
-        # box2.refresh()
+        box.bkgd(' ', curses.color_pair(0))
+        box.clear()
+        box.refresh()
 
-        # self.screen.nodelay(True)
+        self.screen.nodelay(True)
+
+
+
+    def find_path(screen, matrix, x, y):
+        numbered_matrix = [[ 0 for i in range(30)] for _ in range(30)]
+#         x1, y1 = 2, 2 # start
+
+
+        # # borders
+        # for l in range(len(matrix)):
+        #         for j in range(len(matrix[l])):
+        #             if l==0 or l==len(matrix)-1 or j==0 or j==len(matrix[l])-1:
+        #                 matrix[l][j]=999
+
+        # matrix[3][3]=999
+        # matrix[3][2]=999
+
+        # num=1
+        # matrix[x1][y1]=num
+
+        # end_x = 5
+        # end_y = 5
+        # matrix[end_x][end_y]=998
+
+        # pathfound=False
+
+
+
+        # while pathfound == False:
+        #     #проходим матрицу и заполняем её значениями дистанции от стартовой точки
+
+        #     for l in range(len(matrix)):
+        #         for j in range(len(matrix[l])):
+        #             if (matrix[l][j] == 0) or (matrix[l][j] == 998):
+        #                 #надо определить, есть ли в ближайшем окружении заполненные ячейки, и, если есть, выбрать среди них наименьшую
+
+        #                 found = False
+        #                 value = 999
+
+        #                 if (matrix[l - 1][j] < 998) & (matrix[l - 1][j] > 0):
+        #                     found = True
+        #                     if matrix[l - 1][j] < value:
+        #                         value = matrix[l - 1][j]
+
+        #                 if (matrix[l + 1][j] < 998) & (matrix[l + 1][j] > 0):
+        #                     found = True
+        #                     if matrix[l + 1][j] < value:
+        #                         value = matrix[l + 1][j]
+
+        #                 if (matrix[l][j - 1] < 998) & (matrix[l][j - 1] > 0):
+        #                     found = True
+        #                     if matrix[l][j - 1] < value:
+        #                         value = matrix[l][j - 1]
+        #                 if (matrix[l][j + 1] < 998) & (matrix[l][j + 1] > 0):
+        #                     found = True
+        #                     if matrix[l][j + 1] < value:
+        #                         value = matrix[l][j + 1]
+
+
+
+        #                 if (found == True) and (value<num):
+        #                     matrix[l][j]= value + 1
+
+        #                 if (l == end_y) and (j == end_x) and (found == True):
+        #                     matrix[l][j] = value + 1
+        #                     pathfound=True
+
+
+
+
+        # numbered matrix, end x, end y >>>> path
+        # path lenght = num
+        path, path_j, path_l= {}, end_x, end_y
+        for i in range(num-3, 0, -1):
+
+            a = [] # список значений из numbered matrix
+            l = [] # список соответствующих им координат
+            if numbered_matrix[path_l - 1][path_j][1] != 0 and numbered_matrix[path_l - 1][path_j][1] < 999:
+                a.append(numbered_matrix[path_l - 1][path_j][1])
+                l.append([path_l - 1, path_j])
+
+            if numbered_matrix[path_l + 1][path_j][1] != 0 and numbered_matrix[path_l + 1][path_j][1] < 999:
+                a.append(numbered_matrix[path_l + 1][path_j][1])
+                l.append([path_l + 1, path_j])
+
+            if numbered_matrix[path_l][path_j - 1][1] != 0 and numbered_matrix[path_l][path_j - 1][1] < 999:
+                a.append(numbered_matrix[path_l][path_j - 1][1])
+                l.append([path_l, path_j - 1])
+
+            if numbered_matrix[path_l][path_j + 1][1] != 0 and numbered_matrix[path_l][path_j + 1][1] < 999:
+                a.append(numbered_matrix[path_l][path_j + 1][1])
+                l.append([path_l, path_j + 1])
+
+            path[i] = l[a.index(min(a))]
+            path_l = l[a.index(min(a))][0]
+            path_j = l[a.index(min(a))][1]
+        if len(path)==0:
+            path[1]=[end_y, end_x]
+
+        ## draw matrix
+        for i in range(len(numbered_matrix)):
+            for j in range(len(numbered_matrix[i])):
+                self.screen.move(5 + i, 5 + j * 2)
+                if numbered_matrix[i][j][1] == 0:
+                    self.screen.addstr('  ', curses.color_pair(10))
+                elif numbered_matrix[i][j][1] == 999:
+                    self.screen.addstr('  ', curses.color_pair(1))
+                elif numbered_matrix[i][j][1] == 998:
+                    self.screen.addstr('  ', curses.color_pair(4))
+                else:
+                    self.screen.addstr(str(numbered_matrix[i][j][1])+' ')
+        ## draw path
+        for i in range(1, len(path)+1):
+            self.screen.move(5+path[i][0], 5+path[i][1]*2)
+            self.screen.addstr('  ', curses.color_pair(2))
+        ## draw snake body
+        for i in range(0, len(path_snake_body)):
+            self.screen.move(5  + path_snake_body[i][1], 5 + path_snake_body[i][2] * 2)
+            self.screen.addstr(str(path_snake_body[i][0]+2), curses.color_pair(16))
+
+        self.screen.addstr(1, 1, str(path_snake_body))
+        return path
+
+
+    ### auto snake
+    def auto_move_snake(self):
+            path=self.find_path(self.screen, self.matrix, self.x, self.y)
+            if path[1][1]<self.x:
+                if self.direction!='right':
+                    self.rotate_snake('left')
+                    self.screen.addstr(40, 10, 'left')
+                else:
+                    self.rotate_snake('down')
+            if path[1][1]>self.x:
+                if self.direction!='left':
+                    self.rotate_snake('right')
+                    self.screen.addstr(40, 10, 'right')
+                else:
+                    self.rotate_snake('up')
+            if path[1][0]<self.y:
+                if self.direction!='down':
+                    self.rotate_snake('up')
+                    self.screen.addstr(40, 10, 'up')
+                else:
+                    self.rotate_snake('left')
+            if path[1][0]>self.y:
+                if self.direction!='up':
+                    self.rotate_snake('down')
+                    self.screen.addstr(40, 10, 'down')
+                else:
+                    self.rotate_snake('right')
 
     ### tick
     def tick(self):         ### двигает змею
@@ -313,6 +476,13 @@ class snake:
                 if self.rabbit_count>=20:
                     self.rabbit_count=0
                     self.rabbit()
+            if self.robot_snake==True:
+                self.auto_move_snake()
+            #txt robot snake path
+            f=open('robot_snake_path.txt', 'a')
+            f.write('\n'+str(datetime.datetime.now())+'\n'+'\n')
+            for i in self.matrix:
+                f.write(str(i)+'\n')
 
 
     ### get input
@@ -321,17 +491,22 @@ class snake:
         
         if self.scene == 'game':
 
-            if key==curses.KEY_LEFT:
-                self.rotate_snake('left')
-            elif key==curses.KEY_RIGHT:
-                self.rotate_snake('right')
-            elif key==curses.KEY_DOWN:
-                self.rotate_snake('down')
-            elif key==curses.KEY_UP:
-                self.rotate_snake('up')
-            elif key==ord('p'):
-                # self.pause()
-                pass
+            if self.robot_snake==True:
+                if key==ord('a'):
+                    self.screen.clear()
+                    self.robot_snake=False
+            else:
+                if key==curses.KEY_LEFT:
+                    self.rotate_snake('left')
+                elif key==curses.KEY_RIGHT:
+                    self.rotate_snake('right')
+                elif key==curses.KEY_DOWN:
+                    self.rotate_snake('down')
+                elif key==curses.KEY_UP:
+                    self.rotate_snake('up')
+            if key==ord('p'):
+                self.pause()
+                
             elif key==ord('q'):
                 self.screen.clear()
                 self.scene='menu'
@@ -386,21 +561,42 @@ def run_game(screen):
     curses.init_pair(16, 15, 9) # game over
     curses.init_pair(4, 0, 12*15) # rabbits
 
-    snake.screen=screen
-    snake.screen_dimensions=snake.screen.getmaxyx()
+    snake1.screen=screen
+    snake1.screen_dimensions=snake1.screen.getmaxyx()
 
     screen.nodelay(True)
     while True:
-        snake.getinput()
-        snake.draw()
-        snake.tick()
+        snake1.getinput()
+        snake1.draw()
+        snake1.tick()
         
 
 
+snake1 = snake()
+
+snake2 = snake()
+snake2.second_snake=True
+snake2.robot_snake=True
+snake2.x=18
 
 
-snake = snake()
+#txt robot snake2 path
+f = open('robot_snake_path.txt', 'w')
+f.write(' ')
+f.close()
+
 
 curses.wrapper(run_game)
+
+
+
+
+
+
+
+
+
+
+
 
 
