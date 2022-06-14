@@ -86,12 +86,14 @@ def find_path(matrix): # -screen, self
                                 value = num_matrix[l][j+1]
 
 
-                        # проверить если путь найден
-                        if num_matrix[l][j]==998 and found==True:
+                        # # проверить если путь найден
+                        # if num_matrix[l][j]==998 and found==True:
+                        #     pathfound==True
+                        if num_matrix[l-1][j]==998 or num_matrix[l+1][j]==998 or num_matrix[l][j-1]==998 or num_matrix[l][j+1]==998 and found==True:
                             pathfound==True
 
                         #  увеличить значение в центральной клетке до наименьшего+1
-                        if found==True and value<num:
+                        if found==True and value<num and num_matrix[l][j]==0:
                             num_matrix[l][j]=value+1
 
                         
@@ -109,7 +111,7 @@ def find_path(matrix): # -screen, self
             
 
             num+=1
-            if num>20: sysexit
+            # if num>20: sysexit
 
 
 
