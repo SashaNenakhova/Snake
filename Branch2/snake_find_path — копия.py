@@ -4,7 +4,7 @@ import curses
 x = 15 # left, right
 y = 15 # up, down
 matrix = [[ 0 for i in range(30)] for _ in range(30)]
-matrix[8][9]=2 #rabbit
+matrix[25][10]=2 #rabbit
 snake_body={i:[x, y+i-1] for i in range(1, 12)}
 
 
@@ -29,9 +29,6 @@ def find_path(matrix): # -screen, self
                     end_x=j
                     end_y=l
 
-
-
-
         # snake body
         body=len(snake_body)//2
         for i in range(1, len(snake_body)+1):
@@ -42,12 +39,13 @@ def find_path(matrix): # -screen, self
         num_matrix[y][x]=1
 
         pathfound=False
-
         num=0
 
 
+
+        ### проходим матрицу и заполняем её значениями дистанции от стартовой точки ###
+
         while pathfound == False:
-            # проходим матрицу и заполняем её значениями дистанции от стартовой точки
 
             for l in range(1, len(num_matrix)-1):
                 for j in range(1, len(num_matrix[l])-1):
@@ -90,12 +88,9 @@ def find_path(matrix): # -screen, self
                         if end_y==l and end_x==j and found==True:
                             pathfound=True
 
-                        #  увеличить значение в центральной клетке до наименьшего+1
+                        # увеличить значение в центральной клетке до наименьшего+1
                         if found==True and value<num and num_matrix[l][j]==0:
                             num_matrix[l][j]=value+1
-
-                        
-
 
 
             # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -106,79 +101,51 @@ def find_path(matrix): # -screen, self
                 num_matrix[l][j+1])
             for i in num_matrix:
                 print(i)
-            
 
             num+=1
-            # if num>20: sysexit
 
 
 
+        ### finding path ###
 
 
 #____________________________________________________________________________________________________________
 
-                        # found = False
-                        # value = 999
 
-                        # if (matrix[l - 1][j] < 998) & (matrix[l - 1][j] > 0): 
-                        #     found = True
-                        #     if matrix[l - 1][j] < value:
-                        #         value = matrix[l - 1][j]
+        
+        # numbered matrix, end x, end y >>>> path
+        # path lenght = num
+        path, j, l= {}, end_x, end_y
+        for i in range(num-3, 0, -1):
 
-                        # if (matrix[l + 1][j] < 998) & (matrix[l + 1][j] > 0):
-                        #     found = True
-                        #     if matrix[l + 1][j] < value:
-                        #         value = matrix[l + 1][j]
+            a = [] # список значений из numbered matrix
+            l = [] # список соответствующих им координат
+            if num_matrix[l - 1][j] != 0 and num_matrix[l - 1][j] < 999:
+                a.append(num_matrix[l - 1][j])
+                l.append([l - 1, j])
 
-                        # if (matrix[l][j - 1] < 998) & (matrix[l][j - 1] > 0):
-                        #     found = True
-                        #     if matrix[l][j - 1] < value:
-                        #         value = matrix[l][j - 1]
-                        # if (matrix[l][j + 1] < 998) & (matrix[l][j + 1] > 0):
-                        #     found = True
-                        #     if matrix[l][j + 1] < value:
-                        #         value = matrix[l][j + 1]
+            if num_matrix[l + 1][j] != 0 and num_matrix[l + 1][j] < 999:
+                a.append(num_matrix[l + 1][j])
+                l.append([l + 1, j])
 
-                        # if (found == True) and (value<num):
-                        #     matrix[l][j]= value + 1
+            if num_matrix[l][j - 1] != 0 and num_matrix[l][j - 1] < 999:
+                a.append(num_matrix[l][j - 1])
+                l.append([l, j - 1])
 
-                        # if (l == end_y) and (j == end_x) and (found == True):
-                        #     matrix[l][j] = value + 1
-                        #     pathfound=True
+            if num_matrix[l][j + 1] != 0 and num_matrix[l][j + 1] < 999:
+                a.append(num_matrix[l][j + 1])
+                l.append([l, j + 1])
 
+            path[i] = l[a.index(min(a))]
+            l = l[a.index(min(a))]
+            j = l[a.index(min(a))]
+        if len(path)==0:
+            path=[end_y, end_x]
 
+        print(path)
+        # return path
 
-
-
-
-        # # numbered matrix, end x, end y >>>> path
-        # # path lenght = num
-        # path, path_j, path_l= {}, end_x, end_y
-        # for i in range(num-3, 0, -1):
-
-        #     a = [] # список значений из numbered matrix
-        #     l = [] # список соответствующих им координат
-        #     if numbered_matrix[path_l - 1][path_j][1] != 0 and numbered_matrix[path_l - 1][path_j][1] < 999:
-        #         a.append(numbered_matrix[path_l - 1][path_j][1])
-        #         l.append([path_l - 1, path_j])
-
-        #     if numbered_matrix[path_l + 1][path_j][1] != 0 and numbered_matrix[path_l + 1][path_j][1] < 999:
-        #         a.append(numbered_matrix[path_l + 1][path_j][1])
-        #         l.append([path_l + 1, path_j])
-
-        #     if numbered_matrix[path_l][path_j - 1][1] != 0 and numbered_matrix[path_l][path_j - 1][1] < 999:
-        #         a.append(numbered_matrix[path_l][path_j - 1][1])
-        #         l.append([path_l, path_j - 1])
-
-        #     if numbered_matrix[path_l][path_j + 1][1] != 0 and numbered_matrix[path_l][path_j + 1][1] < 999:
-        #         a.append(numbered_matrix[path_l][path_j + 1][1])
-        #         l.append([path_l, path_j + 1])
-
-        #     path[i] = l[a.index(min(a))]
-        #     path_l = l[a.index(min(a))][0]
-        #     path_j = l[a.index(min(a))][1]
-        # if len(path)==0:
-        #     path[1]=[end_y, end_x]
+# ------------------------------------------------------------------------------------------------------------------------
 
         # ## draw matrix
         # for i in range(len(numbered_matrix)):
@@ -202,15 +169,6 @@ def find_path(matrix): # -screen, self
         #     self.screen.addstr(str(path_snake_body[i][0]+2), curses.color_pair(16))
 
         # self.screen.addstr(1, 1, str(path_snake_body))
-        # return path
-
-
-
-
-
-
-
-
 
 # -----------------------------------------------------------------------------------------------------------------
 
@@ -218,3 +176,11 @@ def find_path(matrix): # -screen, self
 
 
 find_path(matrix)
+
+
+
+
+
+
+
+
