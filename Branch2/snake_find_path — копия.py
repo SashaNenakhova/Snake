@@ -5,7 +5,7 @@ x = 15 # left, right
 y = 15 # up, down
 matrix = [[ 0 for i in range(30)] for _ in range(30)]
 matrix[8][9]=2 #rabbit
-snake_body={i:[x, y+i-1] for i in range(1, 8)}
+snake_body={i:[x, y+i-1] for i in range(1, 12)}
 
 
 # ------------------------------------------------------------------------------------------------------------------
@@ -47,14 +47,14 @@ def find_path(matrix): # -screen, self
 
 
         while pathfound == False:
-            #проходим матрицу и заполняем её значениями дистанции от стартовой точки
+            # проходим матрицу и заполняем её значениями дистанции от стартовой точки
 
             for l in range(1, len(num_matrix)-1):
                 for j in range(1, len(num_matrix[l])-1):
-                    if num_matrix[l][j] <998:
-                        #надо определить, есть ли в ближайшем окружении заполненные ячейки, и, если есть, выбрать среди них наименьшую
+                    if num_matrix[l][j]==998 or num_matrix[l][j]==0:
+                        # надо определить, есть ли в ближайшем окружении заполненные ячейки, и, если есть, выбрать среди них наименьшую
 
-                        found = False #  если не найдено заполненых клеток
+                        found = False # если не найдено заполненых клеток
                         value=999
 
 
@@ -86,11 +86,9 @@ def find_path(matrix): # -screen, self
                                 value = num_matrix[l][j+1]
 
 
-                        # # проверить если путь найден
-                        # if num_matrix[l][j]==998 and found==True:
-                        #     pathfound==True
-                        if num_matrix[l-1][j]==998 or num_matrix[l+1][j]==998 or num_matrix[l][j-1]==998 or num_matrix[l][j+1]==998 and found==True:
-                            pathfound==True
+                        # проверить если путь найден
+                        if end_y==l and end_x==j and found==True:
+                            pathfound=True
 
                         #  увеличить значение в центральной клетке до наименьшего+1
                         if found==True and value<num and num_matrix[l][j]==0:
