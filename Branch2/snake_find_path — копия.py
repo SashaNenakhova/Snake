@@ -116,29 +116,32 @@ def find_path(matrix): # -screen, self
         # numbered matrix, end x, end y >>>> path
         # path lenght = num
         path, j, l= {}, end_x, end_y
+
         for i in range(num-3, 0, -1):
 
             a = [] # список значений из numbered matrix
-            l = [] # список соответствующих им координат
+            b = [] # список соответствующих им координат
+
+
             if num_matrix[l - 1][j] != 0 and num_matrix[l - 1][j] < 999:
                 a.append(num_matrix[l - 1][j])
-                l.append([l - 1, j])
+                b.append([l - 1, j])
 
             if num_matrix[l + 1][j] != 0 and num_matrix[l + 1][j] < 999:
                 a.append(num_matrix[l + 1][j])
-                l.append([l + 1, j])
+                b.append([l + 1, j])
 
             if num_matrix[l][j - 1] != 0 and num_matrix[l][j - 1] < 999:
                 a.append(num_matrix[l][j - 1])
-                l.append([l, j - 1])
+                b.append([l, j - 1])
 
             if num_matrix[l][j + 1] != 0 and num_matrix[l][j + 1] < 999:
                 a.append(num_matrix[l][j + 1])
-                l.append([l, j + 1])
+                b.append([l, j + 1])
 
-            path[i] = l[a.index(min(a))]
-            l = l[a.index(min(a))]
-            j = l[a.index(min(a))]
+            path[i] = b[a.index(min(a))]
+            l = b[a.index(min(a))][0]
+            j = b[a.index(min(a))][1]
         if len(path)==0:
             path=[end_y, end_x]
 
