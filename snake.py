@@ -49,6 +49,8 @@ class snake:
         self.direction = 'up'
         self.scene='game'
         self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
+        if self.second_snake==False:
+            self.robot_snake=False
   
         self.delete_rabbits()
 
@@ -331,18 +333,18 @@ class snake:
                     end_y=l
 
         # snake body
-        body=len(self.snake_body)//2+1
+        body=len(self.snake_body)//2
         for i in range(1, len(self.snake_body)+1):
-            if self.snake_body[i][0]>=self.y and body>(self.snake_body[i][0]-self.y): # down
+            if self.snake_body[i][1]>=self.y and body>(self.snake_body[i][1]-self.y): # down
                 num_matrix[self.snake_body[i][1]][self.snake_body[i][0]]=999
 
-            if self.snake_body[i][0]<=self.y and body>(self.y-self.snake_body[i][0]): # up
+            if self.snake_body[i][1]<=self.y and body>(self.y-self.snake_body[i][1]): # up
                 num_matrix[self.snake_body[i][1]][self.snake_body[i][0]]=999
 
-            if self.snake_body[i][1]>=self.x and body>(self.snake_body[i][1]-self.x): # right
+            if self.snake_body[i][0]>=self.x and body>(self.snake_body[i][0]-self.x): # right
                 num_matrix[self.snake_body[i][1]][self.snake_body[i][0]]=999
 
-            if self.snake_body[i][1]<=self.x and body>(self.x-self.snake_body[i][1]): # left
+            if self.snake_body[i][0]<=self.x and body>(self.x-self.snake_body[i][0]): # left
                 num_matrix[self.snake_body[i][1]][self.snake_body[i][0]]=999
 
 
@@ -405,43 +407,53 @@ class snake:
 
             num+=1
 
-
+        self.screen.clear()
         
         # numbered matrix, end x, end y >>>> path
         # path lenght = num
         path, j, l= {}, end_x, end_y
 
-        for i in range(num-3, 0, -1):
+
+        for i in range(num-2, 0, -1):
 
             a = [] # список значений из numbered matrix
             b = [] # список соответствующих им координат
+ 
 
-
-            if num_matrix[l - 1][j] != 0 and num_matrix[l - 1][j] < 999:
+            if num_matrix[l - 1][j] >1 and num_matrix[l - 1][j] < 999: # up
                 a.append(num_matrix[l - 1][j])
                 b.append([l - 1, j])
 
-            if num_matrix[l + 1][j] != 0 and num_matrix[l + 1][j] < 999:
+            if num_matrix[l + 1][j] >1 and num_matrix[l + 1][j] < 999: # down
                 a.append(num_matrix[l + 1][j])
                 b.append([l + 1, j])
 
-            if num_matrix[l][j - 1] != 0 and num_matrix[l][j - 1] < 999:
+            if num_matrix[l][j - 1] >1 and num_matrix[l][j - 1] < 999: # left
                 a.append(num_matrix[l][j - 1])
                 b.append([l, j - 1])
 
-            if num_matrix[l][j + 1] != 0 and num_matrix[l][j + 1] < 999:
+            if num_matrix[l][j + 1] >1 and num_matrix[l][j + 1] < 999: # right
                 a.append(num_matrix[l][j + 1])
                 b.append([l, j + 1])
 
+
+            self.screen.addstr(1, 1, '                                          '*2)
+            self.screen.addstr(1, 1, str(a)+'   aaa   ' +str(b))
             path[i] = b[a.index(min(a))]
             l = b[a.index(min(a))][0]
-            j = b[a.index(min(a))][1]
+            j = b[a.index(min(a))][1]  
         if len(path)==0:
             path[1]=[end_y, end_x]
 
+      
 
-        self.screen.clear()
 
+
+
+
+
+    
+        
         ## draw matrix
         for i in range(len(num_matrix)):
             for j in range(len(num_matrix[i])):
@@ -459,13 +471,20 @@ class snake:
             self.screen.move(5+path[i][0], 5+path[i][1]*2)
             self.screen.addstr('  ', curses.color_pair(2))
 
-        self.screen.addstr(1, 1, str(path))
+        self.screen.addstr(2, 1, str(path))
 
 
 
 
+        #txt robot snake path
+        f=open('robot_snake_path.txt', 'a')
+        f.write('\n'+str(datetime.datetime.now())+'\n'+'\n')
+        f.write('\n'+str(path)+'\n')
+        for i in num_matrix:
+            f.write(str(i)+'\n')
 
         return path
+
 
 
     ### auto snake
@@ -501,12 +520,6 @@ class snake:
                 self.move_body()
             if self.robot_snake==True:
                 self.auto_move_snake()
-
-            #txt robot snake path
-            f=open('robot_snake_path.txt', 'a')
-            f.write('\n'+str(datetime.datetime.now())+'\n'+'\n')
-            for i in self.matrix:
-                f.write(str(i)+'\n')
 
 
     ### get input
