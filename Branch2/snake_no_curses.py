@@ -1,4 +1,4 @@
-import curses
+
 import datetime
 import random
 
@@ -9,7 +9,6 @@ class snake:
     x = 15 # left, right
     y = 15 # up, down
 
-    screen = None
 
     scene = ''
     direction = '' 
@@ -25,7 +24,6 @@ class snake:
 
     ### initiation
     def __init__(self):
-        screen = None
 
         ## create matrix and a snake
         self.matrix = [[ 0 for i in range(30)] for _ in range(30)]
@@ -41,6 +39,7 @@ class snake:
         self.direction = 'up'
         self.scene='menu'
         self.timer = datetime.datetime.now()
+        self.rabbit()
 
     ### new game
     def initiation(self):
@@ -59,37 +58,8 @@ class snake:
     ### has screen changed
     def has_screen_changed(self):
 
-        current_dimensions = self.screen.getmaxyx()
+        pass
 
-        ## terminal too small
-        while self.screen.getmaxyx()[0]<len(self.matrix)+4 or self.screen.getmaxyx()[1]<len(self.matrix[0])*2+3:
-            current_dimensions = self.screen.getmaxyx()
-            
-            ## exit
-            key=self.screen.getch()
-            if key==ord('q'):
-                self.screen.clear()
-                exit(0)
-
-            ## screen has changed
-            if self.screen_dimensions != current_dimensions:
-                self.screen_dimensions = current_dimensions
-                self.screen.clear()
-
-            ## terminal too small
-            if self.screen.getmaxyx()[0]<len(self.matrix)+4 or self.screen.getmaxyx()[1]<len(self.matrix[0])*2+3:
-                self.screen.move(self.screen.getmaxyx()[0]//2, self.screen.getmaxyx()[1]//2-9)
-                self.screen.addstr('Terminal too small', curses.color_pair(16))
-            elif self.screen.getmaxyx()[0]<3 or self.screen.getmaxyx()[1]<20:
-                self.screen.move(self.screen.getmaxyx()[0]//2, self.screen.getmaxyx()[1]//2-3)
-                self.screen.addstr('Error', curses.color_pair(16))
-            else:
-                self.screen.addstr(0, 0, ' ')
-
-        ## screen has changed
-        if current_dimensions != self.screen_dimensions:
-            self.screen_dimensions = current_dimensions
-            self.screen.clear()
 
 
 
@@ -102,91 +72,7 @@ class snake:
 
     ### draw
     def draw(self):
-        ## corners
-        self.left_corner = (self.screen.getmaxyx()[1])//2 - len(self.matrix[0])-15 # ширина. (-36)
-        self.top_corner = (self.screen.getmaxyx()[0])//2 - len(self.matrix)//2 # высота. (-14)
-        self.has_screen_changed()
-
-
-
-        ## draw scenes
-        if self.second_snake==False:
-            ## draw scenes
-            if self.scene == 'menu':
-                self.draw_menu()
-            elif self.scene == 'game':
-                self.draw_game()
-            elif self.scene == 'game over':
-                self.draw_game_over()
-            elif self.scene == 'save record':
-                pass
-            elif self.scene == 'records':
-                pass
-        else:
-            if snake1.scene=="game":
-                self.draw_game()
-
-
-        self.screen.refresh()
-
-        ## 
-        # self.screen.addstr(0, 0, str(self.screen.getmaxyx()[0]) + ' height')
-        # self.screen.addstr(1, 0, str(self.screen.getmaxyx()[1]) + ' width')
-        # self.screen.addstr(0, 17, str(self.y) + ' y')
-        # self.screen.addstr(1, 17, str(self.x) + ' x')
-        # self.screen.addstr(0, 25, self.direction)
-        # self.screen.addstr(1, 25, str(self.snake_body))
-
-    ### draw menu
-    def draw_menu(self):
-        for i in range(4):
-            if self.menu_item==i and self.menu_item!=0:
-                self.screen.addstr((self.screen.getmaxyx()[0] - 7+i*4) // 2, (self.screen.getmaxyx()[1]-14) // 2, self.menu_lst[i], curses.color_pair(6))
-            else:
-                self.screen.addstr((self.screen.getmaxyx()[0] - 7+i*4) // 2, (self.screen.getmaxyx()[1]-14) // 2, self.menu_lst[i])
-
-    ### draw game
-    def draw_game(self):
-        if self.second_snake==False:
-            ## draw matrix
-            for i in range(len(self.matrix)):
-                for j in range(len(self.matrix[i])):
-                    self.screen.move(self.top_corner+i, self.left_corner+j*2)
-                    if self.matrix[i][j]==0:
-                        self.screen.addstr('  ', curses.color_pair(10))
-                    elif self.matrix[i][j]==1:
-                        self.screen.addstr('  ', curses.color_pair(1))
-                    elif self.matrix[i][j]==2:
-                        self.screen.addstr('  ', curses.color_pair(4))
-            ## lenght
-            self.screen.addstr(self.top_corner+2, self.left_corner+len(self.matrix)*2+9, ' Lenght ', curses.color_pair(17))
-            self.screen.addstr(self.top_corner+4, self.left_corner+len(self.matrix)*2+12, str(len(self.snake_body)))
-            ## auto snake
-            if self.robot_snake==True:
-                self.screen.addstr(self.top_corner+7, self.left_corner+len(self.matrix)*2+7, ' Auto snake ', curses.color_pair(16))
-
-        ## draw snake
-        for i in range(2, len(self.snake_body)+1):
-            self.screen.move(self.top_corner+self.snake_body[i][1], self.left_corner+self.snake_body[i][0]*2)
-            self.screen.addstr('  ', curses.color_pair(2))
-
-        ## draw snake head
-        for i in range(len(self.snake_head)):
-            for j in range(len(self.snake_head[i])):
-                self.screen.move(self.top_corner+self.y, self.left_corner+self.x*2)
-                self.screen.addstr('  ', curses.color_pair(3))
-
-
-    ### game over
-    def draw_game_over(self):
-        box1 = curses.newwin(6, 21, self.top_corner+10, self.left_corner+17)
-        box1.box()
-        box1.bkgd(' ', curses.color_pair(16))    
-
-        box1.addstr(1, 6, 'Game over', curses.color_pair(16))
-        box1.addstr(3, 1, 'Type "y" to restart')
-        box1.addstr(4, 3, 'or "n" to quit')
-        box1.refresh()
+        pass
 
 
 
@@ -281,7 +167,7 @@ class snake:
             for i in range(1, len(self.snake_body)+1):
                 if self.snake_body[i]==[x, y]:
                     self.rabbit()
-            self.matrix[y][x]=2
+            self.matrix[5][15]=2
             if self.second_snake==True:
                 self.delete_rabbits()
                 self.matrix[y][x]=2
@@ -292,25 +178,7 @@ class snake:
 
  ### pause
     def pause(self):
-        self.screen.nodelay(False)
-
-        key=0
-        while key!=ord('p'):
-            box = curses.newwin(3, 10, self.screen.getmaxyx()[0]//2, self.screen.getmaxyx()[1]//2)
-            box.box()
-            box.bkgd(' ', curses.color_pair(16))    
-            box.addstr(1, 2, 'Paused', curses.color_pair(16))
-            box.refresh()
-
-            key=self.screen.getch()
-
-            self.draw()
-
-        box.bkgd(' ', curses.color_pair(0))
-        box.clear()
-        box.refresh()
-
-        self.screen.nodelay(True)
+        pass
 
 
 # find path
@@ -334,18 +202,18 @@ class snake:
 
         # snake body
         body=len(self.snake_body)//2
-        flag=False
         for i in range(1, len(self.snake_body)+1):
-
-            if body>(self.snake_body[i][1]-self.y) or body>(self.y-self.snake_body[i][1]): # up, down
+            if self.snake_body[i][1]>=self.y and body>(self.snake_body[i][1]-self.y): # down
                 num_matrix[self.snake_body[i][1]][self.snake_body[i][0]]=999
 
-            if body>(self.snake_body[i][0]-self.x) or body>(self.x-self.snake_body[i][0]): # left, right
+            if self.snake_body[i][1]<=self.y and body>(self.y-self.snake_body[i][1]): # up
                 num_matrix[self.snake_body[i][1]][self.snake_body[i][0]]=999
 
+            if self.snake_body[i][0]>=self.x and body>(self.snake_body[i][0]-self.x): # right
+                num_matrix[self.snake_body[i][1]][self.snake_body[i][0]]=999
 
-
-
+            if self.snake_body[i][0]<=self.x and body>(self.x-self.snake_body[i][0]): # left
+                num_matrix[self.snake_body[i][1]][self.snake_body[i][0]]=999
 
 
         # snake head
@@ -407,7 +275,6 @@ class snake:
 
             num+=1
 
-        self.screen.clear()
         
         # numbered matrix, end x, end y >>>> path
         # path lenght = num
@@ -437,57 +304,23 @@ class snake:
                 a.append(num_matrix[l][j + 1])
                 b.append([l, j + 1])
 
+            ###
             if num_matrix[l][j]>1 and num_matrix[l][j]<999:
                 a.append(num_matrix[l][j])
                 b.append([l, j])
 
 
-            self.screen.addstr(1, 1, '                                          '*2)
-            self.screen.addstr(1, 1, str(a)+'   aaa   ' +str(b))
             path[i] = b[a.index(min(a))]
             l = b[a.index(min(a))][0]
             j = b[a.index(min(a))][1]  
         if len(path)==0:
             path[1]=[end_y, end_x]
 
-      
-
-
-
-
-
-
-    
-        
-        ## draw matrix
-        for i in range(len(num_matrix)):
-            for j in range(len(num_matrix[i])):
-                self.screen.move(5 + i, 5 + j * 2)
-                # if num_matrix[i][j] == 0:
-                #     self.screen.addstr(' 0')
-                if num_matrix[i][j] == 999:
-                    self.screen.addstr('99')
-                elif num_matrix[i][j] == 998:
-                    self.screen.addstr('98')
-                else:
-                    self.screen.addstr(str(num_matrix[i][j])+' ')
-        # draw path
-        for i in range(1, len(path)+1):
-            self.screen.move(5+path[i][0], 5+path[i][1]*2)
-            self.screen.addstr('  ', curses.color_pair(2))
-
-        self.screen.addstr(2, 1, str(body))
-        self.screen.addstr(4, 1, str(self.snake_body))
-        self.screen.addstr(3, 1, str(self.x)+' x  ' +str(self.y)+' y')
-
-
-
 
         #txt robot snake path
         f=open('robot_snake_path.txt', 'a')
         f.write('\n'+str(datetime.datetime.now())+'\n'+'\n')
         f.write('\n'+str(path)+'\n')
-        f.write('\n'+str(len(self.snake_body))+'\n')
         for i in num_matrix:
             f.write(str(i)+'\n')
 
@@ -532,92 +365,16 @@ class snake:
 
     ### get input
     def getinput(self):
-        key = self.screen.getch()
-        
-        if self.scene == 'game':
-
-            if self.robot_snake==True:
-                if key==ord('a'):
-                    self.screen.clear()
-                    self.robot_snake=False
-            else:
-                if key==curses.KEY_LEFT:
-                    self.rotate_snake('left')
-                elif key==curses.KEY_RIGHT:
-                    self.rotate_snake('right')
-                elif key==curses.KEY_DOWN:
-                    self.rotate_snake('down')
-                elif key==curses.KEY_UP:
-                    self.rotate_snake('up')
-
-                if key==ord('a'):
-                    self.screen.clear()
-                    self.robot_snake=True
-
-            if key==ord('p'):
-                self.pause()
-                
-            elif key==ord('q'):
-                self.screen.clear()
-                self.scene='menu'
-
-
-        elif self.scene == 'menu':
-
-            if key==ord('q'):
-                pass
-            elif key==curses.KEY_UP:
-                self.menu_item-=1
-                if self.menu_item==0:
-                    self.menu_item=3
-            elif key==curses.KEY_DOWN:
-                self.menu_item+=1
-                if self.menu_item==4:
-                    self.menu_item=1
-            elif key == curses.KEY_ENTER or key == 10 or key == 13:
-                if self.menu_item==3:       # exit
-                    sys.exit(0)
-                elif self.menu_item==1:     # start
-                    self.screen.clear()
-                    self.initiation()
-                    self.scene='game' 
-                    self.rabbit()
-                else:                        # top results
-                    self.screen.clear()
-                    self.scene='records'
-
-        elif self.scene == 'game over':
-            if key==ord('y'):
-                self.screen.clear()
-                self.screen.refresh()
-                self.__init__()
-            elif key==ord('n') or key==ord('q'):
-                self.screen.clear()
-                self.screen.refresh()
-                
-                sys.exit(0)
+        self.scene='game'
+        self.robot_snake=True
 
 
 
 
 
 
-def run_game(screen):
-    curses.curs_set(0)
-    curses.start_color()
-    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_WHITE) # borders
-    curses.init_pair(10, curses.COLOR_BLACK, curses.COLOR_BLACK) # black
-    curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_GREEN) # snake
-    curses.init_pair(3, 0, 10) # head 
-    curses.init_pair(6, curses.COLOR_BLACK, curses.COLOR_WHITE) # menu 
-    curses.init_pair(16, 15, 9) # game over
-    curses.init_pair(17, curses.COLOR_WHITE, curses.COLOR_GREEN) # lenght
-    curses.init_pair(4, 0, 12*15) # rabbits
 
-    snake1.screen=screen
-    snake1.screen_dimensions=snake1.screen.getmaxyx()
-
-    screen.nodelay(True)
+def run_game():
     while True:
         snake1.getinput()
         snake1.draw()
@@ -627,11 +384,6 @@ def run_game(screen):
 
 snake1 = snake()
 
-# snake2 = snake()
-# snake2.second_snake=True
-# snake2.robot_snake=True
-# snake2.x=18
-
 
 #txt robot snake2 path
 f = open('robot_snake_path.txt', 'w')
@@ -639,7 +391,7 @@ f.write(' ')
 f.close()
 
 
-curses.wrapper(run_game)
+run_game()
 
 
 
