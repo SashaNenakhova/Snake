@@ -304,6 +304,11 @@ class snake:
                 a.append(num_matrix[l][j + 1])
                 b.append([l, j + 1])
 
+            ###
+            if num_matrix[l][j]>1 and num_matrix[l][j]<999:
+                a.append(num_matrix[l][j])
+                b.append([l, j])
+
 
             path[i] = b[a.index(min(a))]
             l = b[a.index(min(a))][0]
