@@ -30,7 +30,7 @@ class snake:
         ## create matrix and a snake
         self.matrix = [[ 0 for i in range(30)] for _ in range(30)]
         self.snake_head = [[0]]
-        self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
+        self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 15)}
 
         ## add borders
         for i in range(len(self.matrix)):
@@ -48,7 +48,7 @@ class snake:
         self.y = 15
         self.direction = 'up'
         self.scene='game'
-        self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
+        self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 15)}
         if self.second_snake==False:
             self.robot_snake=False
   
@@ -333,14 +333,16 @@ class snake:
                     end_y=l
 
         # snake body
-        body=len(self.snake_body)//2
-        flag=False
+        body=0
+        a1, a2, b1, b2=0, 0, 0, 0
         for i in range(1, len(self.snake_body)+1):
-
-            if body>(self.snake_body[i][1]-self.y) or body>(self.y-self.snake_body[i][1]): # up, down
-                num_matrix[self.snake_body[i][1]][self.snake_body[i][0]]=999
-
-            if body>(self.snake_body[i][0]-self.x) or body>(self.x-self.snake_body[i][0]): # left, right
+            body=len(self.snake_body)-i
+            a1=self.snake_body[i][1]-self.y
+            a2=self.y-self.snake_body[i][1] 
+            b1=self.snake_body[i][0]-self.x 
+            b2=self.x-self.snake_body[i][0] 
+    
+            if body>a1 and body>a2 and body>b1 and body>b2:
                 num_matrix[self.snake_body[i][1]][self.snake_body[i][0]]=999
 
 
@@ -407,7 +409,7 @@ class snake:
 
             num+=1
 
-        self.screen.clear()
+        # self.screen.clear()
         
         # numbered matrix, end x, end y >>>> path
         # path lenght = num
@@ -476,9 +478,9 @@ class snake:
             self.screen.move(5+path[i][0], 5+path[i][1]*2)
             self.screen.addstr('  ', curses.color_pair(2))
 
-        self.screen.addstr(2, 1, str(body))
-        self.screen.addstr(4, 1, str(self.snake_body))
-        self.screen.addstr(3, 1, str(self.x)+' x  ' +str(self.y)+' y')
+        self.screen.addstr(2, 1, str(body)+'  ')
+        self.screen.addstr(4, 1, str(self.snake_body)+'                  ')
+        self.screen.addstr(3, 1, str(self.x)+' x  ' +str(self.y)+' y                 ')
 
 
 
