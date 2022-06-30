@@ -353,6 +353,7 @@ class snake:
 
         pathfound=False
         num=0
+        
 
 
 
