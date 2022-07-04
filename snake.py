@@ -29,8 +29,18 @@ class snake:
 
         ## create matrix and a snake
         self.matrix = [[ 0 for i in range(30)] for _ in range(30)]
+
+        #########################
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix[i])):
+                if i==7 and j<14:
+                    self.matrix[i][j]=1
+
+
+
+
         self.snake_head = [[0]]
-        self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 15)}
+        self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 16)}
 
         ## add borders
         for i in range(len(self.matrix)):
@@ -277,11 +287,14 @@ class snake:
     def rabbit(self):
         if self.second_snake==False:
             self.delete_rabbits()
+
             y, x=random.randint(1, 28), random.randint(1, 28)
             for i in range(1, len(self.snake_body)+1):
-                if self.snake_body[i]==[x, y]:
+                if self.snake_body[i]==[x, y] or self.matrix[y][x]==1:
+                    self.delete_rabbits()
                     self.rabbit()
             self.matrix[y][x]=2
+
             if self.second_snake==True:
                 self.delete_rabbits()
                 self.matrix[y][x]=2
@@ -320,9 +333,9 @@ class snake:
 
         # borders
         for l in range(len(matrix)):
-                for j in range(len(matrix[l])):
-                    if l==0 or l==len(matrix)-1 or j==0 or j==len(matrix[l])-1:
-                        num_matrix[l][j]=999
+            for j in range(len(matrix[l])):
+                if matrix[l][j]==1:
+                    num_matrix[l][j]=999
 
         # rabbit
         for l in range(len(matrix)):
@@ -336,13 +349,26 @@ class snake:
         body=0
         a1, a2, b1, b2=0, 0, 0, 0
         for i in range(1, len(self.snake_body)+1):
-            body=len(self.snake_body)-i
-            a1=self.snake_body[i][1]-self.y
-            a2=self.y-self.snake_body[i][1] 
-            b1=self.snake_body[i][0]-self.x 
-            b2=self.x-self.snake_body[i][0] 
+            # body=len(self.snake_body)-i
+            # a1=self.snake_body[i][1]-self.y
+            # a2=self.y-self.snake_body[i][1] 
+            # b1=self.snake_body[i][0]-self.x 
+            # b2=self.x-self.snake_body[i][0] 
     
-            if body>a1 and body>a2 and body>b1 and body>b2:
+            # if body>a1 and body>a2 and body>b1 and body>b2:
+            #     num_matrix[self.snake_body[i][1]][self.snake_body[i][0]]=999
+            if self.snake_body[i][1]>self.y: # расстояние y
+                a1=self.snake_body[i][1]-self.y 
+            else:
+                a1=self.y-self.snake_body[i][1] 
+            if self.snake_body[i][0]>self.x: # расстояние x
+                b1=self.snake_body[i][0]-self.x 
+            else:
+                b1=self.x-self.snake_body[i][0] 
+
+            body=len(self.snake_body)+1-i # через сколько шагов хвост пропадет
+
+            if body>=a1 and body>=b1:
                 num_matrix[self.snake_body[i][1]][self.snake_body[i][0]]=999
 
 
@@ -354,6 +380,7 @@ class snake:
         num_matrix[self.y][self.x]=1
 
         pathfound=False
+        pathnotfound=False
         num=0
 
 
@@ -408,9 +435,26 @@ class snake:
                             num_matrix[l][j]=value+1
 
             num+=1
+            if num>100:
+                pathnotfound=True
+                pathfound=True
 
-        # self.screen.clear()
-        
+
+
+
+        # на пути хвост
+        if pathnotfound==True:
+            # поиск пути к наибольшему значению (самой дальней клетке)
+            max_num=0
+            for i in range(len(num_matrix)):
+                for j in range(len(num_matrix[i])):
+                    if num_matrix[i][j]>max_num:
+                        max_num=num_matrix[i][j]
+                        end_y=i
+                        end_x=j
+
+
+
         # numbered matrix, end x, end y >>>> path
         # path lenght = num
         path, j, l= {}, end_x, end_y
