@@ -30,18 +30,9 @@ class snake:
         ## create matrix and a snake
         self.matrix = [[ 0 for i in range(30)] for _ in range(30)]
 
-        #########################
-        for i in range(len(self.matrix)):
-            for j in range(len(self.matrix[i])):
-                if i==7 and j<14:
-                    self.matrix[i][j]=1
-
-
-
-
         self.snake_head = [[0]]
         if self.second_snake==True:
-            self.x=18
+            self.x=20
         self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
 
         ## add borders
@@ -57,7 +48,7 @@ class snake:
     ### new game
     def initiation(self):
         if self.second_snake==True:
-            self.x=18
+            self.x=20
         else:
             self.x = 15
         self.y = 15
@@ -126,7 +117,10 @@ class snake:
 
 
         ## draw scenes
-        if self.second_snake==False:
+        if self.second_snake==True:
+            if snake1.scene=="game":
+                self.draw_game()
+        else:
             ## draw scenes
             if self.scene == 'menu':
                 self.draw_menu()
@@ -138,12 +132,10 @@ class snake:
                 pass
             elif self.scene == 'records':
                 pass
-        else:
-            if snake1.scene=="game":
-                self.draw_game()
-
-
         self.screen.refresh()
+        
+
+        
 
     ### draw menu
     def draw_menu(self):
@@ -248,15 +240,24 @@ class snake:
     def move_body(self):
         if self.matrix[self.y][self.x]==2:
             self.snake_body[len(self.snake_body)+1]=self.snake_body[len(self.snake_body)]
-            self.rabbit()
+            snake1.rabbit()
         for i in range(len(self.snake_body), 1, -1):
             self.snake_body[i]=self.snake_body[i-1] 
 
         for i in range(2, len(self.snake_body)+1):
             if self.snake_body[i]==[self.x, self.y]: 
                 self.scene='game over'
-        self.snake_body[1]=[self.x, self.y]
+            self.snake_body[1]=[self.x, self.y]
 
+
+        if self.second_snake==False:
+            for i in range(2, len(snake2.snake_body)+1):
+                if snake2.snake_body[i]==[self.x, self.y]: 
+                    self.scene='game over'
+        else:
+            for i in range(2, len(snake1.snake_body)+1):
+                if snake1.snake_body[i]==[self.x, self.y]: 
+                    snake2.initiation()
     ### can move if 0 or rabbit//cant move back
     def __can_move(self, new_x, new_y): 
         if self.matrix[new_y][new_x]==0 or self.matrix[new_y][new_x]==2:
@@ -294,6 +295,10 @@ class snake:
 
             for i in range(1, len(self.snake_body)+1):
                 if self.snake_body[i]==[x, y]:
+                    self.delete_rabbits()
+                    self.rabbit()
+            for i in range(1, len(snake2.snake_body)+1):
+                if snake2.snake_body[i]==[x, y]:
                     self.delete_rabbits()
                     self.rabbit()
         
@@ -354,7 +359,7 @@ class snake:
 
         # snake body
         body=0
-        a1, a2, b1, b2=0, 0, 0, 0
+        a1, b1=0, 0
         for i in range(1, len(self.snake_body)+1):
             if self.snake_body[i][1]>self.y: # расстояние y
                 a1=self.snake_body[i][1]-self.y 
@@ -369,6 +374,32 @@ class snake:
 
             if body>=a1 and body>=b1:
                 num_matrix[self.snake_body[i][1]][self.snake_body[i][0]]=999
+
+
+        # other snake body
+        other_snake=0
+        if self.second_snake==False:
+            other_snake=snake2.snake_body
+        else:
+            other_snake=snake1.snake_body
+
+        for i in range(1, len(other_snake)+1):
+            if other_snake[i][1]>self.y: # расстояние y
+                a1=other_snake[i][1]-self.y 
+            else:
+                a1=self.y-other_snake[i][1] 
+            if other_snake[i][0]>self.x: # расстояние x
+                b1=other_snake[i][0]-self.x 
+            else:
+                b1=self.x-other_snake[i][0] 
+
+            body=len(other_snake)+1-i # через сколько шагов хвост пропадет
+
+            if body>=a1 and body>=b1:
+                num_matrix[other_snake[i][1]][other_snake[i][0]]=999
+
+
+
 
 
 
@@ -500,23 +531,23 @@ class snake:
 
 
     
-        
-        ## draw matrix
-        for i in range(len(num_matrix)):
-            for j in range(len(num_matrix[i])):
-                self.screen.move(5 + i, 5 + j * 2)
-                # if num_matrix[i][j] == 0:
-                #     self.screen.addstr(' 0')
-                if num_matrix[i][j] == 999:
-                    self.screen.addstr('99')
-                elif num_matrix[i][j] == 998:
-                    self.screen.addstr('98')
-                else:
-                    self.screen.addstr(str(num_matrix[i][j])+' ')
-        # draw path
-        for i in range(1, len(path)+1):
-            self.screen.move(5+path[i][0], 5+path[i][1]*2)
-            self.screen.addstr('  ', curses.color_pair(2))
+        # if self.second_snake==True:
+        #     ## draw matrix
+        #     for i in range(len(num_matrix)):
+        #         for j in range(len(num_matrix[i])):
+        #             self.screen.move(5 + i, 5 + j * 2)
+        #             # if num_matrix[i][j] == 0:
+        #             #     self.screen.addstr(' 0')
+        #             if num_matrix[i][j] == 999:
+        #                 self.screen.addstr('99')
+        #             elif num_matrix[i][j] == 998:
+        #                 self.screen.addstr('98')
+        #             else:
+        #                 self.screen.addstr(str(num_matrix[i][j])+' ')
+        #     # draw path
+        #     for i in range(1, len(path)+1):
+        #         self.screen.move(5+path[i][0], 5+path[i][1]*2)
+        #         self.screen.addstr('  ', curses.color_pair(2))
 
 
 
@@ -631,6 +662,7 @@ class snake:
                     self.screen.clear()
                     self.screen.refresh()
                     self.__init__()
+                    snake2.initiation()
                 elif key==ord('n') or key==ord('q'):
                     self.screen.clear()
                     self.screen.refresh()
@@ -661,12 +693,13 @@ def run_game(screen):
     snake1.screen_dimensions=snake1.screen.getmaxyx()
 
     snake2.screen=screen
+    snake2.initiation()
     snake2.screen_dimensions=snake2.screen.getmaxyx()
 
     screen.nodelay(True)
     while True:
         snake2.matrix=snake1.matrix
-        
+
         snake1.getinput()
         snake1.draw()
         snake1.tick()
@@ -682,7 +715,7 @@ snake1 = snake()
 snake2 = snake()
 snake2.second_snake=True
 snake2.robot_snake=True
-
+snake2.x=20
 
 #txt robot snake2 path
 f = open('robot_snake_path.txt', 'w')
