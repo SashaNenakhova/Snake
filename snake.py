@@ -132,7 +132,6 @@ class snake:
                 pass
             elif self.scene == 'records':
                 pass
-        self.screen.refresh()
         
 
         
@@ -707,6 +706,9 @@ def run_game(screen):
         snake2.getinput()
         snake2.draw()
         snake2.tick()
+
+        snake1.screen.refresh()
+        snake2.screen.refresh()
         
 
 
