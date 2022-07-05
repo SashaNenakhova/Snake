@@ -140,14 +140,6 @@ class snake:
 
         self.screen.refresh()
 
-        ## 
-        # self.screen.addstr(0, 0, str(self.screen.getmaxyx()[0]) + ' height')
-        # self.screen.addstr(1, 0, str(self.screen.getmaxyx()[1]) + ' width')
-        # self.screen.addstr(0, 17, str(self.y) + ' y')
-        # self.screen.addstr(1, 17, str(self.x) + ' x')
-        # self.screen.addstr(0, 25, self.direction)
-        # self.screen.addstr(1, 25, str(self.snake_body))
-
     ### draw menu
     def draw_menu(self):
         for i in range(4):
@@ -290,21 +282,20 @@ class snake:
             self.delete_rabbits()
 
             y, x=random.randint(1, 28), random.randint(1, 28)
-            self.matrix[y][x]=2
+            if self.matrix[y][x]==1:
+                self.rabbit()
+            else:
+                self.matrix[y][x]=2
+                
             for i in range(1, len(self.snake_body)+1):
                 if self.snake_body[i]==[x, y]:
                     self.delete_rabbits()
                     self.rabbit()
-
-            for i in range(len(self.matrix)):
-                if self.matrix[y][x]==1:
-                    self.delete_rabbits()
-                    self.rabbit()
         
 
-            if self.second_snake==True:
-                self.delete_rabbits()
-                self.matrix[y][x]=2
+        if self.second_snake==True:
+            self.delete_rabbits()
+            self.matrix[y][x]=2
 
 
 
@@ -356,14 +347,6 @@ class snake:
         body=0
         a1, a2, b1, b2=0, 0, 0, 0
         for i in range(1, len(self.snake_body)+1):
-            # body=len(self.snake_body)-i
-            # a1=self.snake_body[i][1]-self.y
-            # a2=self.y-self.snake_body[i][1] 
-            # b1=self.snake_body[i][0]-self.x 
-            # b2=self.x-self.snake_body[i][0] 
-    
-            # if body>a1 and body>a2 and body>b1 and body>b2:
-            #     num_matrix[self.snake_body[i][1]][self.snake_body[i][0]]=999
             if self.snake_body[i][1]>self.y: # расстояние y
                 a1=self.snake_body[i][1]-self.y 
             else:
