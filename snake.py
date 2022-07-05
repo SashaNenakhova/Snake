@@ -58,7 +58,8 @@ class snake:
         self.y = 15
         self.direction = 'up'
         self.scene='game'
-        self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 15)}
+        self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 16)}
+
         if self.second_snake==False:
             self.robot_snake=False
   
@@ -289,11 +290,17 @@ class snake:
             self.delete_rabbits()
 
             y, x=random.randint(1, 28), random.randint(1, 28)
+            self.matrix[y][x]=2
             for i in range(1, len(self.snake_body)+1):
-                if self.snake_body[i]==[x, y] or self.matrix[y][x]==1:
+                if self.snake_body[i]==[x, y]:
                     self.delete_rabbits()
                     self.rabbit()
-            self.matrix[y][x]=2
+
+            for i in range(len(self.matrix)):
+                if self.matrix[y][x]==1:
+                    self.delete_rabbits()
+                    self.rabbit()
+        
 
             if self.second_snake==True:
                 self.delete_rabbits()
@@ -448,7 +455,7 @@ class snake:
             max_num=0
             for i in range(len(num_matrix)):
                 for j in range(len(num_matrix[i])):
-                    if num_matrix[i][j]>max_num:
+                    if num_matrix[i][j]>max_num and num_matrix[i][j]<998:
                         max_num=num_matrix[i][j]
                         end_y=i
                         end_x=j
@@ -487,9 +494,6 @@ class snake:
                 a.append(num_matrix[l][j])
                 b.append([l, j])
 
-
-            self.screen.addstr(1, 1, '                                          '*2)
-            self.screen.addstr(1, 1, str(a)+'   aaa   ' +str(b))
             path[i] = b[a.index(min(a))]
             l = b[a.index(min(a))][0]
             j = b[a.index(min(a))][1]  
@@ -521,10 +525,6 @@ class snake:
         for i in range(1, len(path)+1):
             self.screen.move(5+path[i][0], 5+path[i][1]*2)
             self.screen.addstr('  ', curses.color_pair(2))
-
-        self.screen.addstr(2, 1, str(body)+'  ')
-        self.screen.addstr(4, 1, str(self.snake_body)+'                  ')
-        self.screen.addstr(3, 1, str(self.x)+' x  ' +str(self.y)+' y                 ')
 
 
 
