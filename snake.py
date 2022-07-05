@@ -40,7 +40,9 @@ class snake:
 
 
         self.snake_head = [[0]]
-        self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 16)}
+        if self.second_snake==True:
+            self.x=18
+        self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
 
         ## add borders
         for i in range(len(self.matrix)):
@@ -54,11 +56,14 @@ class snake:
 
     ### new game
     def initiation(self):
-        self.x = 15
+        if self.second_snake==True:
+            self.x=18
+        else:
+            self.x = 15
         self.y = 15
         self.direction = 'up'
         self.scene='game'
-        self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 16)}
+        self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
 
         if self.second_snake==False:
             self.robot_snake=False
@@ -168,11 +173,11 @@ class snake:
             if self.robot_snake==True:
                 self.screen.addstr(self.top_corner+7, self.left_corner+len(self.matrix)*2+7, ' Auto snake ', curses.color_pair(16))
 
+
         ## draw snake
         for i in range(2, len(self.snake_body)+1):
             self.screen.move(self.top_corner+self.snake_body[i][1], self.left_corner+self.snake_body[i][0]*2)
             self.screen.addstr('  ', curses.color_pair(2))
-
         ## draw snake head
         for i in range(len(self.snake_head)):
             for j in range(len(self.snake_head[i])):
@@ -286,7 +291,7 @@ class snake:
                 self.rabbit()
             else:
                 self.matrix[y][x]=2
-                
+
             for i in range(1, len(self.snake_body)+1):
                 if self.snake_body[i]==[x, y]:
                     self.delete_rabbits()
@@ -295,7 +300,11 @@ class snake:
 
         if self.second_snake==True:
             self.delete_rabbits()
-            self.matrix[y][x]=2
+
+            for i in range(len(snake1.matrix)):
+                for j in range(len(snake1.matrix[i])):
+                    if snake1.matrix[i][j]==2:
+                        self.matrix[y][x]=2
 
 
 
@@ -559,72 +568,77 @@ class snake:
                 self.auto_move_snake()
 
 
+
     ### get input
     def getinput(self):
-        key = self.screen.getch()
-        
-        if self.scene == 'game':
+        if self.second_snake==False:
+            key = self.screen.getch()
+            
+            if self.scene == 'game':
 
-            if self.robot_snake==True:
-                if key==ord('a'):
+                if self.robot_snake==True:
+                    if key==ord('a'):
+                        self.screen.clear()
+                        self.robot_snake=False
+                else:
+                    if key==curses.KEY_LEFT:
+                        self.rotate_snake('left')
+                    elif key==curses.KEY_RIGHT:
+                        self.rotate_snake('right')
+                    elif key==curses.KEY_DOWN:
+                        self.rotate_snake('down')
+                    elif key==curses.KEY_UP:
+                        self.rotate_snake('up')
+
+                    if key==ord('a'):
+                        self.screen.clear()
+                        self.robot_snake=True
+
+                if key==ord('p'):
+                    self.pause()
+                    
+                elif key==ord('q'):
                     self.screen.clear()
-                    self.robot_snake=False
-            else:
-                if key==curses.KEY_LEFT:
-                    self.rotate_snake('left')
-                elif key==curses.KEY_RIGHT:
-                    self.rotate_snake('right')
-                elif key==curses.KEY_DOWN:
-                    self.rotate_snake('down')
+                    self.scene='menu'
+
+
+            elif self.scene == 'menu':
+
+                if key==ord('q'):
+                    pass
                 elif key==curses.KEY_UP:
-                    self.rotate_snake('up')
+                    self.menu_item-=1
+                    if self.menu_item==0:
+                        self.menu_item=3
+                elif key==curses.KEY_DOWN:
+                    self.menu_item+=1
+                    if self.menu_item==4:
+                        self.menu_item=1
+                elif key == curses.KEY_ENTER or key == 10 or key == 13:
+                    if self.menu_item==3:       # exit
+                        sys.exit(0)
+                    elif self.menu_item==1:     # start
+                        self.screen.clear()
+                        self.initiation()
+                        self.scene='game' 
+                        self.rabbit()
+                    else:                        # top results
+                        self.screen.clear()
+                        self.scene='records'
 
-                if key==ord('a'):
+            elif self.scene == 'game over':
+                if key==ord('y'):
                     self.screen.clear()
-                    self.robot_snake=True
-
-            if key==ord('p'):
-                self.pause()
-                
-            elif key==ord('q'):
-                self.screen.clear()
-                self.scene='menu'
-
-
-        elif self.scene == 'menu':
-
-            if key==ord('q'):
-                pass
-            elif key==curses.KEY_UP:
-                self.menu_item-=1
-                if self.menu_item==0:
-                    self.menu_item=3
-            elif key==curses.KEY_DOWN:
-                self.menu_item+=1
-                if self.menu_item==4:
-                    self.menu_item=1
-            elif key == curses.KEY_ENTER or key == 10 or key == 13:
-                if self.menu_item==3:       # exit
+                    self.screen.refresh()
+                    self.__init__()
+                elif key==ord('n') or key==ord('q'):
+                    self.screen.clear()
+                    self.screen.refresh()
+                    
                     sys.exit(0)
-                elif self.menu_item==1:     # start
-                    self.screen.clear()
-                    self.initiation()
-                    self.scene='game' 
-                    self.rabbit()
-                else:                        # top results
-                    self.screen.clear()
-                    self.scene='records'
 
-        elif self.scene == 'game over':
-            if key==ord('y'):
-                self.screen.clear()
-                self.screen.refresh()
-                self.__init__()
-            elif key==ord('n') or key==ord('q'):
-                self.screen.clear()
-                self.screen.refresh()
-                
-                sys.exit(0)
+            snake2.scene=snake1.scene
+
 
 
 
@@ -646,20 +660,28 @@ def run_game(screen):
     snake1.screen=screen
     snake1.screen_dimensions=snake1.screen.getmaxyx()
 
+    snake2.screen=screen
+    snake2.screen_dimensions=snake2.screen.getmaxyx()
+
     screen.nodelay(True)
     while True:
+        snake2.matrix=snake1.matrix
+        
         snake1.getinput()
         snake1.draw()
         snake1.tick()
+
+        snake2.getinput()
+        snake2.draw()
+        snake2.tick()
         
 
 
 snake1 = snake()
 
-# snake2 = snake()
-# snake2.second_snake=True
-# snake2.robot_snake=True
-# snake2.x=18
+snake2 = snake()
+snake2.second_snake=True
+snake2.robot_snake=True
 
 
 #txt robot snake2 path
