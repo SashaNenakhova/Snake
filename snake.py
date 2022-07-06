@@ -22,6 +22,7 @@ class snake:
 
     robot_snake=False
     second_snake=False
+    deadcount=0
 
     ### initiation
     def __init__(self):
@@ -29,6 +30,10 @@ class snake:
 
         ## create matrix and a snake
         self.matrix = [[ 0 for i in range(30)] for _ in range(30)]
+
+        ###
+        self.matrix[1][2]=1
+
 
         self.snake_head = [[0]]
         if self.second_snake==True:
@@ -118,7 +123,7 @@ class snake:
 
         ## draw scenes
         if self.second_snake==True:
-            if snake1.scene=="game":
+            if self.scene=="game":
                 self.draw_game()
         else:
             ## draw scenes
@@ -163,17 +168,27 @@ class snake:
             ## auto snake
             if self.robot_snake==True:
                 self.screen.addstr(self.top_corner+7, self.left_corner+len(self.matrix)*2+7, ' Auto snake ', curses.color_pair(16))
+            ## draw first snake
+            for i in range(2, len(self.snake_body)+1):
+                self.screen.move(self.top_corner+self.snake_body[i][1], self.left_corner+self.snake_body[i][0]*2)
+                self.screen.addstr('  ', curses.color_pair(2))
+            ## draw first snake head
+            for i in range(len(self.snake_head)):
+                for j in range(len(self.snake_head[i])):
+                    self.screen.move(self.top_corner+self.y, self.left_corner+self.x*2)
+                    self.screen.addstr('  ', curses.color_pair(3))
 
+        else:
+            ## draw second snake
+            for i in range(2, len(self.snake_body)+1):
+                self.screen.move(self.top_corner+self.snake_body[i][1], self.left_corner+self.snake_body[i][0]*2)
+                self.screen.addstr('  ', curses.color_pair(22))
+            ## draw second snake head
+            for i in range(len(self.snake_head)):
+                for j in range(len(self.snake_head[i])):
+                    self.screen.move(self.top_corner+self.y, self.left_corner+self.x*2)
+                    self.screen.addstr('  ', curses.color_pair(33))
 
-        ## draw snake
-        for i in range(2, len(self.snake_body)+1):
-            self.screen.move(self.top_corner+self.snake_body[i][1], self.left_corner+self.snake_body[i][0]*2)
-            self.screen.addstr('  ', curses.color_pair(2))
-        ## draw snake head
-        for i in range(len(self.snake_head)):
-            for j in range(len(self.snake_head[i])):
-                self.screen.move(self.top_corner+self.y, self.left_corner+self.x*2)
-                self.screen.addstr('  ', curses.color_pair(3))
 
 
     ### game over
@@ -237,18 +252,25 @@ class snake:
 
     ### move body//game over if head doesn't move//snake grow if eat rabbits
     def move_body(self):
+        # кролик
         if self.matrix[self.y][self.x]==2:
             self.snake_body[len(self.snake_body)+1]=self.snake_body[len(self.snake_body)]
             snake1.rabbit()
+
+        # движение
         for i in range(len(self.snake_body), 1, -1):
             self.snake_body[i]=self.snake_body[i-1] 
 
+        # врезается в себя
         for i in range(2, len(self.snake_body)+1):
             if self.snake_body[i]==[self.x, self.y]: 
-                self.scene='game over'
+                if self.second_snake==False:
+                    self.scene='game over'
+                else:
+                    self.scene='dead'
             self.snake_body[1]=[self.x, self.y]
 
-
+        # врезается в другую змею
         if self.second_snake==False:
             for i in range(2, len(snake2.snake_body)+1):
                 if snake2.snake_body[i]==[self.x, self.y]: 
@@ -256,7 +278,10 @@ class snake:
         else:
             for i in range(2, len(snake1.snake_body)+1):
                 if snake1.snake_body[i]==[self.x, self.y]: 
-                    snake2.initiation()
+                    self.scene='dead'
+
+
+
     ### can move if 0 or rabbit//cant move back
     def __can_move(self, new_x, new_y): 
         if self.matrix[new_y][new_x]==0 or self.matrix[new_y][new_x]==2:
@@ -286,7 +311,8 @@ class snake:
         if self.second_snake==False:
             self.delete_rabbits()
 
-            y, x=random.randint(1, 28), random.randint(1, 28)
+            # y, x=random.randint(1, 28), random.randint(1, 28)
+            y, x = 1, 1
             if self.matrix[y][x]==1:
                 self.rabbit()
             else:
@@ -516,9 +542,12 @@ class snake:
                 a.append(num_matrix[l][j])
                 b.append([l, j])
 
-            path[i] = b[a.index(min(a))]
-            l = b[a.index(min(a))][0]
-            j = b[a.index(min(a))][1]  
+            if len(a)==0:
+                path[1]=[end_y, end_x]
+            else:
+                path[i] = b[a.index(min(a))]
+                l = b[a.index(min(a))][0]
+                j = b[a.index(min(a))][1]  
         if len(path)==0:
             path[1]=[end_y, end_x]
 
@@ -590,12 +619,22 @@ class snake:
     ### tick
     def tick(self):         ### двигает змею
         if self.scene == 'game':
+            if self.robot_snake==True:
+                self.auto_move_snake()
             if (datetime.datetime.now()-self.timer).microseconds>=290000:
                 self.timer=datetime.datetime.now()
                 self.move_head()
                 self.move_body()
-            if self.robot_snake==True:
-                self.auto_move_snake()
+        if self.scene=='dead':
+            self.deadcount=0
+            if (datetime.datetime.now()-self.timer).microseconds>=580000:
+                self.draw_game()
+                self.deadcount+=1
+            if self.deadcount==5:
+                self.deadcount=0
+                self.initiation()
+
+            
 
 
 
@@ -667,8 +706,8 @@ class snake:
                     self.screen.refresh()
                     
                     sys.exit(0)
-
-            snake2.scene=snake1.scene
+            if snake2.scene!='dead':
+                snake2.scene=snake1.scene
 
 
 
@@ -683,6 +722,10 @@ def run_game(screen):
     curses.init_pair(10, curses.COLOR_BLACK, curses.COLOR_BLACK) # black
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_GREEN) # snake
     curses.init_pair(3, 0, 10) # head 
+
+    curses.init_pair(22, 0, 30) # second snake
+    curses.init_pair(33, 0, 50) #second head
+
     curses.init_pair(6, curses.COLOR_BLACK, curses.COLOR_WHITE) # menu 
     curses.init_pair(16, 15, 9) # game over
     curses.init_pair(17, curses.COLOR_WHITE, curses.COLOR_GREEN) # lenght
