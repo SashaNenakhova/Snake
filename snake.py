@@ -36,9 +36,14 @@ class snake:
 
 
         self.snake_head = [[0]]
+
         if self.second_snake==True:
             self.x=20
-        self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
+            self.snake_body={i:[self.x, self.y] for i in range(1, 8)}
+        else:
+            self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
+
+
 
         ## add borders
         for i in range(len(self.matrix)):
@@ -53,18 +58,22 @@ class snake:
     ### new game
     def initiation(self):
         if self.second_snake==True:
-            self.x=20
+            self.x, self.y=random.randint(1, 28), random.randint(1, 28)
+            self.snake_body={i:[self.x, self.y] for i in range(1, 8)}
         else:
-            self.x = 15
-        self.y = 15
+            self.x = 15        
+            self.y = 15
+            self.delete_rabbits()
+            self.robot_snake=False
+            self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
+
         self.direction = 'up'
         self.scene='game'
-        self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
+        
 
-        if self.second_snake==False:
-            self.robot_snake=False
-  
-        self.delete_rabbits()
+            
+        
+        
 
 
 
@@ -125,6 +134,7 @@ class snake:
         if self.second_snake==True:
             if self.scene=="game":
                 self.draw_game()
+
         else:
             ## draw scenes
             if self.scene == 'menu':
@@ -188,6 +198,11 @@ class snake:
                 for j in range(len(self.snake_head[i])):
                     self.screen.move(self.top_corner+self.y, self.left_corner+self.x*2)
                     self.screen.addstr('  ', curses.color_pair(33))
+
+
+
+        self.screen.addstr(0, 0, snake2.scene) ##### !!!!!!
+        self.screen.addstr(1, 1, str(snake2.snake_body))
 
 
 
@@ -311,8 +326,12 @@ class snake:
         if self.second_snake==False:
             self.delete_rabbits()
 
-            # y, x=random.randint(1, 28), random.randint(1, 28)
-            y, x = 1, 1
+            if len(self.snake_body)>7 or len(snake2.snake_body)>7: ##!!!
+                y, x=random.randint(1, 28), random.randint(1, 28)
+            else: ##!!
+                y, x = 1, 1 #### !!!!!!!!!
+
+
             if self.matrix[y][x]==1:
                 self.rabbit()
             else:
@@ -594,7 +613,7 @@ class snake:
 
     ### auto snake
     def auto_move_snake(self):
-        path=self.find_path(self.matrix)
+        path=self.find_path(self.matrix) 
         if path[1][1]<self.x:
             if self.direction!='right':
                 self.rotate_snake('left')
@@ -626,9 +645,10 @@ class snake:
                 self.move_head()
                 self.move_body()
         if self.scene=='dead':
-            self.deadcount=0
-            if (datetime.datetime.now()-self.timer).microseconds>=580000:
+            if (datetime.datetime.now()-self.timer).microseconds>=290000:
                 self.draw_game()
+            if (datetime.datetime.now()-self.timer).microseconds>=580000:
+                self.timer=datetime.datetime.now()
                 self.deadcount+=1
             if self.deadcount==5:
                 self.deadcount=0
@@ -706,6 +726,7 @@ class snake:
                     self.screen.refresh()
                     
                     sys.exit(0)
+
             if snake2.scene!='dead':
                 snake2.scene=snake1.scene
 
@@ -725,6 +746,9 @@ def run_game(screen):
 
     curses.init_pair(22, 0, 30) # second snake
     curses.init_pair(33, 0, 50) #second head
+
+    # curses.init_pair(22, 0, 29) # second snake
+    # curses.init_pair(33, 0, 49) #second head
 
     curses.init_pair(6, curses.COLOR_BLACK, curses.COLOR_WHITE) # menu 
     curses.init_pair(16, 15, 9) # game over
