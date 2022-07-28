@@ -31,10 +31,6 @@ class snake:
         ## create matrix and a snake
         self.matrix = [[ 0 for i in range(30)] for _ in range(30)]
 
-        ###
-        self.matrix[1][2]=1
-
-
         self.snake_head = [[0]]
 
         if self.second_snake==True:
@@ -290,10 +286,14 @@ class snake:
             for i in range(2, len(snake2.snake_body)+1):
                 if snake2.snake_body[i]==[self.x, self.y]: 
                     self.scene='game over'
+                # elif snake2.x==self.x and snake2.y==self.y: # врезается в голову     ####!!!!!!!
+                #     self.scene='game over'
         else:
             for i in range(2, len(snake1.snake_body)+1):
                 if snake1.snake_body[i]==[self.x, self.y]: 
                     self.scene='dead'
+                # elif self.x==snake1.x and self.y==snake1.y:                        #####!!!!!!!
+                #     self.scene='dead'
 
 
 
@@ -326,11 +326,8 @@ class snake:
         if self.second_snake==False:
             self.delete_rabbits()
 
-            if len(self.snake_body)>7 or len(snake2.snake_body)>7: ##!!!
-                y, x=random.randint(1, 28), random.randint(1, 28)
-            else: ##!!
-                y, x = 1, 1 #### !!!!!!!!!
 
+            y, x=random.randint(1, 28), random.randint(1, 28)
 
             if self.matrix[y][x]==1:
                 self.rabbit()
@@ -347,8 +344,13 @@ class snake:
                     self.rabbit()
         
 
-        if self.second_snake==True:
+        else:
             self.delete_rabbits()
+
+            for i in range(1, len(self.snake_body)+1):              #### !!!!!!
+                if self.snake_body[i]==[x, y]:
+                    self.delete_rabbits()
+                    self.rabbit()
 
             for i in range(len(snake1.matrix)):
                 for j in range(len(snake1.matrix[i])):
@@ -424,8 +426,10 @@ class snake:
         other_snake=0
         if self.second_snake==False:
             other_snake=snake2.snake_body
+            # num_matrix[snake2.y][snake2.x]=999                                   ####!!!!!!!!
         else:
             other_snake=snake1.snake_body
+            # num_matrix[snake1.y][snake1.x]=999                                   ####!!!!!!!
 
         for i in range(1, len(other_snake)+1):
             if other_snake[i][1]>self.y: # расстояние y
