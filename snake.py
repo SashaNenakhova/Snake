@@ -20,6 +20,7 @@ class snake:
     records_item=0
     new_name=''
 
+    snakes_list=[]
     robot_snake=False
     second_snake=False
     deadcount=0
@@ -196,12 +197,6 @@ class snake:
                     self.screen.addstr('  ', curses.color_pair(33))
 
 
-
-        # self.screen.addstr(0, 0, snake2.scene) ##### !!!!!!
-        # self.screen.addstr(1, 1, str(snake2.snake_body))
-
-
-
     ### game over
     def draw_game_over(self):
         box1 = curses.newwin(6, 21, self.top_corner+10, self.left_corner+17)
@@ -283,12 +278,22 @@ class snake:
 
         # врезается в другую змею
         if self.second_snake==False:
-            for i in range(1, len(snake2.snake_body)+1):
-                if snake2.snake_body[i]==[self.x, self.y]: 
-                    self.scene='game over'
+            if len(self.snakes_list)>1:
+                for i in self.snakes_list:
+                    if i!=self:
+                        for j in range(1, len(i.snake_body)+1):
+                            if i.snake_body[j]==[self.x, self.y]: 
+                                self.scene='game over'
         else:
-            for i in range(1, len(snake1.snake_body)+1):
-                if snake1.snake_body[i]==[self.x, self.y]: 
+            if len(snake1.snakes_list)>2:
+                for i in self.snakes_list:
+                    if i!=self:
+                        for j in range(1, len(i.snake_body)+1):
+                            if i.snake_body[j]==[self.x, self.y]: 
+                                self.scene='dead'
+
+            for j in range(1, len(snake1.snake_body)+1):
+                if snake1.snake_body[j]==[self.x, self.y]: 
                     self.scene='dead'
 
 
@@ -334,10 +339,13 @@ class snake:
                 if self.snake_body[i]==[x, y]:
                     self.delete_rabbits()
                     self.rabbit()
-            for i in range(1, len(snake2.snake_body)+1):
-                if snake2.snake_body[i]==[x, y]:
-                    self.delete_rabbits()
-                    self.rabbit()
+
+            if len(self.snakes_list)>1:
+                for i in self.snakes_list:
+                    for i in range(1, len(i.snake_body)+1):
+                        if i.snake_body[i]==[x, y]:
+                            self.delete_rabbits()
+                            self.rabbit()
         
 
         else:
@@ -421,26 +429,46 @@ class snake:
         # other snake body
         other_snake=0
         if self.second_snake==False:
-            other_snake=snake2.snake_body
-            num_matrix[snake2.y][snake2.x]=999                                  
+            pass
         else:
             other_snake=snake1.snake_body
-            num_matrix[snake1.y][snake1.x]=999                                  
+            num_matrix[snake1.y][snake1.x]=999
 
-        for i in range(1, len(other_snake)+1):
-            if other_snake[i][1]>self.y: # расстояние y
-                a1=other_snake[i][1]-self.y 
-            else:
-                a1=self.y-other_snake[i][1] 
-            if other_snake[i][0]>self.x: # расстояние x
-                b1=other_snake[i][0]-self.x 
-            else:
-                b1=self.x-other_snake[i][0] 
+            for j in range(1, len(other_snake)+1):
+                    if other_snake[j][1]>self.y: # расстояние y
+                        a1=other_snake[j][1]-self.y 
+                    else:
+                        a1=self.y-other_snake[j][1] 
+                    if other_snake[j][0]>self.x: # расстояние x
+                        b1=other_snake[j][0]-self.x 
+                    else:
+                        b1=self.x-other_snake[j][0] 
 
-            body=len(other_snake)+1-i # через сколько шагов хвост пропадет
+                    body=len(other_snake)+1-j # через сколько шагов хвост пропадет
 
-            if body>=a1 and body>=b1:
-                num_matrix[other_snake[i][1]][other_snake[i][0]]=999
+                    if body>=a1 and body>=b1:
+                        num_matrix[other_snake[j][1]][other_snake[j][0]]=999     
+
+        for i in self.snakes_list:
+            if i!=self:
+                other_snake=i.snake_body
+                num_matrix[i.y][i.x]=999   
+                for j in range(1, len(other_snake)+1):
+                    if other_snake[j][1]>self.y: # расстояние y
+                        a1=other_snake[j][1]-self.y 
+                    else:
+                        a1=self.y-other_snake[j][1] 
+                    if other_snake[j][0]>self.x: # расстояние x
+                        b1=other_snake[j][0]-self.x 
+                    else:
+                        b1=self.x-other_snake[j][0] 
+
+                    body=len(other_snake)+1-j # через сколько шагов хвост пропадет
+
+                    if body>=a1 and body>=b1:
+                        num_matrix[other_snake[j][1]][other_snake[j][0]]=999                                  
+
+       
 
 
 
@@ -573,10 +601,6 @@ class snake:
       
 
 
-
-
-
-
     
         # if self.second_snake==True:
         #     ## draw matrix
@@ -635,6 +659,49 @@ class snake:
             else:
                 self.rotate_snake('right')
 
+
+
+
+
+
+    ### add new snake
+    def add_snake(self):
+        snake2 = snake()
+        snake2.second_snake=True
+        snake2.robot_snake=True
+        snake2.x=20
+
+        snake2.screen=snake1.screen
+        snake2.initiation()
+        snake2.screen_dimensions=snake2.screen.getmaxyx()
+
+        snakes_list.append(snake2)
+
+
+
+
+        # snake3 = snake()
+        # snake3.second_snake=True
+        # snake3.robot_snake=True
+        # snake3.x=20
+        # snake3.screen=self.screen
+        # snake3.initiation()
+        # snake3.screen_dimensions=snake3.screen.getmaxyx()
+
+
+
+        pass
+
+    ### delete last snake
+    def delete_snake(self):
+        snake3=0
+
+
+
+
+
+
+
     ### tick
     def tick(self):         ### двигает змею
         if self.scene == 'game':
@@ -683,6 +750,11 @@ class snake:
                         self.screen.clear()
                         self.robot_snake=True
 
+                    if key==ord('='): #add snake
+                        self.add_snake()
+                    if key==ord('-'): #delete last snake
+                        self.delete_snake()
+
                 if key==ord('p'):
                     self.pause()
                     
@@ -727,8 +799,10 @@ class snake:
                     
                     sys.exit(0)
 
-            if snake2.scene!='dead':
-                snake2.scene=snake1.scene
+            if len(self.snakes_list)>0:
+                for i in self.snakes_list:
+                    if i.scene!='dead':
+                        i.scene=snake1.scene
 
 
 
@@ -755,33 +829,36 @@ def run_game(screen):
     snake1.screen=screen
     snake1.screen_dimensions=snake1.screen.getmaxyx()
 
-    snake2.screen=screen
-    snake2.initiation()
-    snake2.screen_dimensions=snake2.screen.getmaxyx()
+    # snake2.screen=screen
+    # snake2.initiation()
+    # snake2.screen_dimensions=snake2.screen.getmaxyx()
 
     screen.nodelay(True)
     while True:
-        snake2.matrix=snake1.matrix
+        
 
         snake1.getinput()
         snake1.draw()
         snake1.tick()
-
-        snake2.getinput()
-        snake2.draw()
-        snake2.tick()
-
         snake1.screen.refresh()
-        snake2.screen.refresh()
+
+        if len(snake1.snakes_list)>0:
+            for i in snake1.snakes_list:
+                i.matrix=snake1.matrix
+                i.getinput()
+                i.draw()
+                i.tick()
+                i.screen.refresh()
         
 
 
 snake1 = snake()
+snake1.snakes_list.append(snake1)
 
-snake2 = snake()
-snake2.second_snake=True
-snake2.robot_snake=True
-snake2.x=20
+# snake2 = snake()
+# snake2.second_snake=True
+# snake2.robot_snake=True
+# snake2.x=20
 
 
 #txt robot snake2 path
