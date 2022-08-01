@@ -197,8 +197,8 @@ class snake:
 
 
 
-        self.screen.addstr(0, 0, snake2.scene) ##### !!!!!!
-        self.screen.addstr(1, 1, str(snake2.snake_body))
+        # self.screen.addstr(0, 0, snake2.scene) ##### !!!!!!
+        # self.screen.addstr(1, 1, str(snake2.snake_body))
 
 
 
@@ -283,17 +283,13 @@ class snake:
 
         # врезается в другую змею
         if self.second_snake==False:
-            for i in range(2, len(snake2.snake_body)+1):
+            for i in range(1, len(snake2.snake_body)+1):
                 if snake2.snake_body[i]==[self.x, self.y]: 
                     self.scene='game over'
-                # elif snake2.x==self.x and snake2.y==self.y: # врезается в голову     ####!!!!!!!
-                #     self.scene='game over'
         else:
-            for i in range(2, len(snake1.snake_body)+1):
+            for i in range(1, len(snake1.snake_body)+1):
                 if snake1.snake_body[i]==[self.x, self.y]: 
                     self.scene='dead'
-                # elif self.x==snake1.x and self.y==snake1.y:                        #####!!!!!!!
-                #     self.scene='dead'
 
 
 
@@ -426,10 +422,10 @@ class snake:
         other_snake=0
         if self.second_snake==False:
             other_snake=snake2.snake_body
-            # num_matrix[snake2.y][snake2.x]=999                                   ####!!!!!!!!
+            num_matrix[snake2.y][snake2.x]=999                                  
         else:
             other_snake=snake1.snake_body
-            # num_matrix[snake1.y][snake1.x]=999                                   ####!!!!!!!
+            num_matrix[snake1.y][snake1.x]=999                                  
 
         for i in range(1, len(other_snake)+1):
             if other_snake[i][1]>self.y: # расстояние y
@@ -644,7 +640,7 @@ class snake:
         if self.scene == 'game':
             if self.robot_snake==True:
                 self.auto_move_snake()
-            if (datetime.datetime.now()-self.timer).microseconds>=290000:
+            if (datetime.datetime.now()-self.timer).microseconds>=290000: ####### 290000
                 self.timer=datetime.datetime.now()
                 self.move_head()
                 self.move_body()
@@ -751,9 +747,6 @@ def run_game(screen):
     curses.init_pair(22, 0, 30) # second snake
     curses.init_pair(33, 0, 50) #second head
 
-    # curses.init_pair(22, 0, 29) # second snake
-    # curses.init_pair(33, 0, 49) #second head
-
     curses.init_pair(6, curses.COLOR_BLACK, curses.COLOR_WHITE) # menu 
     curses.init_pair(16, 15, 9) # game over
     curses.init_pair(17, curses.COLOR_WHITE, curses.COLOR_GREEN) # lenght
@@ -789,6 +782,7 @@ snake2 = snake()
 snake2.second_snake=True
 snake2.robot_snake=True
 snake2.x=20
+
 
 #txt robot snake2 path
 f = open('robot_snake_path.txt', 'w')
