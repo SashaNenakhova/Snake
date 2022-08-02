@@ -34,11 +34,11 @@ class snake:
 
         self.snake_head = [[0]]
 
-        if self.second_snake==True:
-            self.x=20
-            self.snake_body={i:[self.x, self.y] for i in range(1, 8)}
-        else:
-            self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
+        # if self.second_snake==True:
+        #     self.x=20
+        #     self.snake_body={i:[self.x, self.y] for i in range(1, 8)}
+        
+        self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
 
 
 
@@ -54,15 +54,17 @@ class snake:
 
     ### new game
     def initiation(self):
-        if self.second_snake==True:
-            self.x, self.y=random.randint(1, 28), random.randint(1, 28)
-            self.snake_body={i:[self.x, self.y] for i in range(1, 8)}
-        else:
-            self.x = 15        
-            self.y = 15
-            self.delete_rabbits()
-            self.robot_snake=False
-            self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
+        # if self.second_snake==True:
+        #     self.x, self.y=random.randint(1, 28), random.randint(1, 28)
+        #     self.snake_body={i:[self.x, self.y] for i in range(1, 8)}
+        # else:
+        self.x = 15        
+        self.y = 15
+        self.delete_rabbits()
+        self.robot_snake=False
+        self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
+
+        self.snakes_list=[snake1]
 
         self.direction = 'up'
         self.scene='game'
@@ -195,6 +197,11 @@ class snake:
                 for j in range(len(self.snake_head[i])):
                     self.screen.move(self.top_corner+self.y, self.left_corner+self.x*2)
                     self.screen.addstr('  ', curses.color_pair(33))
+
+
+
+        ###
+        
 
 
     ### game over
@@ -342,8 +349,8 @@ class snake:
 
             if len(self.snakes_list)>1:
                 for i in self.snakes_list:
-                    for i in range(1, len(i.snake_body)+1):
-                        if i.snake_body[i]==[x, y]:
+                    for j in range(1, len(i.snake_body)+1):
+                        if i.snake_body[j]==[x, y]:
                             self.delete_rabbits()
                             self.rabbit()
         
@@ -360,6 +367,8 @@ class snake:
                 for j in range(len(snake1.matrix[i])):
                     if snake1.matrix[i][j]==2:
                         self.matrix[y][x]=2
+
+        self.screen.addstr(1, 1, str(y)+'  '+str(x))
 
 
 
@@ -600,29 +609,6 @@ class snake:
 
       
 
-
-    
-        # if self.second_snake==True:
-        #     ## draw matrix
-        #     for i in range(len(num_matrix)):
-        #         for j in range(len(num_matrix[i])):
-        #             self.screen.move(5 + i, 5 + j * 2)
-        #             # if num_matrix[i][j] == 0:
-        #             #     self.screen.addstr(' 0')
-        #             if num_matrix[i][j] == 999:
-        #                 self.screen.addstr('99')
-        #             elif num_matrix[i][j] == 998:
-        #                 self.screen.addstr('98')
-        #             else:
-        #                 self.screen.addstr(str(num_matrix[i][j])+' ')
-        #     # draw path
-        #     for i in range(1, len(path)+1):
-        #         self.screen.move(5+path[i][0], 5+path[i][1]*2)
-        #         self.screen.addstr('  ', curses.color_pair(2))
-
-
-
-
         #txt robot snake path
         f=open('robot_snake_path.txt', 'a')
         f.write('\n'+str(datetime.datetime.now())+'\n'+'\n')
@@ -675,26 +661,15 @@ class snake:
         snake2.initiation()
         snake2.screen_dimensions=snake2.screen.getmaxyx()
 
-        snakes_list.append(snake2)
+        self.snakes_list.append(snake2)
+
+        self.screen.addstr(2, 2, 'aaaa')
 
 
-
-
-        # snake3 = snake()
-        # snake3.second_snake=True
-        # snake3.robot_snake=True
-        # snake3.x=20
-        # snake3.screen=self.screen
-        # snake3.initiation()
-        # snake3.screen_dimensions=snake3.screen.getmaxyx()
-
-
-
-        pass
 
     ### delete last snake
     def delete_snake(self):
-        snake3=0
+        self.snakes_list=[snake1]
 
 
 
@@ -750,10 +725,10 @@ class snake:
                         self.screen.clear()
                         self.robot_snake=True
 
-                    if key==ord('='): #add snake
-                        self.add_snake()
-                    if key==ord('-'): #delete last snake
-                        self.delete_snake()
+                if key==ord('='): #add snake
+                    self.add_snake()
+                if key==ord('-'): #delete last snake
+                    self.delete_snake()
 
                 if key==ord('p'):
                     self.pause()
@@ -792,7 +767,6 @@ class snake:
                     self.screen.clear()
                     self.screen.refresh()
                     self.__init__()
-                    snake2.initiation()
                 elif key==ord('n') or key==ord('q'):
                     self.screen.clear()
                     self.screen.refresh()
@@ -837,10 +811,10 @@ def run_game(screen):
     while True:
         
 
-        snake1.getinput()
-        snake1.draw()
-        snake1.tick()
-        snake1.screen.refresh()
+        # snake1.getinput()
+        # snake1.draw()
+        # snake1.tick()
+        # snake1.screen.refresh()
 
         if len(snake1.snakes_list)>0:
             for i in snake1.snakes_list:
