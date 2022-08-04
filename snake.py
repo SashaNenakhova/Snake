@@ -21,9 +21,11 @@ class snake:
     new_name=''
 
     snakes_list=[]
-    robot_snake=False
+    robot_snake=True
     second_snake=False
     deadcount=0
+
+    steps_count=0 ######################################################
 
     ### initiation
     def __init__(self):
@@ -54,6 +56,9 @@ class snake:
         self.direction = 'up'
         self.timer = datetime.datetime.now()
 
+        self.timertimer=datetime.datetime.now() ###########################################
+
+
     ### new game
     def initiation(self):
         if self.second_snake==True:
@@ -63,7 +68,7 @@ class snake:
             self.x = 15        
             self.y = 15
             self.delete_rabbits()
-            self.robot_snake=False
+            self.robot_snake=True
             self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
 
             self.snakes_list=[snake1]
@@ -705,15 +710,25 @@ class snake:
         if self.scene == 'game':
             if self.robot_snake==True:
                 self.auto_move_snake()
-            if (datetime.datetime.now()-self.timer).microseconds>=290000: ####### 290000
+            if (datetime.datetime.now()-self.timer).microseconds>=100: #### 290000
                 self.timer=datetime.datetime.now()
                 self.move_head()
                 self.move_body()
 
+                if self.second_snake==False: #######################################################
+                    if self.steps_count>499: 
+                        ff=open("snake time.txt", 'a')
+                        ff.write('\n'+str(len(self.snakes_list))+'\n')
+                        ff.write("\n"+str(self.timertimer)+'\n')
+                        self.add_snake()
+                        self.timertimer=datetime.datetime.now()
+                        self.steps_count=0
+                    self.steps_count+=1
+
         if self.scene=='dead':
-            if (datetime.datetime.now()-self.timer).microseconds>=290000:
+            if (datetime.datetime.now()-self.timer).microseconds>=100: #### 290000
                 self.draw_game()
-            if (datetime.datetime.now()-self.timer).microseconds>=580000:
+            if (datetime.datetime.now()-self.timer).microseconds>=200: #### 580000
                 self.timer=datetime.datetime.now()
                 self.deadcount+=1
             if self.deadcount==5:
@@ -982,6 +997,7 @@ def run_game(screen):
 
 
 snake1 = snake()
+snake1.robot_snake=True
 snake1.snakes_list.append(snake1)
 
 
@@ -989,6 +1005,10 @@ snake1.snakes_list.append(snake1)
 f = open('robot_snake_path.txt', 'w')
 f.write(' ')
 f.close()
+
+ff = open('snake time.txt', 'w')
+ff.write(' ')
+ff.close()
 
 
 curses.wrapper(run_game)
