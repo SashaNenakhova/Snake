@@ -41,6 +41,7 @@ class snake:
         
             self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
             self.scene='menu'
+            self.records_top=self.read_file()
 
 
 
@@ -134,9 +135,9 @@ class snake:
             elif self.scene == 'game over':
                 self.draw_game_over()
             elif self.scene == 'save record':
-                pass
+                self.draw_saving_record()
             elif self.scene == 'records':
-                pass
+                self.draw_records()
         
 
         
@@ -210,6 +211,43 @@ class snake:
         box1.addstr(4, 3, 'or "n" to quit')
         box1.refresh()
 
+
+
+
+
+
+
+
+
+ ### draw records
+    def draw_records(self):
+        self.screen.addstr(self.screen.getmaxyx()[0]//2-12, self.screen.getmaxyx()[1]//2-14+8, '  Top records')
+
+        ## draw records list
+        for i in range(1, len(self.records_top)+1):
+            j=i-1
+            self.screen.addstr((self.screen.getmaxyx()[0]) // 2 - 12+2*i, (self.screen.getmaxyx()[1]) // 2 - 14+2, str(i)+' '+self.records_top[j][0])
+            self.screen.addstr((self.screen.getmaxyx()[0]) // 2 - 12+2*i, (self.screen.getmaxyx()[1]) // 2 - 14+4+len(self.records_top[j][0])-1+len(str(j)), '-'*((24-len(self.records_top[j][0])+1-len(str(j)))+3))
+            self.screen.addstr((self.screen.getmaxyx()[0]) // 2 - 12+2*i, (self.screen.getmaxyx()[1]) // 2 - 14+4+24+3-len(str(self.records_top[j][1])), str(self.records_top[j][1]))
+       
+        ## draw back, clear records
+        for i in range(2):
+            if self.records_item==i:
+                # выбранная кнопка
+                self.screen.addstr(self.screen.getmaxyx()[0]//2-12+2+len(self.records_top)*2, self.screen.getmaxyx()[1]//2-14+18*i, self.records_lst[i], curses.color_pair(6))
+            else:
+                self.screen.addstr(self.screen.getmaxyx()[0]//2-12+2+len(self.records_top)*2, self.screen.getmaxyx()[1]//2-14+18*i, self.records_lst[i])
+
+
+ ### draw saving record
+    def draw_saving_record(self):
+        box2 = curses.newwin(5, 35, self.top_corner+18, self.left_corner+21)
+        box2.box()
+        box2.bkgd(' ', curses.color_pair(16))    
+        box2.addstr(1, 1, 'You have achieved the high score!', curses.color_pair(16))
+        box2.addstr(3, 1, 'Please, type your name:'+self.new_name, curses.color_pair(16))
+        self.screen.move(self.top_corner+18, self.left_corner+44)
+        box2.refresh()
 
 
 
@@ -758,7 +796,57 @@ class snake:
                         self.screen.clear()
                         self.scene='records'
 
+
+            elif self.scene == 'records':
+
+                if key==curses.KEY_RIGHT:
+                    self.records_item+=1
+                elif key==curses.KEY_LEFT:
+                    self.records_item-=1
+                elif key == curses.KEY_ENTER or key == 10 or key == 13:
+                    if self.records_item==0: # back to menu
+                        self.screen.clear()
+                        self.scene='menu'
+                    elif self.records_item==1: # clear records
+                        self.screen.clear()
+                        self.clear_records()
+
+                if self.records_item==-1:
+                    self.records_item=1
+                elif self.records_item==2:
+                    self.records_item=0
+
+
+            elif self.scene == 'save record':
+                # запись имени
+                if key==curses.KEY_ENTER or key == 10 or key == 13:
+
+                    ### добавление рекорда
+                    self.add_records([self.new_name, len(self.snake_body)])
+                    self.update_file()
+
+                    self.screen.clear()
+                    self.screen.refresh()
+                    self.new_name=''
+                    self.scene='records'
+                elif key==curses.KEY_BACKSPACE or key==8 or key==127:
+                    self.new_name=self.new_name[:-1]
+                elif 90<=key<=126:
+                    if len(self.new_name)<10:
+                        self.new_name+=chr(key)
+                            
+
             elif self.scene == 'game over':
+                # records
+                if len(self.records_top)<10:
+                    self.new_name=''
+                    self.scene='save record'
+                else:
+                    for i in range(len(self.records_top)):
+                        if self.records_top[i][1]<len(self.snake_body):
+                            self.new_name=''
+                            self.scene='save record'
+
                 if key==ord('y'):
                     self.screen.clear()
                     self.screen.refresh()
@@ -766,13 +854,105 @@ class snake:
                 elif key==ord('n') or key==ord('q'):
                     self.screen.clear()
                     self.screen.refresh()
-                    
                     sys.exit(0)
+
+
 
             if len(self.snakes_list)>0:
                 for i in self.snakes_list:
                     if i.scene!='dead':
                         i.scene=snake1.scene
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+########### RECORDS ###########
+
+    ### updating file
+    def update_file(self):
+        file = open('records.txt', 'w')
+        strings = []
+        # списки из records_top формируются в список строк
+        for i in self.records_top: 
+            if len(i)==2:
+                strings.append(i[0] + ';' + str(i[1]))
+        # строки добавляются в конец файла
+        for i in strings: 
+            file.write(i+'\n')
+        file.close()
+
+    ### copy file to records_top
+    def read_file(self):
+        read=[]
+        try:
+            file=open('records.txt')
+            str_list=file.read().split('\n')
+            for i in str_list:
+                if ';' in i:
+                    spl=i.split(';')
+                    read.append([spl[0], int(spl[1])])
+        except FileNotFoundError:
+            file = open('records.txt', 'w')
+            file.write('')
+        file.close()
+        return read
+
+    ### add record to records_top
+    def add_records(self, record):
+        if self.records_top==[]:   # если список пустой
+            self.records_top.append(record)
+        else:
+            for i in range(len(self.records_top)):
+                if self.records_top[i][1]<record[1]:  # если есть рекорд меньше
+                    self.records_top.insert(i, record)
+                    break
+            else:
+                if len(self.records_top)<10:  # если нет рекордов меньше но есть место в списке
+                    self.records_top.append(record)
+
+        if len(self.records_top)==11:   # удаление лишних строк
+            self.records_top=self.records_top[:-1]
+
+    ### clear records
+    def clear_records(self):
+        file=open('records.txt', 'w')
+        file.write('')
+        file.close()
+        self.records_top=[]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
