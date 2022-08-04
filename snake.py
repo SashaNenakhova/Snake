@@ -195,10 +195,6 @@ class snake:
 
 
 
-        ###
-        snake1.screen.addstr(0, 0, str(snake1.snakes_list[0]))
-        
-
 
     ### game over
     def draw_game_over(self):
@@ -367,10 +363,6 @@ class snake:
         if self.second_snake==False:
             self.delete_rabbits()
 
-            # if len(self.snake_body)>7 or len(snake1.snakes_list[-1].snake_body)>7: ##!!!
-            #     y, x=random.randint(1, 28), random.randint(1, 28)
-            # else: ##!!
-            #     y, x = 1, 1 #### !!!!!!!!!
             y, x=random.randint(1, 28), random.randint(1, 28)
 
             if self.matrix[y][x]==1:
@@ -394,7 +386,7 @@ class snake:
         else:
             self.delete_rabbits()
 
-            for i in range(1, len(self.snake_body)+1):              #### !!!!!!
+            for i in range(1, len(self.snake_body)+1):     
                 if self.snake_body[i]==[x, y]:
                     self.delete_rabbits()
                     self.rabbit()
@@ -403,8 +395,6 @@ class snake:
                 for j in range(len(snake1.matrix[i])):
                     if snake1.matrix[i][j]==2:
                         self.matrix[y][x]=2
-
-        self.screen.addstr(1, 1, str(y)+'  '+str(x))
 
 
 
