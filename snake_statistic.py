@@ -3,7 +3,6 @@ import datetime
 import random
 
 
-
 class snake:
     
     ## координаты головы змеи
@@ -25,6 +24,13 @@ class snake:
     robot_snake=False
     second_snake=False
     deadcount=0
+
+
+    steps_count=0 ######################################################
+    counting=False
+    timer2=0
+    count_time=0
+
 
     ### initiation
     def __init__(self):
@@ -64,7 +70,7 @@ class snake:
             self.x = 15        
             self.y = 15
             self.delete_rabbits()
-            self.robot_snake=False
+            self.robot_snake=True ######
             self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
 
             self.snakes_list=[snake1]
@@ -297,7 +303,7 @@ class snake:
     def move_body(self):
         # кролик
         if self.matrix[self.y][self.x]==2:
-            self.snake_body[len(self.snake_body)+1]=self.snake_body[len(self.snake_body)]
+            # self.snake_body[len(self.snake_body)+1]=self.snake_body[len(self.snake_body)] #######################################
             snake1.rabbit()
 
         # движение
@@ -308,7 +314,8 @@ class snake:
         for i in range(2, len(self.snake_body)+1):
             if self.snake_body[i]==[self.x, self.y]: 
                 if self.second_snake==False:
-                    self.scene='game over'
+                    # self.scene='game over'
+                    pass
                 else:
                     self.scene='dead'
             self.snake_body[1]=[self.x, self.y]
@@ -320,7 +327,8 @@ class snake:
                     if i!=self:
                         for j in range(1, len(i.snake_body)+1):
                             if i.snake_body[j]==[self.x, self.y]: 
-                                self.scene='game over'
+                                # self.scene='game over'
+                                pass
         else:
             if len(snake1.snakes_list)>2:
                 for i in snake1.snakes_list:
@@ -427,6 +435,9 @@ class snake:
 # find path
     def find_path(self, matrix): # -screen, self
         num_matrix = [[ 0 for i in range(30)] for _ in range(30)]
+
+        if snake1.counting==True:
+            snake1.timer2=datetime.datetime.now()
 
 
         # borders
@@ -634,15 +645,30 @@ class snake:
         if len(path)==0:
             path[1]=[end_y, end_x]
 
-      
 
-        #txt robot snake path
-        f=open('robot_snake_path.txt', 'a')
-        f.write('\n'+str(datetime.datetime.now())+'\n'+'\n')
-        f.write('\n'+str(path)+'\n')
-        f.write('\n'+str(len(self.snake_body))+'\n')
-        for i in num_matrix:
-            f.write(str(i)+'\n')
+        if snake1.counting==True:
+            snake1.count_time+=(datetime.datetime.now()-snake1.timer2).microseconds
+            if self==snake1:
+                snake1.steps_count+=1
+                try:
+                    f=open('snakestat'+str(len(snake1.snakes_list)), 'a')
+                except FileNotFoundError:
+                    f=open('snakestat'+str(len(snake1.snakes_list), 'w'))
+                f.write(str(snake1.count_time)+'\n')
+                snake1.count_time=0
+
+                if snake1.steps_count==500:
+                    
+                    snake1.steps_count=0
+                    snake1.counting=False
+                    snake1.screen.addstr(1, 0, '                                  ')
+                    snake1.screen.addstr(0, 0, '                                      ')
+                    snake1.screen.addstr(2, 0, '                                        ')
+
+            snake1.screen.addstr(1, 0, 'counting='+str(snake1.counting))
+            snake1.screen.addstr(0, 0, 'steps count='+str(snake1.steps_count))
+            snake1.screen.addstr(2, 0, 'snakes: '+str(len(snake1.snakes_list)))
+
 
         return path
 
@@ -706,15 +732,15 @@ class snake:
         if self.scene == 'game':
             if self.robot_snake==True:
                 self.auto_move_snake()
-            if (datetime.datetime.now()-self.timer).microseconds>=290000: ####### 290000
+            if (datetime.datetime.now()-self.timer).microseconds>=1: ####### 290000
                 self.timer=datetime.datetime.now()
                 self.move_head()
                 self.move_body()
 
         if self.scene=='dead':
-            if (datetime.datetime.now()-self.timer).microseconds>=290000:
+            if (datetime.datetime.now()-self.timer).microseconds>=1:
                 self.draw_game()
-            if (datetime.datetime.now()-self.timer).microseconds>=580000:
+            if (datetime.datetime.now()-self.timer).microseconds>=2: ######## 580000
                 self.timer=datetime.datetime.now()
                 self.deadcount+=1
             if self.deadcount==5:
@@ -757,6 +783,9 @@ class snake:
 
                 if key==ord('p'):
                     self.pause()
+
+                if key==ord('c'):
+                    snake1.counting=True
                     
                 elif key==ord('q'):
                     self.screen.clear()
@@ -983,13 +1012,7 @@ def run_game(screen):
 
 
 snake1 = snake()
+snake1.robot_snake=True
 snake1.snakes_list.append(snake1)
-
-
-#txt robot snake2 path
-f = open('robot_snake_path.txt', 'w')
-f.write(' ')
-f.close()
-
 
 curses.wrapper(run_game)
