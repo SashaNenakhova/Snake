@@ -312,7 +312,8 @@ class snake:
         for i in range(2, len(self.snake_body)+1):
             if self.snake_body[i]==[self.x, self.y]: 
                 if self.second_snake==False:
-                    self.scene='game over'
+                    # self.scene='game over'
+                    pass
                 else:
                     self.scene='dead'
             self.snake_body[1]=[self.x, self.y]
@@ -324,7 +325,8 @@ class snake:
                     if i!=self:
                         for j in range(1, len(i.snake_body)+1):
                             if i.snake_body[j]==[self.x, self.y]: 
-                                self.scene='game over'
+                                # self.scene='game over'
+                                pass
         else:
             if len(snake1.snakes_list)>2:
                 for i in snake1.snakes_list:
@@ -436,57 +438,15 @@ class snake:
         for l in range(len(matrix)):
             for j in range(len(matrix)):
                 if matrix[l][j]==2:
-                    snake1.num_matrix[l][j]=998
-                    end_x=j
-                    end_y=l
-
-
-
+                    snake1.num_matrix[l][j]=1
+                    # end_x=j
+                    # end_y=l
 
         # snake body
         steps=0
         a1, b1=0, 0
-        # for i in range(1, len(self.snake_body)+1):
-        #     if self.snake_body[i][1]>self.y: # расстояние y
-        #         a1=self.snake_body[i][1]-self.y 
-        #     else:
-        #         a1=self.y-self.snake_body[i][1] 
-        #     if self.snake_body[i][0]>self.x: # расстояние x
-        #         b1=self.snake_body[i][0]-self.x 
-        #     else:
-        #         b1=self.x-self.snake_body[i][0] 
-
-        #     steps=len(self.snake_body)+1-i # через сколько шагов хвост пропадет
-
-        #     if steps>=a1 and steps>=b1:
-        #         snake1.num_matrix[self.snake_body[i][1]][self.snake_body[i][0]]=999
-
-
-        # other snake body
-        snake_body=0
-        # if self.second_snake==False:
-        #     pass
-        # else:
-        #     other_snake=snake1.snake_body
-        #     snake1.num_matrix[snake1.y][snake1.x]=999
-
-        #     for j in range(1, len(other_snake)+1):
-        #             if other_snake[j][1]>self.y: # расстояние y
-        #                 a1=other_snake[j][1]-self.y 
-        #             else:
-        #                 a1=self.y-other_snake[j][1] 
-        #             if other_snake[j][0]>self.x: # расстояние x
-        #                 b1=other_snake[j][0]-self.x 
-        #             else:
-        #                 b1=self.x-other_snake[j][0] 
-
-        #             steps=len(other_snake)+1-j # через сколько шагов хвост пропадет
-
-        #             if steps>=a1 and steps>=b1:
-        #                 snake1.num_matrix[other_snake[j][1]][other_snake[j][0]]=999     
-
+        snake_body=0 
         for i in snake1.snakes_list:
-            # if i!=self:
             snake_body=i.snake_body
             self.num_matrix[i.y][i.x]=999   
             for j in range(1, len(snake_body)+1):
@@ -509,9 +469,13 @@ class snake:
 
 
 
-
+            # snake head
+            self.num_matrix[self.y][self.x]=998
+            end_x=self.x
+            end_y=self.y
 
         if self==snake1:
+
             # borders
             for l in range(len(matrix)):
                 for j in range(len(matrix[l])):
@@ -519,8 +483,8 @@ class snake:
                         snake1.num_matrix[l][j]=999
 
 
-            # snake head
-            snake1.num_matrix[self.y][self.x]=1
+            # # snake head
+            # snake1.num_matrix[self.y][self.x]=998
 
             pathfound=False
             pathnotfound=False
@@ -570,11 +534,14 @@ class snake:
 
 
                             # проверить если путь найден
-                            if end_y==l and end_x==j and found==True:
+                            # if end_y==l and end_x==j and found==True:
+                            if snake1.num>50:
                                 pathfound=True
 
+
                             # увеличить значение в центральной клетке до наименьшего+1
-                            if found==True and value<snake1.num and snake1.num_matrix[l][j]==0:
+                            # if found==True and value<snake1.num and snake1.num_matrix[l][j]==0:
+                            if found==True and snake1.num_matrix[l][j]==0:
                                 snake1.num_matrix[l][j]=value+1
 
                 snake1.num+=1
@@ -604,7 +571,6 @@ class snake:
                 for j in range(len(self.num_matrix)):
                     if self.num_matrix[i][j]!=999:
                         self.num_matrix[i][j]=snake1.num_matrix[i][j]
-                        self.screen.addstr(0, 0, 'aaaa')
 
 
 
@@ -614,30 +580,31 @@ class snake:
         path, j, l= {}, end_x, end_y
 
 
-        for i in range(snake1.num-2, 0, -1):
+        # for i in range(snake1.num-2, 0, -1):
+        for i in range(1, snake1.num-1):
 
             a = [] # список значений из numbered matrix
             b = [] # список соответствующих им координат
  
 
-            if self.num_matrix[l - 1][j] >1 and self.num_matrix[l - 1][j] < 999: # up
+            if self.num_matrix[l - 1][j] >0 and self.num_matrix[l - 1][j] < 998: # up
                 a.append(self.num_matrix[l - 1][j])
                 b.append([l - 1, j])
 
-            if self.num_matrix[l + 1][j] >1 and self.num_matrix[l + 1][j] < 999: # down
+            if self.num_matrix[l + 1][j] >0 and self.num_matrix[l + 1][j] < 998: # down
 
                 a.append(self.num_matrix[l + 1][j])
                 b.append([l + 1, j])
 
-            if self.num_matrix[l][j - 1] >1 and self.num_matrix[l][j - 1] < 999: # left
+            if self.num_matrix[l][j - 1] >0 and self.num_matrix[l][j - 1] < 998: # left
                 a.append(self.num_matrix[l][j - 1])
                 b.append([l, j - 1])
 
-            if self.num_matrix[l][j + 1] >1 and self.num_matrix[l][j + 1] < 999: # right
+            if self.num_matrix[l][j + 1] >0 and self.num_matrix[l][j + 1] < 998: # right
                 a.append(self.num_matrix[l][j + 1])
                 b.append([l, j + 1])
 
-            if self.num_matrix[l][j]>1 and self.num_matrix[l][j]<999:
+            if self.num_matrix[l][j]>0 and self.num_matrix[l][j]<998:
                 a.append(self.num_matrix[l][j])
                 b.append([l, j])
 
@@ -647,8 +614,8 @@ class snake:
                 path[i] = b[a.index(min(a))]
                 l = b[a.index(min(a))][0]
                 j = b[a.index(min(a))][1]  
-        if len(path)==0:
-            path[1]=[end_y, end_x]
+        # if len(path)==0:
+        #     path[1]=[end_y, end_x]
 
 
 
@@ -659,7 +626,7 @@ class snake:
 
 
 
-        if self!=snake1:
+        if self==snake1:
             ## draw matrix
             for i in range(len(self.num_matrix)):
                 for j in range(len(self.num_matrix[i])):
@@ -676,6 +643,9 @@ class snake:
             for i in range(1, len(path)+1):
                 self.screen.move(5+path[i][0], 5+path[i][1]*2)
                 self.screen.addstr('  ', curses.color_pair(2))
+
+            self.screen.addstr(0, 0, str(pathfound)+' '+str(snake1.num)+'  '+str(pathnotfound) + ' '+str(path)+'                    '*20)
+
       
 
         return path
@@ -740,15 +710,15 @@ class snake:
         if self.scene == 'game':
             if self.robot_snake==True:
                 self.auto_move_snake()
-            if (datetime.datetime.now()-self.timer).microseconds>=290000: ####### 290000
+            if (datetime.datetime.now()-self.timer).microseconds>=100000: ####### 290000
                 self.timer=datetime.datetime.now()
                 self.move_head()
                 self.move_body()
 
         if self.scene=='dead':
-            if (datetime.datetime.now()-self.timer).microseconds>=290000:
+            if (datetime.datetime.now()-self.timer).microseconds>=100000:
                 self.draw_game()
-            if (datetime.datetime.now()-self.timer).microseconds>=580000:
+            if (datetime.datetime.now()-self.timer).microseconds>=200000: ######## 580000
                 self.timer=datetime.datetime.now()
                 self.deadcount+=1
             if self.deadcount==5:
