@@ -312,8 +312,8 @@ class snake:
         for i in range(2, len(self.snake_body)+1):
             if self.snake_body[i]==[self.x, self.y]: 
                 if self.second_snake==False:
-                    # self.scene='game over'
-                    pass
+                    self.scene='game over'
+                    
                 else:
                     self.scene='dead'
             self.snake_body[1]=[self.x, self.y]
@@ -325,8 +325,8 @@ class snake:
                     if i!=self:
                         for j in range(1, len(i.snake_body)+1):
                             if i.snake_body[j]==[self.x, self.y]: 
-                                # self.scene='game over'
-                                pass
+                                self.scene='game over'
+
         else:
             if len(snake1.snakes_list)>2:
                 for i in snake1.snakes_list:
@@ -710,15 +710,15 @@ class snake:
         if self.scene == 'game':
             if self.robot_snake==True:
                 self.auto_move_snake()
-            if (datetime.datetime.now()-self.timer).microseconds>=100000: ####### 290000
+            if (datetime.datetime.now()-self.timer).microseconds>=290000: ####### 290000
                 self.timer=datetime.datetime.now()
                 self.move_head()
                 self.move_body()
 
         if self.scene=='dead':
-            if (datetime.datetime.now()-self.timer).microseconds>=100000:
+            if (datetime.datetime.now()-self.timer).microseconds>=290000:
                 self.draw_game()
-            if (datetime.datetime.now()-self.timer).microseconds>=200000: ######## 580000
+            if (datetime.datetime.now()-self.timer).microseconds>=580000: ######## 580000
                 self.timer=datetime.datetime.now()
                 self.deadcount+=1
             if self.deadcount==5:
