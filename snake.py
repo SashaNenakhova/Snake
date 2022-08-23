@@ -26,13 +26,14 @@ class snake:
     second_snake=False
     deadcount=0
 
+    wave_algorithm=False
+
     ### initiation
     def __init__(self):
         screen = None
 
         ## create matrix and a snake
         self.matrix = [[ 0 for i in range(30)] for _ in range(30)]
-
         self.snake_head = [[0]]
 
         if self.second_snake==True:
@@ -43,8 +44,6 @@ class snake:
             self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
             self.scene='menu'
             self.records_top=self.read_file()
-
-
 
         ## add borders
         for i in range(len(self.matrix)):
@@ -430,17 +429,40 @@ class snake:
         self.screen.nodelay(True)
 
 
-# find path
-    def find_path(self, matrix): # -screen, self
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #### numbered matrix
+    def wave(self):
         self.num_matrix = [[ 0 for i in range(30)] for _ in range(30)]
 
+        # aaa
+        for i in snake1.snakes_list:
+            i.wave_algorithm=False
+
         # rabbit
-        for l in range(len(matrix)):
-            for j in range(len(matrix)):
-                if matrix[l][j]==2:
+        for l in range(len(snake1.matrix)):
+            for j in range(len(snake1.matrix)):
+                if snake1.matrix[l][j]==2:
                     snake1.num_matrix[l][j]=1
-                    # end_x=j
-                    # end_y=l
 
         # snake body
         steps=0
@@ -458,130 +480,176 @@ class snake:
                     b1=snake_body[j][0]-self.x 
                 else:
                     b1=self.x-snake_body[j][0] 
-
                 steps=len(snake_body)+1-j # через сколько шагов хвост пропадет
-
                 if steps>=a1 and steps>=b1:
                     self.num_matrix[snake_body[j][1]][snake_body[j][0]]=999  
 
+        # snake head
+        self.num_matrix[self.y][self.x]=998
+        end_x=self.x
+        end_y=self.y
+
+        # borders
+        for l in range(len(snake1.matrix)):
+            for j in range(len(snake1.matrix[l])):
+                if snake1.matrix[l][j]==1:
+                    snake1.num_matrix[l][j]=999
+
+        # # snake head
+        # snake1.num_matrix[self.y][self.x]=998
+
+        pathfound=False
+        pathnotfound=False
+        snake1.num=0
+
+        ### проходим матрицу и заполняем её значениями дистанции от стартовой точки ###
+        while pathfound == False:
+
+            for l in range(1, len(snake1.num_matrix)-1):
+                for j in range(1, len(snake1.num_matrix[l])-1):
+                    if snake1.num_matrix[l][j]==998 or snake1.num_matrix[l][j]==0:
+                        # надо определить, есть ли в ближайшем окружении заполненные ячейки, и, если есть, выбрать среди них наименьшую
+
+                        found = False # если не найдено заполненых клеток
+                        value=999
+
+
+                        ## поиск клеток со значением больше 0; не стены
+                        ## поиск наименьшего значения (расстояния от кролика)
+
+                        # верхняя клетка
+                        if snake1.num_matrix[l-1][j]<998 and snake1.num_matrix[l-1][j]>0: 
+                            found=True
+                            if snake1.num_matrix[l-1][j]<value and snake1.num_matrix[l-1][j]!=0: # поиск наименьшего значения 
+                                value = snake1.num_matrix[l-1][j]
+
+                        # нижняя клетка
+                        if snake1.num_matrix[l+1][j]<998 and snake1.num_matrix[l+1][j]>0: 
+                            found=True
+                            if snake1.num_matrix[l+1][j]<value: # поиск наименьшего значения 
+                                value = snake1.num_matrix[l+1][j]
+
+                        # левая клетка
+                        if snake1.num_matrix[l][j-1]<998 and snake1.num_matrix[l][j-1]>0: 
+                            found=True
+                            if snake1.num_matrix[l][j-1]<value: # поиск наименьшего значения 
+                                value = snake1.num_matrix[l][j-1]
+
+                        # правая клетка
+                        if snake1.num_matrix[l][j+1]<998 and snake1.num_matrix[l][j+1]>0: 
+                            found=True
+                            if snake1.num_matrix[l][j+1]<value: # поиск наименьшего значения 
+                                value = snake1.num_matrix[l][j+1]
+
+
+
+                        # увеличить значение в центральной клетке до наименьшего+1
+                        # if found==True and value<snake1.num and snake1.num_matrix[l][j]==0:
+                        if found==True and snake1.num_matrix[l][j]==0:
+                            snake1.num_matrix[l][j]=value+1
+
+
+                        # проверить если путь найден
+                        # if end_y==l and end_x==j and found==True:
+                        for i in snake1.snakes_list:
+                            if l==i.y and j==i.x and found==True:
+                                i.wave_algorithm=True
+
+                        
+                        for i in snake1.snakes_list:
+                            if i.wave_algorithm==False:
+                                break
+                            
+                        else:
+                            pathfound=True
+                        # if snake1.num>50: ################################
+                        #     pathfound=True
+
+            snake1.num+=1
+            if snake1.num>100:
+                pathnotfound=True
+                pathfound=True
+
+        ###############
+        for i in snake1.snakes_list:
+            i.wave_algorithm=False
+
+        # на пути хвост
+        if pathnotfound==True:
+            # поиск пути к наибольшему значению (самой дальней клетке)
+            max_num=0
+            for i in range(len(snake1.num_matrix)):
+                for j in range(len(snake1.num_matrix[i])):
+                    if snake1.num_matrix[i][j]>max_num and snake1.num_matrix[i][j]<998:
+                        max_num=snake1.num_matrix[i][j]
+                        end_y=i
+                        end_x=j
+
+
+
+
+        
+
+
+
+       ## draw matrix
+        for i in range(len(self.num_matrix)):
+            for j in range(len(self.num_matrix[i])):
+                self.screen.move(5 + i, 5 + j * 2)
+                if self.num_matrix[i][j] == 0:
+                    self.screen.addstr(' 0')
+                if self.num_matrix[i][j] == 999:
+                    self.screen.addstr('99')
+                elif self.num_matrix[i][j] == 998:
+                    self.screen.addstr('98')
+                else:
+                    self.screen.addstr(str(self.num_matrix[i][j])+' ')
+
+
+        return (end_x, end_y)
 
 
 
 
 
-            # snake head
-            self.num_matrix[self.y][self.x]=998
-            end_x=self.x
-            end_y=self.y
-
-        if self==snake1:
-
-            # borders
-            for l in range(len(matrix)):
-                for j in range(len(matrix[l])):
-                    if matrix[l][j]==1:
-                        snake1.num_matrix[l][j]=999
-
-
-            # # snake head
-            # snake1.num_matrix[self.y][self.x]=998
-
-            pathfound=False
-            pathnotfound=False
-            snake1.num=0
-
-
-
-            ### проходим матрицу и заполняем её значениями дистанции от стартовой точки ###
-
-            while pathfound == False:
-
-                for l in range(1, len(snake1.num_matrix)-1):
-                    for j in range(1, len(snake1.num_matrix[l])-1):
-                        if snake1.num_matrix[l][j]==998 or snake1.num_matrix[l][j]==0:
-                            # надо определить, есть ли в ближайшем окружении заполненные ячейки, и, если есть, выбрать среди них наименьшую
-
-                            found = False # если не найдено заполненых клеток
-                            value=999
-
-
-                            ## поиск клеток со значением больше 0; не стены
-                            ## поиск наименьшего значения (расстояния от кролика)
-
-                            # верхняя клетка
-                            if snake1.num_matrix[l-1][j]<998 and snake1.num_matrix[l-1][j]>0: 
-                                found=True
-                                if snake1.num_matrix[l-1][j]<value and snake1.num_matrix[l-1][j]!=0: # поиск наименьшего значения 
-                                    value = snake1.num_matrix[l-1][j]
-
-                            # нижняя клетка
-                            if snake1.num_matrix[l+1][j]<998 and snake1.num_matrix[l+1][j]>0: 
-                                found=True
-                                if snake1.num_matrix[l+1][j]<value: # поиск наименьшего значения 
-                                    value = snake1.num_matrix[l+1][j]
-
-                            # левая клетка
-                            if snake1.num_matrix[l][j-1]<998 and snake1.num_matrix[l][j-1]>0: 
-                                found=True
-                                if snake1.num_matrix[l][j-1]<value: # поиск наименьшего значения 
-                                    value = snake1.num_matrix[l][j-1]
-
-                            # правая клетка
-                            if snake1.num_matrix[l][j+1]<998 and snake1.num_matrix[l][j+1]>0: 
-                                found=True
-                                if snake1.num_matrix[l][j+1]<value: # поиск наименьшего значения 
-                                    value = snake1.num_matrix[l][j+1]
-
-
-                            # проверить если путь найден
-                            # if end_y==l and end_x==j and found==True:
-                            if snake1.num>50:
-                                pathfound=True
-
-
-                            # увеличить значение в центральной клетке до наименьшего+1
-                            # if found==True and value<snake1.num and snake1.num_matrix[l][j]==0:
-                            if found==True and snake1.num_matrix[l][j]==0:
-                                snake1.num_matrix[l][j]=value+1
-
-                snake1.num+=1
-                if snake1.num>100:
-                    pathnotfound=True
-                    pathfound=True
 
 
 
 
-            # на пути хвост
-            if pathnotfound==True:
-                # поиск пути к наибольшему значению (самой дальней клетке)
-                max_num=0
-                for i in range(len(snake1.num_matrix)):
-                    for j in range(len(snake1.num_matrix[i])):
-                        if snake1.num_matrix[i][j]>max_num and snake1.num_matrix[i][j]<998:
-                            max_num=snake1.num_matrix[i][j]
-                            end_y=i
-                            end_x=j
 
+
+
+
+
+
+
+
+
+
+
+
+    # find path
+    def find_path(self, matrix): # -screen, self
+
+        j, l=snake1.wave()
 
 
         ### second snakes matrix (snakes bodies + snake1.num_matrix)
         if self!=snake1:
             for i in range(len(self.num_matrix)):
-                for j in range(len(self.num_matrix)):
-                    if self.num_matrix[i][j]!=999:
-                        self.num_matrix[i][j]=snake1.num_matrix[i][j]
-
-
+                for t in range(len(self.num_matrix)):
+                    if self.num_matrix[i][t]!=999:
+                        self.num_matrix[i][t]=snake1.num_matrix[i][t]
 
 
         # numbered matrix, end x, end y >>>> path
         # path lenght = num
-        path, j, l= {}, end_x, end_y
+        # j, l= end_x, end_y
+        path={}
 
 
         # for i in range(snake1.num-2, 0, -1):
-        for i in range(1, snake1.num-1):
+        for i in range(1, snake1.num+1):
 
             a = [] # список значений из numbered matrix
             b = [] # список соответствующих им координат
@@ -609,46 +677,40 @@ class snake:
                 b.append([l, j])
 
             if len(a)==0:
-                path[1]=[end_y, end_x]
+                path[1]=[l, j]
             else:
                 path[i] = b[a.index(min(a))]
                 l = b[a.index(min(a))][0]
                 j = b[a.index(min(a))][1]  
-        # if len(path)==0:
-        #     path[1]=[end_y, end_x]
-
-
-
-
-
-
-
-
-
 
         if self==snake1:
-            ## draw matrix
-            for i in range(len(self.num_matrix)):
-                for j in range(len(self.num_matrix[i])):
-                    self.screen.move(5 + i, 5 + j * 2)
-                    if self.num_matrix[i][j] == 0:
-                        self.screen.addstr(' 0')
-                    if self.num_matrix[i][j] == 999:
-                        self.screen.addstr('99')
-                    elif self.num_matrix[i][j] == 998:
-                        self.screen.addstr('98')
-                    else:
-                        self.screen.addstr(str(self.num_matrix[i][j])+' ')
-            # draw path
+            
+
+         # draw path
             for i in range(1, len(path)+1):
                 self.screen.move(5+path[i][0], 5+path[i][1]*2)
                 self.screen.addstr('  ', curses.color_pair(2))
-
-            self.screen.addstr(0, 0, str(pathfound)+' '+str(snake1.num)+'  '+str(pathnotfound) + ' '+str(path)+'                    '*20)
-
-      
+            self.screen.addstr(0, 0, str(path)+'                    '*20)
 
         return path
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
