@@ -520,7 +520,7 @@ class snake:
                         # верхняя клетка
                         if snake1.num_matrix[l-1][j]<998 and snake1.num_matrix[l-1][j]>0: 
                             found=True
-                            if snake1.num_matrix[l-1][j]<value and snake1.num_matrix[l-1][j]!=0: # поиск наименьшего значения 
+                            if snake1.num_matrix[l-1][j]<value: # поиск наименьшего значения 
                                 value = snake1.num_matrix[l-1][j]
 
                         # нижняя клетка
@@ -545,12 +545,11 @@ class snake:
 
                         # увеличить значение в центральной клетке до наименьшего+1
                         # if found==True and value<snake1.num and snake1.num_matrix[l][j]==0:
-                        if found==True and snake1.num_matrix[l][j]==0:
+                        if found==True and value<snake1.num and snake1.num_matrix[l][j]==0:
                             snake1.num_matrix[l][j]=value+1
 
 
                         # проверить если путь найден
-                        # if end_y==l and end_x==j and found==True:
                         for i in snake1.snakes_list:
                             if l==i.y and j==i.x and found==True:
                                 i.wave_algorithm=True
@@ -562,8 +561,6 @@ class snake:
                             
                         else:
                             pathfound=True
-                        # if snake1.num>50: ################################
-                        #     pathfound=True
 
             snake1.num+=1
             if snake1.num>100:
