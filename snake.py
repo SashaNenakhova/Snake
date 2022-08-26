@@ -553,17 +553,16 @@ class snake:
 
                         # проверить если путь найден
                         for i in snake1.snakes_list:
-                            if l==i.y and j==i.x: #and found==True:
+                            # if (l-1==i.y or l+1==i.y or l==i.y) and (j-1==i.x or j+1==i.x or j==i.x) and found==True:
+                            if l==i.y and j==i.x and found==True:
                                 i.wave_algorithm=True
-                            self.screen.addstr(0, 0, str(i.wave_algorithm))
+                            self.screen.addstr(0, 0, str(i.wave_algorithm)) #############
 
                         
                         for i in snake1.snakes_list:
                             if i.wave_algorithm==False:
-                                self.screen.addstr(2, 0, 'bbbbbb')
-                            
+                                break
                         else:
-                            self.screen.addstr(2, 0, 'aaaaa')
                             pathfound=True
 
             snake1.num+=1
@@ -573,9 +572,7 @@ class snake:
 
 
 
-        ###############
-        for i in snake1.snakes_list:
-            i.wave_algorithm=False
+      
 
         # на пути хвост
         if pathnotfound==True:
@@ -589,19 +586,50 @@ class snake:
                         end_x=j
 
 
-       ## draw matrix
+       # ## draw matrix
+       #  for i in range(len(self.num_matrix)):
+       #      for j in range(len(self.num_matrix[i])):
+       #          self.screen.move(5 + i, 5 + j * 2)
+       #          if self.num_matrix[i][j] == 0:
+       #              self.screen.addstr(' 0')
+       #          if self.num_matrix[i][j] == 999:
+       #              self.screen.addstr('99')
+       #          elif self.num_matrix[i][j] == 998:
+       #              self.screen.addstr('98')
+       #          else:
+       #              self.screen.addstr(str(self.num_matrix[i][j])+' ')
+
+         ## draw matrix
         for i in range(len(self.num_matrix)):
             for j in range(len(self.num_matrix[i])):
                 self.screen.move(5 + i, 5 + j * 2)
                 if self.num_matrix[i][j] == 0:
                     self.screen.addstr(' 0')
                 if self.num_matrix[i][j] == 999:
-                    self.screen.addstr('99')
+                    self.screen.addstr('  ', curses.color_pair(1))
                 elif self.num_matrix[i][j] == 998:
                     self.screen.addstr('98')
                 else:
                     self.screen.addstr(str(self.num_matrix[i][j])+' ')
 
+        for i in range(len(snake1.snakes_list)):
+            for j in range(1, len(snake1.snakes_list[i].snake_body)):
+                self.screen.move(5+snake1.snakes_list[i].snake_body[j][1], 5+snake1.snakes_list[i].snake_body[j][0]*2)
+                if snake1.snakes_list[i].wave_algorithm==True:
+                    self.screen.addstr('  ', curses.color_pair(22))
+                else:
+                    self.screen.addstr('  ', curses.color_pair(1))  
+
+
+
+
+
+
+
+
+        ###############
+        for i in snake1.snakes_list:
+            i.wave_algorithm=False
 
         return (end_x, end_y)
 
@@ -631,9 +659,9 @@ class snake:
         for i in snake1.snakes_list: ##########
             i.num_matrix = [[ 0 for i in range(30)] for _ in range(30)]
 
-        # if self==snake1: ########
-        if self==snake1.snakes_list[-1]:
-            self.find_path_x, self.find_path_y=snake1.wave()
+        # # if self==snake1: ########
+        # if self==snake1.snakes_list[-1]:
+        snake1.find_path_x, snake1.find_path_y=snake1.wave()
 
         j, l=snake1.find_path_x, snake1.find_path_y ###
 
@@ -652,6 +680,9 @@ class snake:
 
         #         self.screen.addstr(40, 50, str(snake1.find_path_x)+'  '+str(snake1.find_path_y))
         #         self.screen.refresh()
+
+
+
 
         # numbered matrix, end x, end y >>>> path
         # path lenght = num
