@@ -69,6 +69,8 @@ class snake:
             self.snakes_list=[snake1]
             self.num=0
 
+            self.find_path_x, self.find_path_y=0, 0 ########################
+
         self.num_matrix= [[ 0 for i in range(30)] for _ in range(30)]
        
 
@@ -551,21 +553,25 @@ class snake:
 
                         # проверить если путь найден
                         for i in snake1.snakes_list:
-                            if l==i.y and j==i.x and found==True:
+                            if l==i.y and j==i.x: #and found==True:
                                 i.wave_algorithm=True
+                            self.screen.addstr(0, 0, str(i.wave_algorithm))
 
                         
                         for i in snake1.snakes_list:
                             if i.wave_algorithm==False:
-                                break
+                                self.screen.addstr(2, 0, 'bbbbbb')
                             
                         else:
+                            self.screen.addstr(2, 0, 'aaaaa')
                             pathfound=True
 
             snake1.num+=1
             if snake1.num>100:
                 pathnotfound=True
                 pathfound=True
+
+
 
         ###############
         for i in snake1.snakes_list:
@@ -581,12 +587,6 @@ class snake:
                         max_num=snake1.num_matrix[i][j]
                         end_y=i
                         end_x=j
-
-
-
-
-        
-
 
 
        ## draw matrix
@@ -628,7 +628,14 @@ class snake:
     # find path
     def find_path(self, matrix): # -screen, self
 
-        j, l=snake1.wave()
+        for i in snake1.snakes_list: ##########
+            i.num_matrix = [[ 0 for i in range(30)] for _ in range(30)]
+
+        # if self==snake1: ########
+        if self==snake1.snakes_list[-1]:
+            self.find_path_x, self.find_path_y=snake1.wave()
+
+        j, l=snake1.find_path_x, snake1.find_path_y ###
 
 
         ### second snakes matrix (snakes bodies + snake1.num_matrix)
@@ -638,13 +645,18 @@ class snake:
                     if self.num_matrix[i][t]!=999:
                         self.num_matrix[i][t]=snake1.num_matrix[i][t]
 
+        # if self!=snake1:
+        #     while True:
+        #         for i in range(len(self.num_matrix)):
+        #             self.screen.addstr(i, 0, str(self.num_matrix[i]))
+
+        #         self.screen.addstr(40, 50, str(snake1.find_path_x)+'  '+str(snake1.find_path_y))
+        #         self.screen.refresh()
 
         # numbered matrix, end x, end y >>>> path
         # path lenght = num
         # j, l= end_x, end_y
         path={}
-
-
         # for i in range(snake1.num-2, 0, -1):
         for i in range(1, snake1.num+1):
 
@@ -657,7 +669,6 @@ class snake:
                 b.append([l - 1, j])
 
             if self.num_matrix[l + 1][j] >0 and self.num_matrix[l + 1][j] < 998: # down
-
                 a.append(self.num_matrix[l + 1][j])
                 b.append([l + 1, j])
 
@@ -678,11 +689,9 @@ class snake:
             else:
                 path[i] = b[a.index(min(a))]
                 l = b[a.index(min(a))][0]
-                j = b[a.index(min(a))][1]  
+                j = b[a.index(min(a))][1]
 
         if self==snake1:
-            
-
          # draw path
             for i in range(1, len(path)+1):
                 self.screen.move(5+path[i][0], 5+path[i][1]*2)
