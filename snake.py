@@ -497,8 +497,8 @@ class snake:
                 if snake1.matrix[l][j]==1:
                     snake1.num_matrix[l][j]=999
 
-        # # snake head
-        # snake1.num_matrix[self.y][self.x]=998
+        for i in snake1.snakes_list:
+            snake1.num_matrix[i.y][i.x]=998
 
         pathfound=False
         pathnotfound=False
@@ -520,25 +520,25 @@ class snake:
                         ## поиск наименьшего значения (расстояния от кролика)
 
                         # верхняя клетка
-                        if snake1.num_matrix[l-1][j]<998 and snake1.num_matrix[l-1][j]>0: 
+                        if snake1.num_matrix[l-1][j]<=998 and snake1.num_matrix[l-1][j]>0: 
                             found=True
                             if snake1.num_matrix[l-1][j]<value: # поиск наименьшего значения 
                                 value = snake1.num_matrix[l-1][j]
 
                         # нижняя клетка
-                        if snake1.num_matrix[l+1][j]<998 and snake1.num_matrix[l+1][j]>0: 
+                        if snake1.num_matrix[l+1][j]<=998 and snake1.num_matrix[l+1][j]>0: 
                             found=True
                             if snake1.num_matrix[l+1][j]<value: # поиск наименьшего значения 
                                 value = snake1.num_matrix[l+1][j]
 
                         # левая клетка
-                        if snake1.num_matrix[l][j-1]<998 and snake1.num_matrix[l][j-1]>0: 
+                        if snake1.num_matrix[l][j-1]<=998 and snake1.num_matrix[l][j-1]>0: 
                             found=True
                             if snake1.num_matrix[l][j-1]<value: # поиск наименьшего значения 
                                 value = snake1.num_matrix[l][j-1]
 
                         # правая клетка
-                        if snake1.num_matrix[l][j+1]<998 and snake1.num_matrix[l][j+1]>0: 
+                        if snake1.num_matrix[l][j+1]<=998 and snake1.num_matrix[l][j+1]>0: 
                             found=True
                             if snake1.num_matrix[l][j+1]<value: # поиск наименьшего значения 
                                 value = snake1.num_matrix[l][j+1]
@@ -553,12 +553,9 @@ class snake:
 
                         # проверить если путь найден
                         for i in snake1.snakes_list:
-                            # if (l-1==i.y or l+1==i.y or l==i.y) and (j-1==i.x or j+1==i.x or j==i.x) and found==True:
                             if l==i.y and j==i.x and found==True:
                                 i.wave_algorithm=True
-                            self.screen.addstr(0, 0, str(i.wave_algorithm)) #############
 
-                        
                         for i in snake1.snakes_list:
                             if i.wave_algorithm==False:
                                 break
@@ -586,42 +583,27 @@ class snake:
                         end_x=j
 
 
-       # ## draw matrix
-       #  for i in range(len(self.num_matrix)):
-       #      for j in range(len(self.num_matrix[i])):
-       #          self.screen.move(5 + i, 5 + j * 2)
-       #          if self.num_matrix[i][j] == 0:
-       #              self.screen.addstr(' 0')
-       #          if self.num_matrix[i][j] == 999:
-       #              self.screen.addstr('99')
-       #          elif self.num_matrix[i][j] == 998:
-       #              self.screen.addstr('98')
-       #          else:
-       #              self.screen.addstr(str(self.num_matrix[i][j])+' ')
+
 
          ## draw matrix
         for i in range(len(self.num_matrix)):
             for j in range(len(self.num_matrix[i])):
                 self.screen.move(5 + i, 5 + j * 2)
                 if self.num_matrix[i][j] == 0:
-                    self.screen.addstr(' 0')
+                    self.screen.addstr('0 ')
                 if self.num_matrix[i][j] == 999:
                     self.screen.addstr('  ', curses.color_pair(1))
                 elif self.num_matrix[i][j] == 998:
                     self.screen.addstr('98')
                 else:
                     self.screen.addstr(str(self.num_matrix[i][j])+' ')
-
-        for i in range(len(snake1.snakes_list)):
-            for j in range(1, len(snake1.snakes_list[i].snake_body)):
-                self.screen.move(5+snake1.snakes_list[i].snake_body[j][1], 5+snake1.snakes_list[i].snake_body[j][0]*2)
-                if snake1.snakes_list[i].wave_algorithm==True:
-                    self.screen.addstr('  ', curses.color_pair(22))
-                else:
-                    self.screen.addstr('  ', curses.color_pair(1))  
-
-
-
+        # for i in range(len(snake1.snakes_list)):
+        #     for j in range(1, len(snake1.snakes_list[i].snake_body)):
+        #         self.screen.move(5+snake1.snakes_list[i].snake_body[j][1], 5+snake1.snakes_list[i].snake_body[j][0]*2)
+        #         if snake1.snakes_list[i].wave_algorithm==True:
+        #             self.screen.addstr('  ', curses.color_pair(22))
+        #         else:
+        #             self.screen.addstr('  ', curses.color_pair(1))  
 
 
 
@@ -630,6 +612,9 @@ class snake:
         ###############
         for i in snake1.snakes_list:
             i.wave_algorithm=False
+
+
+
 
         return (end_x, end_y)
 
@@ -654,14 +639,16 @@ class snake:
 
 
     # find path
-    def find_path(self, matrix): # -screen, self
+    def find_path(self): # -screen, self
 
         for i in snake1.snakes_list: ##########
             i.num_matrix = [[ 0 for i in range(30)] for _ in range(30)]
 
         # # if self==snake1: ########
         # if self==snake1.snakes_list[-1]:
-        snake1.find_path_x, snake1.find_path_y=snake1.wave()
+
+        # snake1.find_path_x, snake1.find_path_y=snake1.wave()
+        snake1.find_path_x, snake1.find_path_y=self.wave()
 
         j, l=snake1.find_path_x, snake1.find_path_y ###
 
@@ -669,17 +656,10 @@ class snake:
         ### second snakes matrix (snakes bodies + snake1.num_matrix)
         if self!=snake1:
             for i in range(len(self.num_matrix)):
-                for t in range(len(self.num_matrix)):
+                for t in range(len(self.num_matrix[i])):
                     if self.num_matrix[i][t]!=999:
                         self.num_matrix[i][t]=snake1.num_matrix[i][t]
 
-        # if self!=snake1:
-        #     while True:
-        #         for i in range(len(self.num_matrix)):
-        #             self.screen.addstr(i, 0, str(self.num_matrix[i]))
-
-        #         self.screen.addstr(40, 50, str(snake1.find_path_x)+'  '+str(snake1.find_path_y))
-        #         self.screen.refresh()
 
 
 
@@ -695,19 +675,19 @@ class snake:
             b = [] # список соответствующих им координат
  
 
-            if self.num_matrix[l - 1][j] >0 and self.num_matrix[l - 1][j] < 998: # up
+            if self.num_matrix[l - 1][j] >0 and self.num_matrix[l - 1][j] <= 998: # up
                 a.append(self.num_matrix[l - 1][j])
                 b.append([l - 1, j])
 
-            if self.num_matrix[l + 1][j] >0 and self.num_matrix[l + 1][j] < 998: # down
+            if self.num_matrix[l + 1][j] >0 and self.num_matrix[l + 1][j] <= 998: # down
                 a.append(self.num_matrix[l + 1][j])
                 b.append([l + 1, j])
 
-            if self.num_matrix[l][j - 1] >0 and self.num_matrix[l][j - 1] < 998: # left
+            if self.num_matrix[l][j - 1] >0 and self.num_matrix[l][j - 1] <=998: # left
                 a.append(self.num_matrix[l][j - 1])
                 b.append([l, j - 1])
 
-            if self.num_matrix[l][j + 1] >0 and self.num_matrix[l][j + 1] < 998: # right
+            if self.num_matrix[l][j + 1] >0 and self.num_matrix[l][j + 1] <= 998: # right
                 a.append(self.num_matrix[l][j + 1])
                 b.append([l, j + 1])
 
@@ -716,18 +696,31 @@ class snake:
                 b.append([l, j])
 
             if len(a)==0:
-                path[1]=[l, j]
+                for i in range(len(snake1.num_matrix)):
+                    for k in range(len(snake1.num_matrix[i])):
+                        if snake1.num_matrix[i][k]==1:
+                            path[1]=[i, k]
             else:
                 path[i] = b[a.index(min(a))]
                 l = b[a.index(min(a))][0]
                 j = b[a.index(min(a))][1]
 
-        if self==snake1:
+            # if 998 not in a:
+            #     for n in range(len(snake1.num_matrix)):
+            #         for m in range(len(snake1.num_matrix[n])):
+            #             if snake1.num_matrix[n][m]>snake1.num_matrix[path[1][0]][path[1][1]]:
+            #                 path[1]=[n, m]
+
+
+
+
+
+        if len(snake1.snakes_list)>1:
          # draw path
             for i in range(1, len(path)+1):
-                self.screen.move(5+path[i][0], 5+path[i][1]*2)
-                self.screen.addstr('  ', curses.color_pair(2))
-            self.screen.addstr(0, 0, str(path)+'                    '*20)
+                snake1.snakes_list[1].screen.move(5+path[i][0], 5+path[i][1]*2)
+                snake1.snakes_list[1].screen.addstr('  ', curses.color_pair(2))
+            snake1.snakes_list[1].screen.addstr(0, 0, str(path)+'                    '*20)
 
         return path
 
@@ -753,7 +746,9 @@ class snake:
 
     ### auto snake
     def auto_move_snake(self):
-        path=self.find_path(self.matrix) 
+
+
+        path=self.find_path()  #######
         if path[1][1]<self.x:
             if self.direction!='right':
                 self.rotate_snake('left')
@@ -807,9 +802,13 @@ class snake:
     ### tick
     def tick(self):         ### двигает змею
         if self.scene == 'game':
+
+            # if snake1.robot_snake==True or len(snake1.snakes_list)>1: #####################################
+            #     snake1.find_path_x, snake1.find_path_y=snake1.wave()
+
             if self.robot_snake==True:
                 self.auto_move_snake()
-            if (datetime.datetime.now()-self.timer).microseconds>=290000: ####### 290000
+            if (datetime.datetime.now()-self.timer).microseconds>=290000: # 290000
                 self.timer=datetime.datetime.now()
                 self.move_head()
                 self.move_body()
@@ -817,12 +816,14 @@ class snake:
         if self.scene=='dead':
             if (datetime.datetime.now()-self.timer).microseconds>=290000:
                 self.draw_game()
-            if (datetime.datetime.now()-self.timer).microseconds>=580000: ######## 580000
+            if (datetime.datetime.now()-self.timer).microseconds>=580000: # 580000
                 self.timer=datetime.datetime.now()
                 self.deadcount+=1
             if self.deadcount==5:
                 self.deadcount=0
                 self.initiation()
+
+        
 
             
 
