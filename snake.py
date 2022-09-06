@@ -562,10 +562,12 @@ class snake:
                         else:
                             pathfound=True
 
+
             snake1.num+=1
             if snake1.num>100:
                 pathnotfound=True
                 pathfound=True
+
 
 
 
@@ -604,6 +606,7 @@ class snake:
         #             self.screen.addstr('  ', curses.color_pair(22))
         #         else:
         #             self.screen.addstr('  ', curses.color_pair(1))  
+    
 
 
 
@@ -616,7 +619,8 @@ class snake:
 
 
 
-        return (end_x, end_y)
+        # return (end_x, end_y)
+        snake1.find_path_x, snake1.find_path_y=end_x, end_y
 
 
 
@@ -647,8 +651,7 @@ class snake:
         # # if self==snake1: ########
         # if self==snake1.snakes_list[-1]:
 
-        # snake1.find_path_x, snake1.find_path_y=snake1.wave()
-        snake1.find_path_x, snake1.find_path_y=self.wave()
+        snake1.wave()
 
         j, l=snake1.find_path_x, snake1.find_path_y ###
 
@@ -659,6 +662,7 @@ class snake:
                 for t in range(len(self.num_matrix[i])):
                     if self.num_matrix[i][t]!=999:
                         self.num_matrix[i][t]=snake1.num_matrix[i][t]
+
 
 
 
@@ -691,36 +695,39 @@ class snake:
                 a.append(self.num_matrix[l][j + 1])
                 b.append([l, j + 1])
 
-            if self.num_matrix[l][j]>0 and self.num_matrix[l][j]<998:
+            if self.num_matrix[l][j]>0 and self.num_matrix[l][j]<=998:
                 a.append(self.num_matrix[l][j])
                 b.append([l, j])
 
-            if len(a)==0:
-                for i in range(len(snake1.num_matrix)):
-                    for k in range(len(snake1.num_matrix[i])):
-                        if snake1.num_matrix[i][k]==1:
-                            path[1]=[i, k]
-            else:
-                path[i] = b[a.index(min(a))]
-                l = b[a.index(min(a))][0]
-                j = b[a.index(min(a))][1]
+            # if len(path)==0:
+            #     for i in range(len(snake1.num_matrix)):
+            #         for k in range(len(snake1.num_matrix[i])):
+            #             if snake1.num_matrix[i][k]==1:
+            #                 path[1]=[i, k]
 
-            # if 998 not in a:
-            #     for n in range(len(snake1.num_matrix)):
-            #         for m in range(len(snake1.num_matrix[n])):
-            #             if snake1.num_matrix[n][m]>snake1.num_matrix[path[1][0]][path[1][1]]:
-            #                 path[1]=[n, m]
+            # else:
+            path[i] = b[a.index(min(a))]
+            l = b[a.index(min(a))][0]
+            j = b[a.index(min(a))][1]
 
 
 
 
 
-        if len(snake1.snakes_list)>1:
+
+        # if len(snake1.snakes_list)>1:
+        #  # draw path
+        #     for i in range(1, len(path)+1):
+        #         snake1.snakes_list[1].screen.move(5+path[i][0], 5+path[i][1]*2)
+        #         snake1.snakes_list[1].screen.addstr('  ', curses.color_pair(2))
+        #     snake1.snakes_list[1].screen.addstr(0, 0, str(path)+'                    '*20)
+
+        if self==snake1:
          # draw path
             for i in range(1, len(path)+1):
-                snake1.snakes_list[1].screen.move(5+path[i][0], 5+path[i][1]*2)
-                snake1.snakes_list[1].screen.addstr('  ', curses.color_pair(2))
-            snake1.snakes_list[1].screen.addstr(0, 0, str(path)+'                    '*20)
+                snake1.screen.move(5+path[i][0], 5+path[i][1]*2)
+                snake1.screen.addstr('  ', curses.color_pair(2))
+            snake1.screen.addstr(0, 0, str(path)+'                    '*20)
 
         return path
 
@@ -772,9 +779,6 @@ class snake:
 
 
 
-
-
-
     ### add new snake
     def add_snake(self):
         new_snake=object 
@@ -783,20 +787,21 @@ class snake:
         new_snake.second_snake=True
         new_snake.robot_snake=True
         new_snake.x=20
-
         new_snake.screen=snake1.screen
         new_snake.initiation()
         new_snake.screen_dimensions=new_snake.screen.getmaxyx()
-
         snake1.snakes_list.append(new_snake)
-
-
-
-
     ### delete last snake
     def delete_snake(self):
         if len(snake1.snakes_list)>1:
             snake1.snakes_list.pop(len(snake1.snakes_list)-1)
+
+
+
+
+
+
+
 
 
     ### tick
@@ -1076,6 +1081,9 @@ def run_game(screen):
 
     screen.nodelay(True)
     while True:
+
+        # snake1.find_path_x, snake1.find_path_y=snake1.wave() #######
+        # snake1.wave()
 
         for i in snake1.snakes_list:
             i.matrix=snake1.matrix
