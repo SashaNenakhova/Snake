@@ -520,25 +520,25 @@ class snake:
                         ## поиск наименьшего значения (расстояния от кролика)
 
                         # верхняя клетка
-                        if snake1.num_matrix[l-1][j]<=998 and snake1.num_matrix[l-1][j]>0: 
+                        if snake1.num_matrix[l-1][j]<998 and snake1.num_matrix[l-1][j]>0: 
                             found=True
                             if snake1.num_matrix[l-1][j]<value: # поиск наименьшего значения 
                                 value = snake1.num_matrix[l-1][j]
 
                         # нижняя клетка
-                        if snake1.num_matrix[l+1][j]<=998 and snake1.num_matrix[l+1][j]>0: 
+                        if snake1.num_matrix[l+1][j]<998 and snake1.num_matrix[l+1][j]>0: 
                             found=True
                             if snake1.num_matrix[l+1][j]<value: # поиск наименьшего значения 
                                 value = snake1.num_matrix[l+1][j]
 
                         # левая клетка
-                        if snake1.num_matrix[l][j-1]<=998 and snake1.num_matrix[l][j-1]>0: 
+                        if snake1.num_matrix[l][j-1]<998 and snake1.num_matrix[l][j-1]>0: 
                             found=True
                             if snake1.num_matrix[l][j-1]<value: # поиск наименьшего значения 
                                 value = snake1.num_matrix[l][j-1]
 
                         # правая клетка
-                        if snake1.num_matrix[l][j+1]<=998 and snake1.num_matrix[l][j+1]>0: 
+                        if snake1.num_matrix[l][j+1]<998 and snake1.num_matrix[l][j+1]>0: 
                             found=True
                             if snake1.num_matrix[l][j+1]<value: # поиск наименьшего значения 
                                 value = snake1.num_matrix[l][j+1]
@@ -576,50 +576,40 @@ class snake:
         # на пути хвост
         if pathnotfound==True:
             # поиск пути к наибольшему значению (самой дальней клетке)
-            max_num=0
-            for i in range(len(snake1.num_matrix)):
-                for j in range(len(snake1.num_matrix[i])):
-                    if snake1.num_matrix[i][j]>max_num and snake1.num_matrix[i][j]<998:
-                        max_num=snake1.num_matrix[i][j]
-                        end_y=i
-                        end_x=j
+           
+            pass # новая функция где волна распространяется от змеи
+
+
+        # else:
+        #     ###############
+        #     for i in range(len(snake1.num_matrix)):
+        #         for j in range(len(snake1.num_matrix[i])):
+        #             if snake1.num_matrix[i][j]==1:
+        #                 end_y, end_x=i, j
 
 
 
-
-         ## draw matrix
-        for i in range(len(self.num_matrix)):
-            for j in range(len(self.num_matrix[i])):
-                self.screen.move(5 + i, 5 + j * 2)
-                if self.num_matrix[i][j] == 0:
-                    self.screen.addstr('0 ')
-                if self.num_matrix[i][j] == 999:
-                    self.screen.addstr('  ', curses.color_pair(1))
-                elif self.num_matrix[i][j] == 998:
-                    self.screen.addstr('98')
-                else:
-                    self.screen.addstr(str(self.num_matrix[i][j])+' ')
-        # for i in range(len(snake1.snakes_list)):
-        #     for j in range(1, len(snake1.snakes_list[i].snake_body)):
-        #         self.screen.move(5+snake1.snakes_list[i].snake_body[j][1], 5+snake1.snakes_list[i].snake_body[j][0]*2)
-        #         if snake1.snakes_list[i].wave_algorithm==True:
-        #             self.screen.addstr('  ', curses.color_pair(22))
-        #         else:
-        #             self.screen.addstr('  ', curses.color_pair(1))  
-    
-
-
-
-
+        if self==snake1:
+             ## draw matrix
+            for i in range(len(self.num_matrix)):
+                for j in range(len(self.num_matrix[i])):
+                    self.screen.move(5 + i, 5 + j * 2)
+                    if self.num_matrix[i][j] == 0:
+                        self.screen.addstr('0 ')
+                    if self.num_matrix[i][j] == 999:
+                        self.screen.addstr('  ', curses.color_pair(1))
+                    elif self.num_matrix[i][j] == 998:
+                        self.screen.addstr('98')
+                    else:
+                        self.screen.addstr(str(self.num_matrix[i][j])+' ')
+        
+        
 
         ###############
         for i in snake1.snakes_list:
             i.wave_algorithm=False
 
 
-
-
-        # return (end_x, end_y)
         snake1.find_path_x, snake1.find_path_y=end_x, end_y
 
 
@@ -653,8 +643,8 @@ class snake:
 
         snake1.wave()
 
-        j, l=snake1.find_path_x, snake1.find_path_y ###
-
+        # j, l=snake1.find_path_x, snake1.find_path_y ###
+        j, l=self.x, self.y ###
 
         ### second snakes matrix (snakes bodies + snake1.num_matrix)
         if self!=snake1:
@@ -679,23 +669,23 @@ class snake:
             b = [] # список соответствующих им координат
  
 
-            if self.num_matrix[l - 1][j] >0 and self.num_matrix[l - 1][j] <= 998: # up
+            if self.num_matrix[l - 1][j] >0 and self.num_matrix[l - 1][j] < 998: # up
                 a.append(self.num_matrix[l - 1][j])
                 b.append([l - 1, j])
 
-            if self.num_matrix[l + 1][j] >0 and self.num_matrix[l + 1][j] <= 998: # down
+            if self.num_matrix[l + 1][j] >0 and self.num_matrix[l + 1][j] < 998: # down
                 a.append(self.num_matrix[l + 1][j])
                 b.append([l + 1, j])
 
-            if self.num_matrix[l][j - 1] >0 and self.num_matrix[l][j - 1] <=998: # left
+            if self.num_matrix[l][j - 1] >0 and self.num_matrix[l][j - 1] <998: # left
                 a.append(self.num_matrix[l][j - 1])
                 b.append([l, j - 1])
 
-            if self.num_matrix[l][j + 1] >0 and self.num_matrix[l][j + 1] <= 998: # right
+            if self.num_matrix[l][j + 1] >0 and self.num_matrix[l][j + 1] < 998: # right
                 a.append(self.num_matrix[l][j + 1])
                 b.append([l, j + 1])
 
-            if self.num_matrix[l][j]>0 and self.num_matrix[l][j]<=998:
+            if self.num_matrix[l][j]>0 and self.num_matrix[l][j]<998:
                 a.append(self.num_matrix[l][j])
                 b.append([l, j])
 
