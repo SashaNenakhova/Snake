@@ -67,12 +67,12 @@ class snake:
             self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
 
             self.snakes_list=[snake1]
-            self.num=0
+
 
             self.find_path_x, self.find_path_y=0, 0 ########################
 
         self.num_matrix= [[ 0 for i in range(30)] for _ in range(30)]
-       
+        self.num = 0
 
         self.direction = 'up'
         self.scene='game'
@@ -498,6 +498,9 @@ class snake:
                             self.num_matrix[l][j]=value+1
 
 
+                num+=1
+
+
 
 
 
@@ -603,7 +606,9 @@ class snake:
                         # проверить если путь найден
                         for i in snake1.snakes_list:
                             if l==i.y and j==i.x and found==True:
+                            # if (snake1.num_matrix[i.y-1][i.x]>0 and snake1.num_matrix[i.y-1][i.x]<999) or (snake1.num_matrix[i.y+1][i.x]>0 and snake1.num_matrix[i.y+1][i.x]<999) or (snake1.num_matrix[i.y][i.x-1]>0 and snake1.num_matrix[i.y][i.x-1]<999) or (snake1.num_matrix[i.y][i.x+1]>0 and snake1.num_matrix[i.y][i.x+1]<999):
                                 i.wave_algorithm=True
+                                i.num=snake1.num
 
                         for i in snake1.snakes_list:
                             if i.wave_algorithm==False:
@@ -623,10 +628,15 @@ class snake:
       
 
         # на пути хвост
-        if pathnotfound==True:
+        # if pathnotfound==True:
+        for i in snake1.snakes_list:
+            if i.wave_algorithm!=True:
+                i.path_not_found() ##################
+
+
             # поиск пути к наибольшему значению (самой дальней клетке)
 
-            pass # новая функция где волна распространяется от змеи
+            # pass # новая функция где волна распространяется от змеи
 
 
         # else:
@@ -690,11 +700,8 @@ class snake:
         if self!=snake1:
             for i in range(len(self.num_matrix)):
                 for t in range(len(self.num_matrix[i])):
-                    if snake1.num_matrix[i][t]!=999:
+                    if snake1.num_matrix[i][t]<=998:
                         self.num_matrix[i][t]=snake1.num_matrix[i][t]
-
-
-
 
 
 
@@ -703,7 +710,7 @@ class snake:
         # j, l= end_x, end_y
         path={}
         # for i in range(snake1.num-2, 0, -1):
-        for i in range(1, snake1.num+1):
+        for i in range(1, self.num+1):
 
             a = [] # список значений из numbered matrix
             b = [] # список соответствующих им координат
@@ -729,6 +736,7 @@ class snake:
                 a.append(self.num_matrix[l][j])
                 b.append([l, j])
 
+
             path[i] = b[a.index(min(a))]
             l = b[a.index(min(a))][0]
             j = b[a.index(min(a))][1]
@@ -750,10 +758,11 @@ class snake:
             snake1.screen.addstr(0, 0, str(path)+'                    '*20)
 
 
+        if len(path)==0:
+            pass
 
-
-        for i in snake1.snakes_list: ##########
-            i.num_matrix = [[ 0 for i in range(30)] for _ in range(30)]
+        # for i in snake1.snakes_list: ##########
+        #     i.num_matrix = [[ 0 for i in range(30)] for _ in range(30)]
 
         return path
 
@@ -1108,10 +1117,12 @@ def run_game(screen):
 
     screen.nodelay(True)
     while True:
+        snake1.getinput()
 
         # snake1.find_path_x, snake1.find_path_y=snake1.wave() #######
-        snake1.wave()
-        snake1.getinput()
+        if snake1.robot_snake==True or len(snake1.snakes_list)>1:
+            snake1.wave()
+        
         
         for i in snake1.snakes_list:
             i.matrix=snake1.matrix
