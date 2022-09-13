@@ -64,7 +64,7 @@ class snake:
             self.y = 15
             self.delete_rabbits()
             self.robot_snake=False
-            self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
+            self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 15)}
 
             self.snakes_list=[snake1]
 
@@ -451,8 +451,11 @@ class snake:
 
 
     def path_not_found(self):
+
+        self.num_matrix[self.y][self.x]=1###
+
         num=0
-        while num<20:
+        while num<30:
 
             for l in range(1, len(self.num_matrix)-1):
                 for j in range(1, len(self.num_matrix[l])-1):
@@ -496,9 +499,11 @@ class snake:
                         # if found==True and value<snake1.num and snake1.num_matrix[l][j]==0:
                         if found==True and value<self.num and self.num_matrix[l][j]==0:
                             self.num_matrix[l][j]=value+1
+            num+=1
 
 
-                num+=1
+
+        self.num_matrix[self.y][self.x]=998 ###
 
 
 
@@ -704,6 +709,14 @@ class snake:
                         self.num_matrix[i][t]=snake1.num_matrix[i][t]
 
 
+        if self==snake1:
+            f=open('robot_snake_path.txt', 'a')
+            f.write(str(datetime.datetime.now())+'\n'*2)
+            for i in snake1.num_matrix:
+                f.write(str(i)+'\n')
+            f.write('\n')
+
+
 
         # numbered matrix, end x, end y >>>> path
         # path lenght = num
@@ -756,13 +769,6 @@ class snake:
                 snake1.screen.move(5+path[i][0], 5+path[i][1]*2)
                 snake1.screen.addstr('  ', curses.color_pair(2))
             snake1.screen.addstr(0, 0, str(path)+'                    '*20)
-
-
-        if len(path)==0:
-            pass
-
-        # for i in snake1.snakes_list: ##########
-        #     i.num_matrix = [[ 0 for i in range(30)] for _ in range(30)]
 
         return path
 
@@ -1136,7 +1142,7 @@ snake1 = snake()
 snake1.snakes_list.append(snake1)
 
 
-#txt robot snake2 path
+#txt robot snake path
 f = open('robot_snake_path.txt', 'w')
 f.write(' ')
 f.close()
