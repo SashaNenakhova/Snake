@@ -770,6 +770,19 @@ class snake:
                 snake1.screen.addstr('  ', curses.color_pair(2))
             snake1.screen.addstr(0, 0, str(path)+'                    '*20)
 
+
+
+
+        if len(path)==0:
+            if self.direction=='up':
+                path[1]=[self.y-1, self.x]
+            elif self.direction=='down':
+                path[1]=[self.y+1, self.x]
+            elif self.direction=='right':
+                path[1]=[self.y, self.x+1]
+            elif self.direction=='left':
+                path[1]=[self.y, self.x-1]
+
         return path
 
 
