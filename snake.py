@@ -59,6 +59,14 @@ class snake:
         if self.second_snake==True:
             self.x, self.y=random.randint(1, 28), random.randint(1, 28)
             self.snake_body={i:[self.x, self.y] for i in range(1, 8)}
+
+            # for i in snake1.snakes_list:
+            #     for j in range(1, len(i.snake_body)+1):
+            #         if i.snake_body[j]==[snake1.x, snake1.y]:
+            #             self.initiation()
+
+            # self.snake_body={i:[self.x, self.y] for i in range(1, 8)}
+
         else:
             self.x = 15        
             self.y = 15
@@ -378,17 +386,12 @@ class snake:
             else:
                 self.matrix[y][x]=2
 
-            for i in range(1, len(self.snake_body)+1):
-                if self.snake_body[i]==[x, y]:
-                    self.delete_rabbits()
-                    self.rabbit()
 
-            if len(self.snakes_list)>1:
-                for i in self.snakes_list:
-                    for j in range(1, len(i.snake_body)+1):
-                        if i.snake_body[j]==[x, y]:
-                            self.delete_rabbits()
-                            self.rabbit()
+            for i in snake1.snakes_list:
+                for j in range(1, len(i.snake_body)+1):
+                    if i.snake_body[j]==[x, y]:
+                        self.delete_rabbits()
+                        self.rabbit()
         
 
         else:
@@ -749,10 +752,24 @@ class snake:
                 a.append(self.num_matrix[l][j])
                 b.append([l, j])
 
+            try:
+                path[i] = b[a.index(min(a))]
+                l = b[a.index(min(a))][0]
+                j = b[a.index(min(a))][1]
+            except:
+                if self.direction=='up':
+                    path[i]=[self.y-1, self.x]
+                elif self.direction=='down':
+                    path[i]=[self.y+1, self.x]
+                elif self.direction=='right':
+                    path[i]=[self.y, self.x+1]
+                elif self.direction=='left':
+                    path[i]=[self.y, self.x-1]
 
-            path[i] = b[a.index(min(a))]
-            l = b[a.index(min(a))][0]
-            j = b[a.index(min(a))][1]
+                break
+
+            # l = b[a.index(min(a))][0]
+            # j = b[a.index(min(a))][1]
 
 
 
@@ -773,7 +790,7 @@ class snake:
 
 
 
-        if len(path)==0:
+        if len(path.keys())==0:
             if self.direction=='up':
                 path[1]=[self.y-1, self.x]
             elif self.direction=='down':
@@ -782,6 +799,7 @@ class snake:
                 path[1]=[self.y, self.x+1]
             elif self.direction=='left':
                 path[1]=[self.y, self.x-1]
+
 
         return path
 
