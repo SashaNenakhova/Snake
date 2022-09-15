@@ -60,13 +60,6 @@ class snake:
             self.x, self.y=random.randint(1, 28), random.randint(1, 28)
             self.snake_body={i:[self.x, self.y] for i in range(1, 8)}
 
-            # for i in snake1.snakes_list:
-            #     for j in range(1, len(i.snake_body)+1):
-            #         if i.snake_body[j]==[snake1.x, snake1.y]:
-            #             self.initiation()
-
-            # self.snake_body={i:[self.x, self.y] for i in range(1, 8)}
-
         else:
             self.x = 15        
             self.y = 15
@@ -656,19 +649,19 @@ class snake:
 
 
 
-        if self==snake1:
-             ## draw matrix
-            for i in range(len(self.num_matrix)):
-                for j in range(len(self.num_matrix[i])):
-                    self.screen.move(5 + i, 5 + j * 2)
-                    if self.num_matrix[i][j] == 0:
-                        self.screen.addstr('0 ')
-                    if self.num_matrix[i][j] == 999:
-                        self.screen.addstr('  ', curses.color_pair(1))
-                    elif self.num_matrix[i][j] == 998:
-                        self.screen.addstr('98')
-                    else:
-                        self.screen.addstr(str(self.num_matrix[i][j])+' ')
+        # if self==snake1:
+        #      ## draw matrix
+        #     for i in range(len(self.num_matrix)):
+        #         for j in range(len(self.num_matrix[i])):
+        #             self.screen.move(5 + i, 5 + j * 2)
+        #             if self.num_matrix[i][j] == 0:
+        #                 self.screen.addstr('0 ')
+        #             if self.num_matrix[i][j] == 999:
+        #                 self.screen.addstr('  ', curses.color_pair(1))
+        #             elif self.num_matrix[i][j] == 998:
+        #                 self.screen.addstr('98')
+        #             else:
+        #                 self.screen.addstr(str(self.num_matrix[i][j])+' ')
         
         
 
@@ -708,8 +701,39 @@ class snake:
         if self!=snake1:
             for i in range(len(self.num_matrix)):
                 for t in range(len(self.num_matrix[i])):
-                    if snake1.num_matrix[i][t]<=998:
+                    if snake1.num_matrix[i][t]<998:
                         self.num_matrix[i][t]=snake1.num_matrix[i][t]
+
+
+
+
+
+    # # snake body
+        # steps=0
+        # a1, b1=0, 0
+        # snake_body=0 
+        # for i in snake1.snakes_list:
+        #     snake_body=i.snake_body
+        #     self.num_matrix[i.y][i.x]=999   
+        #     for j in range(1, len(snake_body)+1):
+        #         if snake_body[j][1]>self.y: # расстояние y
+        #             a1=snake_body[j][1]-self.y 
+        #         else:
+        #             a1=self.y-snake_body[j][1] 
+        #         if snake_body[j][0]>self.x: # расстояние x
+        #             b1=snake_body[j][0]-self.x 
+        #         else:
+        #             b1=self.x-snake_body[j][0] 
+        #         steps=len(snake_body)+1-j # через сколько шагов хвост пропадет
+        #         if steps>=a1 and steps>=b1:
+        #             self.num_matrix[snake_body[j][1]][snake_body[j][0]]=999  
+
+    # for i in snake1.snakes_list:
+    #         snake1.num_matrix[i.y][i.x]=998
+
+
+
+
 
 
         if self==snake1:
@@ -780,13 +804,8 @@ class snake:
             snake1.snakes_list[1].screen.addstr(39, 0, str(path)+'                    '*20)
 
 
-        if self==snake1:
-         # draw path
-            for i in range(1, len(path)+1):
-                snake1.screen.move(5+path[i][0], 5+path[i][1]*2)
-                snake1.screen.addstr('  ', curses.color_pair(2))
-            snake1.screen.addstr(0, 0, str(path)+'                    '*20)
-
+     
+            self.screen.refresh()
 
 
 
@@ -800,6 +819,30 @@ class snake:
             elif self.direction=='left':
                 path[1]=[self.y, self.x-1]
 
+
+
+
+        if self!=snake1:
+             ## draw matrix
+            for i in range(len(self.num_matrix)):
+                for j in range(len(self.num_matrix[i])):
+                    self.screen.move(5 + i, 5 + j * 2)
+                    if self.num_matrix[i][j] == 0:
+                        self.screen.addstr('0 ')
+                    if self.num_matrix[i][j] == 999:
+                        self.screen.addstr('99', curses.color_pair(1))
+                    elif self.num_matrix[i][j] == 998:
+                        self.screen.addstr('98')
+                    else:
+                        self.screen.addstr(str(self.num_matrix[i][j])+' ')
+        
+        if self!=snake1:
+             # draw path
+            for i in range(1, len(path)+1):
+                self.screen.move(5+path[i][0], 5+path[i][1]*2)
+                self.screen.addstr('  ', curses.color_pair(2))
+
+            self.screen.addstr(0, 0, str(path)+'                    '*20)
 
         return path
 
