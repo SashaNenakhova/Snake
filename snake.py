@@ -731,19 +731,6 @@ class snake:
 
 
 
-
-
-
-
-        if self==snake1:
-            f=open('robot_snake_path.txt', 'a')
-            f.write(str(datetime.datetime.now())+'\n'*2)
-            for i in snake1.num_matrix:
-                f.write(str(i)+'\n')
-            f.write('\n')
-
-
-
         # numbered matrix, end x, end y >>>> path
         # path lenght = num
         # j, l= end_x, end_y
@@ -832,6 +819,49 @@ class snake:
 
         if self==snake1:
             snake1.screen.addstr(3, 0, str(path)+'                    '*20)
+
+
+
+
+
+
+
+
+
+        #############
+
+        if self!=snake1:
+            f=open('robot_snake_path.txt', 'a')
+            f.write(str(datetime.datetime.now())+'\n'*2)
+            f.write(str(path)+'\n')
+            f.write(str(self.direction)+' - snake2 direction'+'\n')
+            f.write(str(snake1.robot_snake)+' snake1 robot snake'+'\n')
+
+            ###
+            f.write('snake1 body: '+str(snake1.snake_body))
+            f.write('snake22 body: '+str(snake1.snakes_list[1].snake_body))
+            for i in self.num_matrix:
+                for j in range(len(i)):
+                    if j ==999:
+                        f.write(' 99')
+                    elif j==998:
+                        f.write(' 98')
+                    else:
+                        if len(str(i[j]))==1:
+                            f.write('  '+str(i[j]))
+                        else:
+                            f.write(' '+ str(i[j]))
+                f.write('\n')
+
+            f.write('\n')
+            f.close()
+    
+
+
+
+
+
+
 
 
         for i in snake1.snakes_list:
