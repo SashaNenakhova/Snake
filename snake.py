@@ -604,6 +604,8 @@ class snake:
                             snake1.num_matrix[l][j]=value+1
 
 
+
+
                         # проверить если путь найден
                         for i in snake1.snakes_list:
                             if l==i.y and j==i.x and found==True:
@@ -838,13 +840,13 @@ class snake:
             f.write(str(snake1.robot_snake)+' snake1 robot snake'+'\n')
 
             ###
-            f.write('snake1 body: '+str(snake1.snake_body))
-            f.write('snake22 body: '+str(snake1.snakes_list[1].snake_body))
+            f.write('snake1 body: '+str(snake1.snake_body)+'\n')
+            f.write('snake2 body: '+str(snake1.snakes_list[1].snake_body)+'\n')
             for i in self.num_matrix:
                 for j in range(len(i)):
-                    if j ==999:
+                    if i[j] ==999:
                         f.write(' 99')
-                    elif j==998:
+                    elif i[j]==998:
                         f.write(' 98')
                     else:
                         if len(str(i[j]))==1:
@@ -1184,8 +1186,9 @@ class snake:
 
 
 
-
-
+    ##########
+    def load_matrix():
+        pass
 
 
 
