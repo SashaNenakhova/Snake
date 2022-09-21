@@ -524,8 +524,7 @@ class snake:
         a1, b1=0, 0
         snake_body=0 
         for i in snake1.snakes_list:
-            snake_body=i.snake_body
-            self.num_matrix[i.y][i.x]=998###   
+            snake_body=i.snake_body  
             for j in range(1, len(snake_body)+1):
                 if snake_body[j][1]>self.y: # расстояние y
                     a1=snake_body[j][1]-self.y 
@@ -538,6 +537,7 @@ class snake:
                 steps=len(snake_body)+1-j # через сколько шагов хвост пропадет
                 if steps>=a1 and steps>=b1:
                     self.num_matrix[snake_body[j][1]][snake_body[j][0]]=999  
+                self.num_matrix[i.y][i.x]=998### 
 
         # snake head
         self.num_matrix[self.y][self.x]=998
@@ -706,10 +706,6 @@ class snake:
                     if snake1.num_matrix[i][t]<998:
                         self.num_matrix[i][t]=snake1.num_matrix[i][t]
 
-            pass
-
-
-
             # snake body
             steps=0
             a1, b1=0, 0
@@ -729,6 +725,22 @@ class snake:
                     steps=len(snake_body)+1-j # через сколько шагов хвост пропадет
                     if steps>=a1 and steps>=b1:
                         self.num_matrix[snake_body[j][1]][snake_body[j][0]]=999  
+
+            self.num_matrix[self.y][self.x]=998####
+
+            ##########
+            for i in range(len(self.num_matrix)):
+                for j in range(len(self.num_matrix[i])):
+                    if self.num_matrix[i][j]==2:
+                        if self.x<=j:
+                            self.num=j-self.x
+                        else:
+                            self.num=self.x-j
+                        if self.y<=i:
+                            self.num+=i-self.y
+                        else:
+                            self.num+=self.y-i
+                    
 
 
 
@@ -787,7 +799,52 @@ class snake:
      
             self.screen.refresh()
 
+   #############
 
+        if self!=snake1:
+            f=open('robot_snake_path.txt', 'a')
+            f.write(str(datetime.datetime.now())+'\n'*2)
+            f.write(str(path)+'  path snake2'+ '\n')
+            f.write(str(self.direction)+'  snake2 direction'+'\n')
+            # f.write(str(path)+'  path snake2'+ '\n')
+            # f.write(str(self.direction)+'  snake2 direction'+'\n')
+
+            f.write(str(snake1.robot_snake)+' snake1 robot snake'+'\n')
+            f.write(str(self.num)+'  snake2 num'+'\n')
+
+            ###
+            f.write('snake1 body: '+str(snake1.snake_body)+'\n')
+            f.write('snake2 body: '+str(snake1.snakes_list[1].snake_body)+'\n')
+            for i in self.num_matrix:
+                for j in range(len(i)):
+                    if i[j] ==999:
+                        f.write(' 99')
+                    elif i[j]==998:
+                        f.write(' 98')
+                    else:
+                        if len(str(i[j]))==1:
+                            f.write('  '+str(i[j]))
+                        else:
+                            f.write(' '+ str(i[j]))
+                f.write('\n')
+
+            f.write('\n')
+            f.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
         if self!=snake1:
              ## draw matrix
             for i in range(len(self.num_matrix)):
@@ -821,43 +878,6 @@ class snake:
 
         if self==snake1:
             snake1.screen.addstr(3, 0, str(path)+'                    '*20)
-
-
-
-
-
-
-
-
-
-        #############
-
-        if self!=snake1:
-            f=open('robot_snake_path.txt', 'a')
-            f.write(str(datetime.datetime.now())+'\n'*2)
-            f.write(str(path)+'\n')
-            f.write(str(self.direction)+' - snake2 direction'+'\n')
-            f.write(str(snake1.robot_snake)+' snake1 robot snake'+'\n')
-
-            ###
-            f.write('snake1 body: '+str(snake1.snake_body)+'\n')
-            f.write('snake2 body: '+str(snake1.snakes_list[1].snake_body)+'\n')
-            for i in self.num_matrix:
-                for j in range(len(i)):
-                    if i[j] ==999:
-                        f.write(' 99')
-                    elif i[j]==998:
-                        f.write(' 98')
-                    else:
-                        if len(str(i[j]))==1:
-                            f.write('  '+str(i[j]))
-                        else:
-                            f.write(' '+ str(i[j]))
-                f.write('\n')
-
-            f.write('\n')
-            f.close()
-    
 
 
 
@@ -999,6 +1019,10 @@ class snake:
                     if key==ord('a'):
                         self.screen.clear()
                         self.robot_snake=True
+
+                #####
+                if key==ord('l'):
+                    snake1.load_matrix()
 
                 if key==ord('='): #add snake
                     self.add_snake()
@@ -1187,12 +1211,36 @@ class snake:
 
 
     ##########
-    def load_matrix():
-        pass
+    def load_matrix(self):
+        # snake1 body: {1: [21, 20], 2: [20, 20], 3: [19, 20], 4: [19, 19], 5: [19, 18], 6: [19, 17], 7: [19, 16], 8: [19, 15], 9: [19, 14], 10: [20, 14], 11: [21, 14], 12: [22, 14], 13: [23, 14], 14: [24, 14], 15: [24, 15], 16: [25, 15]}
+        # snake2 body: {1: [17, 15], 2: [16, 15], 3: [15, 15], 4: [14, 15], 5: [13, 15], 6: [12, 15], 7: [11, 15]}
+        # rabbit 15 y 22x 
+
+        
+        try:
+            self.matrix = [[ 0 for i in range(30)] for _ in range(30)]
+            ## add borders
+            for i in range(len(self.matrix)):
+                for j in range(len(self.matrix[i])):
+                    if i==0 or i==len(self.matrix)-1 or j==0 or j==len(self.matrix[i])-1:
+                        self.matrix[i][j]=1
 
 
+            self.x, self.y=21, 20
+            snake1.snakes_list[1].x, snake1.snakes_list[1].y, snake1.snakes_list[1].direction=17, 15, 'right'
 
+            snake1.snakes_list[1].scene='game'
 
+        
+            snake1.snakes_list[1].snake_body={1: [17, 15], 2: [16, 15], 3: [15, 15], 4: [14, 15], 5: [13, 15], 6: [12, 15], 7: [11, 15]}
+            snake1.snake_body={1: [21, 20], 2: [20, 20], 3: [19, 20], 4: [19, 19], 5: [19, 18], 6: [19, 17], 7: [19, 16], 8: [19, 15], 9: [19, 14], 10: [20, 14], 11: [21, 14], 12: [22, 14], 13: [23, 14], 14: [24, 14], 15: [24, 15], 16: [25, 15]}
+            
+            snake1.delete_rabbits()
+            snake1.matrix[15][22]=2
+        except:
+            pass
+
+        
 
 
 
