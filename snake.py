@@ -712,30 +712,30 @@ class snake:
             snake_body=0 
             for i in snake1.snakes_list:
                 snake_body=i.snake_body
-                self.num_matrix[i.y][i.x]=999   
-                for j in range(1, len(snake_body)+1):
-                    if snake_body[j][1]>self.y: # расстояние y
-                        a1=snake_body[j][1]-self.y 
+                self.num_matrix[i.y][i.x]=998 ###   
+                for k in range(1, len(snake_body)+1):
+                    if snake_body[k][1]>self.y: # расстояние y
+                        a1=snake_body[k][1]-self.y
                     else:
-                        a1=self.y-snake_body[j][1] 
-                    if snake_body[j][0]>self.x: # расстояние x
-                        b1=snake_body[j][0]-self.x 
+                        a1=self.y-snake_body[k][1]
+                    if snake_body[k][0]>self.x: # расстояние x
+                        b1=snake_body[k][0]-self.x
                     else:
-                        b1=self.x-snake_body[j][0] 
-                    steps=len(snake_body)+1-j # через сколько шагов хвост пропадет
+                        b1=self.x-snake_body[k][0]
+                    steps=len(snake_body)+1-k # через сколько шагов хвост пропадет
                     if steps>=a1 and steps>=b1:
-                        self.num_matrix[snake_body[j][1]][snake_body[j][0]]=999  
+                        self.num_matrix[snake_body[k][1]][snake_body[k][0]]=999
 
             self.num_matrix[self.y][self.x]=998####
 
             ##########
             for i in range(len(self.num_matrix)):
-                for j in range(len(self.num_matrix[i])):
-                    if self.num_matrix[i][j]==2:
-                        if self.x<=j:
-                            self.num=j-self.x
+                for k in range(len(self.num_matrix[i])):
+                    if self.num_matrix[i][k]==2:
+                        if self.x<=k:
+                            self.num=k-self.x
                         else:
-                            self.num=self.x-j
+                            self.num=self.x-k
                         if self.y<=i:
                             self.num+=i-self.y
                         else:
@@ -744,7 +744,9 @@ class snake:
 
 
 
-
+        if self!=snake1:
+            f=open('robot_snake_path.txt', 'a')
+            f.write(str(self.num)+'  num'+ '\n'*2)
         # numbered matrix, end x, end y >>>> path
         # path lenght = num
         # j, l= end_x, end_y
@@ -849,7 +851,7 @@ class snake:
              ## draw matrix
             for i in range(len(self.num_matrix)):
                 for j in range(len(self.num_matrix[i])):
-                    self.screen.move(5 + i, 5 + j * 3)
+                    self.screen.move(self.top_corner + i, 5 + j * 3)
                     if self.num_matrix[i][j] == 0:
                         self.screen.addstr(' 0 ')
                     if self.num_matrix[i][j] == 999:
@@ -862,7 +864,7 @@ class snake:
         if self!=snake1:
              # draw path
             for i in range(1, len(path)+1):
-                self.screen.move(5+path[i][0], 5+path[i][1]*3)
+                self.screen.move(self.top_corner+path[i][0], 5+path[i][1]*3)
                 self.screen.addstr('   ', curses.color_pair(2))
 
             self.screen.addstr(0, 0, str(path)+'                    '*20)
@@ -870,9 +872,9 @@ class snake:
             # draw snakes
             for i in snake1.snakes_list:
                 for j in range(1, len(i.snake_body)+1):
-                    self.screen.move(5+i.snake_body[j][1], 5+i.snake_body[j][0]*3)
+                    self.screen.move(self.top_corner+i.snake_body[j][1], 5+i.snake_body[j][0]*3)
                     self.screen.addstr('  ', curses.color_pair(22))
-                    self.screen.move(5+i.y, 5+i.x*3)
+                    self.screen.move(self.top_corner+i.y, 5+i.x*3)
                     self.screen.addstr('  ', curses.color_pair(33))
 
 
