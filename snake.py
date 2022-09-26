@@ -369,8 +369,9 @@ class snake:
 
     ### generate rabbits
     def rabbit(self):
+        self.delete_rabbits()
+
         if self.second_snake==False:
-            self.delete_rabbits()
 
             y, x=random.randint(1, 28), random.randint(1, 28)
 
@@ -383,17 +384,14 @@ class snake:
             for i in snake1.snakes_list:
                 for j in range(1, len(i.snake_body)+1):
                     if i.snake_body[j]==[x, y]:
-                        self.delete_rabbits()
                         self.rabbit()
         
 
         else:
-            self.delete_rabbits()
 
             for i in range(1, len(self.snake_body)+1):     
                 if self.snake_body[i]==[x, y]:
-                    self.delete_rabbits()
-                    self.rabbit()
+                    snake1.rabbit()
 
             for i in range(len(snake1.matrix)):
                 for j in range(len(snake1.matrix[i])):
@@ -701,8 +699,8 @@ class snake:
 
         # ### second snakes matrix (snakes bodies + snake1.num_matrix)
         if self!=snake1:
-            for i in range(len(self.num_matrix)):
-                for t in range(len(self.num_matrix[i])):
+            for i in range(len(snake1.num_matrix)):
+                for t in range(len(snake1.num_matrix[i])):
                     if snake1.num_matrix[i][t]<998:
                         self.num_matrix[i][t]=snake1.num_matrix[i][t]
 
@@ -1281,7 +1279,7 @@ def run_game(screen):
         
         
         for i in snake1.snakes_list:
-            i.matrix=snake1.matrix
+            # i.matrix=snake1.matrix
             i.draw()
             i.tick()
         snake1.screen.refresh()
