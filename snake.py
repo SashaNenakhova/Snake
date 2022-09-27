@@ -302,7 +302,7 @@ class snake:
     ### move body//game over if head doesn't move//snake grow if eat rabbits
     def move_body(self):
         # кролик
-        if self.matrix[self.y][self.x]==2:
+        if snake1.matrix[self.y][self.x]==2:
             self.snake_body[len(self.snake_body)+1]=self.snake_body[len(self.snake_body)]
             snake1.rabbit()
 
