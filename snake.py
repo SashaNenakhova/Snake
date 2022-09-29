@@ -701,8 +701,9 @@ class snake:
         if self!=snake1:
             for i in range(len(snake1.num_matrix)):
                 for t in range(len(snake1.num_matrix[i])):
-                    if snake1.num_matrix[i][t]<998:
+                    if snake1.num_matrix[i][t]<999:
                         self.num_matrix[i][t]=snake1.num_matrix[i][t]
+
 
             # snake body
             steps=0
@@ -783,13 +784,13 @@ class snake:
 
             except:
                 if self.direction=='up':
-                    path[i]=[self.y-1, self.x]
+                    path[1]=[self.y-1, self.x]
                 elif self.direction=='down':
-                    path[i]=[self.y+1, self.x]
+                    path[1]=[self.y+1, self.x]
                 elif self.direction=='right':
-                    path[i]=[self.y, self.x+1]
+                    path[1]=[self.y, self.x+1]
                 elif self.direction=='left':
-                    path[i]=[self.y, self.x-1]
+                    path[1]=[self.y, self.x-1]
 
                 break
 
@@ -967,10 +968,6 @@ class snake:
     ### tick
     def tick(self):         ### двигает змею
         if self.scene == 'game':
-
-            # if snake1.robot_snake==True or len(snake1.snakes_list)>1: #####################################
-            #     snake1.find_path_x, snake1.find_path_y=snake1.wave()
-            # snake1.wave()#######################
 
             if self.robot_snake==True:
                 self.auto_move_snake()
@@ -1273,13 +1270,10 @@ def run_game(screen):
     while True:
         snake1.getinput()
 
-        # snake1.find_path_x, snake1.find_path_y=snake1.wave() #######
-        if snake1.robot_snake==True or len(snake1.snakes_list)>1:
-            snake1.wave()
-        
+        # if snake1.robot_snake==True or len(snake1.snakes_list)>1:
+        #     snake1.wave()
         
         for i in snake1.snakes_list:
-            # i.matrix=snake1.matrix
             i.draw()
             i.tick()
         snake1.screen.refresh()
