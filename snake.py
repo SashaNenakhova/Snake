@@ -21,6 +21,11 @@ class snake:
     records_item=0
     new_name=''
 
+    top_corner=0
+    left_corner=0
+    num=0
+    path={}
+
     snakes_list=[]
     robot_snake=False
     second_snake=False
@@ -54,6 +59,7 @@ class snake:
         self.direction = 'up'
         self.timer = datetime.datetime.now()
 
+
     ### new game
     def initiation(self):
         if self.second_snake==True:
@@ -73,7 +79,7 @@ class snake:
             self.find_path_x, self.find_path_y=0, 0 ########################
 
         self.num_matrix= [[ 0 for i in range(30)] for _ in range(30)]
-        self.num = 0
+        self.num=0
 
         self.direction = 'up'
         self.scene='game'
@@ -505,7 +511,7 @@ class snake:
 
     #### numbered matrix
     def wave(self):
-        self.num_matrix = [[ 0 for i in range(30)] for _ in range(30)]
+        # self.num_matrix = [[ 0 for i in range(30)] for _ in range(30)]
 
         # aaa
         for i in snake1.snakes_list:
@@ -798,7 +804,7 @@ class snake:
             # j = b[a.index(min(a))][1]
 
      
-            self.screen.refresh()
+            # self.screen.refresh()
 
    #############
 
@@ -882,14 +888,6 @@ class snake:
 
 
 
-
-
-
-
-
-        for i in snake1.snakes_list:
-            i.num_matrix=[[ 0 for i in range(30)] for _ in range(30)]
-
         return path
 
 
@@ -916,23 +914,23 @@ class snake:
     def auto_move_snake(self):
 
 
-        path=self.find_path()  #######
-        if path[1][1]<self.x:
+       # path=self.find_path()  #######
+        if self.path[1][1]<self.x:
             if self.direction!='right':
                 self.rotate_snake('left')
             else:
                 self.rotate_snake('down')
-        elif path[1][1]>self.x:
+        elif self.path[1][1]>self.x:
             if self.direction!='left':
                 self.rotate_snake('right')
             else:
                 self.rotate_snake('up')
-        elif path[1][0]<self.y:
+        elif self.path[1][0]<self.y:
             if self.direction!='down':
                 self.rotate_snake('up')
             else:
                 self.rotate_snake('left')
-        elif path[1][0]>self.y:
+        elif self.path[1][0]>self.y:
             if self.direction!='up':
                 self.rotate_snake('down')
             else:
@@ -1000,7 +998,7 @@ class snake:
             if self.scene == 'game':
 
                 if self.robot_snake==True:
-                    if key==ord('a'):
+                    if key==ord('a') or key==ord('A'):
                         self.screen.clear()
                         self.robot_snake=False
                 else:
@@ -1013,30 +1011,30 @@ class snake:
                     elif key==curses.KEY_UP:
                         self.rotate_snake('up')
 
-                    if key==ord('a'):
+                    if key==ord('a') or key==ord('A'):
                         self.screen.clear()
                         self.robot_snake=True
 
                 #####
-                if key==ord('l'):
+                if key==ord('l') or key==ord('L'):
                     snake1.load_matrix()
 
-                if key==ord('='): #add snake
+                if key==ord('=') or key==ord('+'): #add snake
                     self.add_snake()
-                if key==ord('-'): #delete last snake
+                if key==ord('-') or key==ord('_'): #delete last snake
                     self.delete_snake()
 
-                if key==ord('p'):
+                if key==ord('p') or key==ord('P'):
                     self.pause()
                     
-                elif key==ord('q'):
+                elif key==ord('q') or key==ord('Q'):
                     self.screen.clear()
                     self.scene='menu'
 
 
             elif self.scene == 'menu':
 
-                if key==ord('q'):
+                if key==ord('q') or key==ord('Q'):
                     pass
                 elif key==curses.KEY_UP:
                     self.menu_item-=1
@@ -1109,11 +1107,11 @@ class snake:
                             self.new_name=''
                             self.scene='save record'
 
-                if key==ord('y'):
+                if key==ord('y') or key==ord('Y'):
                     self.screen.clear()
                     self.screen.refresh()
                     self.__init__()
-                elif key==ord('n') or key==ord('q'):
+                elif key==ord('n') or key==ord('N') or key==ord('q') or key==ord('Q'):
                     self.screen.clear()
                     self.screen.refresh()
                     sys.exit(0)
@@ -1270,12 +1268,33 @@ def run_game(screen):
     while True:
         snake1.getinput()
 
-        # if snake1.robot_snake==True or len(snake1.snakes_list)>1:
-        #     snake1.wave()
+        if snake1.robot_snake==True or len(snake1.snakes_list)>1:
+            snake1.wave()
         
         for i in snake1.snakes_list:
+            ##################
+            
+
+            ##### RABBITS
+
+            i.path=i.find_path()
+
+
+           
+
+            ##################
+
+
+
             i.draw()
             i.tick()
+
+                
+        for i in snake1.snakes_list: ########
+            i.num_matrix=[[ 0 for i in range(30)] for _ in range(30)] #######
+
+
+            
         snake1.screen.refresh()
         
 
