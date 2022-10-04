@@ -2,6 +2,9 @@ import curses
 import datetime
 import random
 
+import draw_snake_game
+from draw_snake_game import draw, draw_menu
+
 
 
 class snake:
@@ -125,102 +128,100 @@ class snake:
 
 
 
-    ### draw
-    def draw(self):
-        ## corners
-        self.left_corner = (self.screen.getmaxyx()[1])//2 - len(self.matrix[0])-15 # ширина. (-36)
-        self.top_corner = (self.screen.getmaxyx()[0])//2 - len(self.matrix)//2 # высота. (-14)
-        self.has_screen_changed()
+ #    ### draw
+ #    def draw(self):
+ #        ## corners
+ #        self.left_corner = (self.screen.getmaxyx()[1])//2 - len(self.matrix[0])-15 # ширина. (-36)
+ #        self.top_corner = (self.screen.getmaxyx()[0])//2 - len(self.matrix)//2 # высота. (-14)
+ #        self.has_screen_changed()
 
 
 
-        ## draw scenes
-        if self.second_snake==True:
-            if self.scene=="game":
-                self.draw_game()
+ #        ## draw scenes
+ #        if self.second_snake==True:
+ #            if self.scene=="game":
+ #                self.draw_game()
 
-        else:
-            ## draw scenes
-            if self.scene == 'menu':
-                self.draw_menu()
-            elif self.scene == 'game':
-                self.draw_game()
-            elif self.scene == 'game over':
-                self.draw_game_over()
-            elif self.scene == 'save record':
-                self.draw_saving_record()
-            elif self.scene == 'records':
-                self.draw_records()
+ #        else:
+ #            ## draw scenes
+ #            if self.scene == 'menu':
+ #                self.draw_menu()
+ #            elif self.scene == 'game':
+ #                self.draw_game()
+ #            elif self.scene == 'game over':
+ #                self.draw_game_over()
+ #            elif self.scene == 'save record':
+ #                self.draw_saving_record()
+ #            elif self.scene == 'records':
+ #                self.draw_records()
         
 
         
 
-    ### draw menu
-    def draw_menu(self):
-        for i in range(4):
-            if self.menu_item==i and self.menu_item!=0:
-                self.screen.addstr((self.screen.getmaxyx()[0] - 7+i*4) // 2, (self.screen.getmaxyx()[1]-14) // 2, self.menu_lst[i], curses.color_pair(6))
-            else:
-                self.screen.addstr((self.screen.getmaxyx()[0] - 7+i*4) // 2, (self.screen.getmaxyx()[1]-14) // 2, self.menu_lst[i])
+ #    ### draw menu
+ #    def draw_menu(self):
+ #        for i in range(4):
+ #            if self.menu_item==i and self.menu_item!=0:
+ #                self.screen.addstr((self.screen.getmaxyx()[0] - 7+i*4) // 2, (self.screen.getmaxyx()[1]-14) // 2, self.menu_lst[i], curses.color_pair(6))
+ #            else:
+ #                self.screen.addstr((self.screen.getmaxyx()[0] - 7+i*4) // 2, (self.screen.getmaxyx()[1]-14) // 2, self.menu_lst[i])
 
-    ### draw game
-    def draw_game(self):
-        if self.second_snake==False:
-            ## draw matrix
-            for i in range(len(self.matrix)):
-                for j in range(len(self.matrix[i])):
-                    self.screen.move(self.top_corner+i, self.left_corner+j*2)
-                    if self.matrix[i][j]==0:
-                        self.screen.addstr('  ', curses.color_pair(10))
-                    elif self.matrix[i][j]==1:
-                        self.screen.addstr('  ', curses.color_pair(1))
-                    elif self.matrix[i][j]==2:
-                        self.screen.addstr('  ', curses.color_pair(4))
-            ## lenght
-            self.screen.addstr(self.top_corner+2, self.left_corner+len(self.matrix)*2+9, ' Lenght ', curses.color_pair(17))
-            self.screen.addstr(self.top_corner+4, self.left_corner+len(self.matrix)*2+12, str(len(self.snake_body)))
-            ## auto snake
-            if self.robot_snake==True:
-                self.screen.addstr(self.top_corner+7, self.left_corner+len(self.matrix)*2+7, ' Auto snake ', curses.color_pair(16))
-
-
-            ## draw first snake
-            for i in range(2, len(self.snake_body)+1):
-                self.screen.move(self.top_corner+self.snake_body[i][1], self.left_corner+self.snake_body[i][0]*2)
-                self.screen.addstr('  ', curses.color_pair(2))
-            ## draw first snake head
-            for i in range(len(self.snake_head)):
-                for j in range(len(self.snake_head[i])):
-                    self.screen.move(self.top_corner+self.y, self.left_corner+self.x*2)
-                    self.screen.addstr('  ', curses.color_pair(3))
-
-        else:
-            ## draw second snake
-            for i in range(2, len(self.snake_body)+1):
-                snake1.screen.move(snake1.top_corner+self.snake_body[i][1], snake1.left_corner+self.snake_body[i][0]*2)
-                snake1.screen.addstr('  ', curses.color_pair(22))
-            ## draw second snake head
-            for i in range(len(self.snake_head)):
-                for j in range(len(self.snake_head[i])):
-                    snake1.screen.move(snake1.top_corner+self.y, snake1.left_corner+self.x*2)
-                    snake1.screen.addstr('  ', curses.color_pair(33))
+ #    ### draw game
+ #    def draw_game(self):
+ #        if self.second_snake==False:
+ #            ## draw matrix
+ #            for i in range(len(self.matrix)):
+ #                for j in range(len(self.matrix[i])):
+ #                    self.screen.move(self.top_corner+i, self.left_corner+j*2)
+ #                    if self.matrix[i][j]==0:
+ #                        self.screen.addstr('  ', curses.color_pair(10))
+ #                    elif self.matrix[i][j]==1:
+ #                        self.screen.addstr('  ', curses.color_pair(1))
+ #                    elif self.matrix[i][j]==2:
+ #                        self.screen.addstr('  ', curses.color_pair(4))
+ #            ## lenght
+ #            self.screen.addstr(self.top_corner+2, self.left_corner+len(self.matrix)*2+9, ' Lenght ', curses.color_pair(17))
+ #            self.screen.addstr(self.top_corner+4, self.left_corner+len(self.matrix)*2+12, str(len(self.snake_body)))
+ #            ## auto snake
+ #            if self.robot_snake==True:
+ #                self.screen.addstr(self.top_corner+7, self.left_corner+len(self.matrix)*2+7, ' Auto snake ', curses.color_pair(16))
 
 
+ #            ## draw first snake
+ #            for i in range(2, len(self.snake_body)+1):
+ #                self.screen.move(self.top_corner+self.snake_body[i][1], self.left_corner+self.snake_body[i][0]*2)
+ #                self.screen.addstr('  ', curses.color_pair(2))
+ #            ## draw first snake head
+ #            for i in range(len(self.snake_head)):
+ #                for j in range(len(self.snake_head[i])):
+ #                    self.screen.move(self.top_corner+self.y, self.left_corner+self.x*2)
+ #                    self.screen.addstr('  ', curses.color_pair(3))
+
+ #        else:
+ #            ## draw second snake
+ #            for i in range(2, len(self.snake_body)+1):
+ #                snake1.screen.move(snake1.top_corner+self.snake_body[i][1], snake1.left_corner+self.snake_body[i][0]*2)
+ #                snake1.screen.addstr('  ', curses.color_pair(22))
+ #            ## draw second snake head
+ #            for i in range(len(self.snake_head)):
+ #                for j in range(len(self.snake_head[i])):
+ #                    snake1.screen.move(snake1.top_corner+self.y, snake1.left_corner+self.x*2)
+ #                    snake1.screen.addstr('  ', curses.color_pair(33))
 
 
 
-    ### game over
-    def draw_game_over(self):
-        box1 = curses.newwin(6, 21, self.top_corner+10, self.left_corner+17)
-        box1.box()
-        box1.bkgd(' ', curses.color_pair(16))    
-
-        box1.addstr(1, 6, 'Game over', curses.color_pair(16))
-        box1.addstr(3, 1, 'Type "y" to restart')
-        box1.addstr(4, 3, 'or "n" to quit')
-        box1.refresh()
 
 
+ #    ### game over
+ #    def draw_game_over(self):
+ #        box1 = curses.newwin(6, 21, self.top_corner+10, self.left_corner+17)
+ #        box1.box()
+ #        box1.bkgd(' ', curses.color_pair(16))    
+
+ #        box1.addstr(1, 6, 'Game over', curses.color_pair(16))
+ #        box1.addstr(3, 1, 'Type "y" to restart')
+ #        box1.addstr(4, 3, 'or "n" to quit')
+ #        box1.refresh()
 
 
 
@@ -228,35 +229,37 @@ class snake:
 
 
 
- ### draw records
-    def draw_records(self):
-        self.screen.addstr(self.screen.getmaxyx()[0]//2-12, self.screen.getmaxyx()[1]//2-14+8, '  Top records')
 
-        ## draw records list
-        for i in range(1, len(self.records_top)+1):
-            j=i-1
-            self.screen.addstr((self.screen.getmaxyx()[0]) // 2 - 12+2*i, (self.screen.getmaxyx()[1]) // 2 - 14+2, str(i)+' '+self.records_top[j][0])
-            self.screen.addstr((self.screen.getmaxyx()[0]) // 2 - 12+2*i, (self.screen.getmaxyx()[1]) // 2 - 14+4+len(self.records_top[j][0])-1+len(str(j)), '-'*((24-len(self.records_top[j][0])+1-len(str(j)))+3))
-            self.screen.addstr((self.screen.getmaxyx()[0]) // 2 - 12+2*i, (self.screen.getmaxyx()[1]) // 2 - 14+4+24+3-len(str(self.records_top[j][1])), str(self.records_top[j][1]))
+
+ # ### draw records
+ #    def draw_records(self):
+ #        self.screen.addstr(self.screen.getmaxyx()[0]//2-12, self.screen.getmaxyx()[1]//2-14+8, '  Top records')
+
+ #        ## draw records list
+ #        for i in range(1, len(self.records_top)+1):
+ #            j=i-1
+ #            self.screen.addstr((self.screen.getmaxyx()[0]) // 2 - 12+2*i, (self.screen.getmaxyx()[1]) // 2 - 14+2, str(i)+' '+self.records_top[j][0])
+ #            self.screen.addstr((self.screen.getmaxyx()[0]) // 2 - 12+2*i, (self.screen.getmaxyx()[1]) // 2 - 14+4+len(self.records_top[j][0])-1+len(str(j)), '-'*((24-len(self.records_top[j][0])+1-len(str(j)))+3))
+ #            self.screen.addstr((self.screen.getmaxyx()[0]) // 2 - 12+2*i, (self.screen.getmaxyx()[1]) // 2 - 14+4+24+3-len(str(self.records_top[j][1])), str(self.records_top[j][1]))
        
-        ## draw back, clear records
-        for i in range(2):
-            if self.records_item==i:
-                # выбранная кнопка
-                self.screen.addstr(self.screen.getmaxyx()[0]//2-12+2+len(self.records_top)*2, self.screen.getmaxyx()[1]//2-14+18*i, self.records_lst[i], curses.color_pair(6))
-            else:
-                self.screen.addstr(self.screen.getmaxyx()[0]//2-12+2+len(self.records_top)*2, self.screen.getmaxyx()[1]//2-14+18*i, self.records_lst[i])
+ #        ## draw back, clear records
+ #        for i in range(2):
+ #            if self.records_item==i:
+ #                # выбранная кнопка
+ #                self.screen.addstr(self.screen.getmaxyx()[0]//2-12+2+len(self.records_top)*2, self.screen.getmaxyx()[1]//2-14+18*i, self.records_lst[i], curses.color_pair(6))
+ #            else:
+ #                self.screen.addstr(self.screen.getmaxyx()[0]//2-12+2+len(self.records_top)*2, self.screen.getmaxyx()[1]//2-14+18*i, self.records_lst[i])
 
 
- ### draw saving record
-    def draw_saving_record(self):
-        box2 = curses.newwin(5, 35, self.top_corner+18, self.left_corner+21)
-        box2.box()
-        box2.bkgd(' ', curses.color_pair(16))    
-        box2.addstr(1, 1, 'You have achieved the high score!', curses.color_pair(16))
-        box2.addstr(3, 1, 'Please, type your name:'+self.new_name, curses.color_pair(16))
-        self.screen.move(self.top_corner+18, self.left_corner+44)
-        box2.refresh()
+ # ### draw saving record
+ #    def draw_saving_record(self):
+ #        box2 = curses.newwin(5, 35, self.top_corner+18, self.left_corner+21)
+ #        box2.box()
+ #        box2.bkgd(' ', curses.color_pair(16))    
+ #        box2.addstr(1, 1, 'You have achieved the high score!', curses.color_pair(16))
+ #        box2.addstr(3, 1, 'Please, type your name:'+self.new_name, curses.color_pair(16))
+ #        self.screen.move(self.top_corner+18, self.left_corner+44)
+ #        box2.refresh()
 
 
 
@@ -1324,7 +1327,7 @@ def run_game(screen):
 
 
 
-            i.draw()
+            draw(i)
             i.tick()
 
                 
