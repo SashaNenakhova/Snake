@@ -310,7 +310,8 @@ class snake:
         # кролик
         if snake1.matrix[self.y][self.x]==2:
             self.snake_body[len(self.snake_body)+1]=self.snake_body[len(self.snake_body)]
-            snake1.rabbit()
+            #####snake1.rabbit()
+            snake1.delete_rabbits()
 
         # движение
         for i in range(len(self.snake_body), 1, -1):
@@ -1265,11 +1266,48 @@ def run_game(screen):
     snake1.screen_dimensions=snake1.screen.getmaxyx()
 
     screen.nodelay(True)
+
+
+
+
+    ############################################# 
+    #
+    #
+    #    main loop 
+    #
+    #
+    #############################################
+
     while True:
         snake1.getinput()
 
         if snake1.robot_snake==True or len(snake1.snakes_list)>1:
             snake1.wave()
+
+
+
+
+
+
+
+        # ##### RABITT
+        # for i in range(len(snake1.matrix)):
+        #     for j in range(len(snake1.matrix[i])):
+        #         if snake1.matrix[i][j]==2:
+        #             pass
+        #     else:
+        #         pass
+        # else:
+        #     snake1.rabbit()
+
+
+
+
+
+
+
+
+
         
         for i in snake1.snakes_list:
             ##################
