@@ -123,8 +123,8 @@ def draw_records(snake):
     for i in range(1, len(snake.records_top)+1):
         j=i-1
         snake.screen.addstr((snake.screen.getmaxyx()[0]) // 2 - 12+2*i, (snake.screen.getmaxyx()[1]) // 2 - 14+2, str(i)+' '+snake.records_top[j][0])
-        snake.screen.addstr((snake.screen.getmaxyx()[0]) // 2 - 12+2*i, (snake.screen.getmaxyx()[1]) // 2 - 14+4+len(snake.records_top[j][0])-1+len(str(j)), '-'*((24-len(self.records_top[j][0])+1-len(str(j)))+3))
-        snake.screen.addstr((snake.screen.getmaxyx()[0]) // 2 - 12+2*i, (snake.screen.getmaxyx()[1]) // 2 - 14+4+24+3-len(str(snake.records_top[j][1])), str(self.records_top[j][1]))
+        snake.screen.addstr((snake.screen.getmaxyx()[0]) // 2 - 12+2*i, (snake.screen.getmaxyx()[1]) // 2 - 14+4+len(snake.records_top[j][0])-1+len(str(j)), '-'*((24-len(snake.records_top[j][0])+1-len(str(j)))+3))
+        snake.screen.addstr((snake.screen.getmaxyx()[0]) // 2 - 12+2*i, (snake.screen.getmaxyx()[1]) // 2 - 14+4+24+3-len(str(snake.records_top[j][1])), str(snake.records_top[j][1]))
    
     ## draw back, clear records
     for i in range(2):
