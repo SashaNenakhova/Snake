@@ -5,6 +5,7 @@ import random
 import draw_snake_game
 from draw_snake_game import draw, draw_menu, draw_game
 from move_snake import rotate_snake, move_head, move_body, __can_move
+from records_functions import update_file, read_file, add_records, clear_records
 
 
 
@@ -52,7 +53,7 @@ class snake:
         
             self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
             self.scene='menu'
-            self.records_top=self.read_file()
+            self.records_top=read_file(self)
 
         ## add borders
         for i in range(len(self.matrix)):
@@ -179,7 +180,7 @@ class snake:
         self.screen.nodelay(False)
 
         key=0
-        while key!=ord('p'):
+        while key!=ord('p') or key!=ord('P'):
             box = curses.newwin(3, 10, self.screen.getmaxyx()[0]//2, self.screen.getmaxyx()[1]//2)
             box.box()
             box.bkgd(' ', curses.color_pair(16))    
@@ -188,7 +189,7 @@ class snake:
 
             key=self.screen.getch()
 
-            self.draw()
+            draw(self)
 
         box.bkgd(' ', curses.color_pair(0))
         box.clear()
@@ -835,7 +836,7 @@ class snake:
                         self.scene='menu'
                     elif self.records_item==1: # clear records
                         self.screen.clear()
-                        self.clear_records()
+                        self=clear_records(self)
 
                 if self.records_item==-1:
                     self.records_item=1
@@ -848,8 +849,8 @@ class snake:
                 if key==curses.KEY_ENTER or key == 10 or key == 13:
 
                     ### добавление рекорда
-                    self.add_records([self.new_name, len(self.snake_body)])
-                    self.update_file()
+                    add_records(self, [self.new_name, len(self.snake_body)])
+                    update_file(self)
 
                     self.screen.clear()
                     self.screen.refresh()
@@ -889,78 +890,6 @@ class snake:
                     if i.scene!='dead':
                         i.scene=snake1.scene
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-########### RECORDS ###########
-
-    ### updating file
-    def update_file(self):
-        file = open('records.txt', 'w')
-        strings = []
-        # списки из records_top формируются в список строк
-        for i in self.records_top: 
-            if len(i)==2:
-                strings.append(i[0] + ';' + str(i[1]))
-        # строки добавляются в конец файла
-        for i in strings: 
-            file.write(i+'\n')
-        file.close()
-
-    ### copy file to records_top
-    def read_file(self):
-        read=[]
-        try:
-            file=open('records.txt')
-            str_list=file.read().split('\n')
-            for i in str_list:
-                if ';' in i:
-                    spl=i.split(';')
-                    read.append([spl[0], int(spl[1])])
-        except FileNotFoundError:
-            file = open('records.txt', 'w')
-            file.write('')
-        file.close()
-        return read
-
-    ### add record to records_top
-    def add_records(self, record):
-        if self.records_top==[]:   # если список пустой
-            self.records_top.append(record)
-        else:
-            for i in range(len(self.records_top)):
-                if self.records_top[i][1]<record[1]:  # если есть рекорд меньше
-                    self.records_top.insert(i, record)
-                    break
-            else:
-                if len(self.records_top)<10:  # если нет рекордов меньше но есть место в списке
-                    self.records_top.append(record)
-
-        if len(self.records_top)==11:   # удаление лишних строк
-            self.records_top=self.records_top[:-1]
-
-    ### clear records
-    def clear_records(self):
-        file=open('records.txt', 'w')
-        file.write('')
-        file.close()
-        self.records_top=[]
 
 
 
