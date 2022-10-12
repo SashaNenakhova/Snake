@@ -40,12 +40,12 @@ def move_head(snake):
     return snake
 
 ### move body//game over if head doesn't move//snake grow if eat rabbits
-def move_body(snake):
+def move_body(snake, snake1):
     # кролик
-    if snake.matrix[snake.y][snake.x]==2:
+    if snake1.matrix[snake.y][snake.x]==2:
         snake.snake_body[len(snake.snake_body)+1]=snake.snake_body[len(snake.snake_body)]
-        #####snake1.rabbit()
-        snake.delete_rabbits()
+        snake1.rabbit()
+        #snake1.delete_rabbits()
 
     # движение
     for i in range(len(snake.snake_body), 1, -1):
@@ -71,18 +71,18 @@ def move_body(snake):
                             snake.scene='game over'
 
     else:
-        if len(snake.snakes_list)>2:
-            for i in snake.snakes_list:
+        if len(snake1.snakes_list)>2:
+            for i in snake1.snakes_list:
                 if i!=snake:
                     for j in range(1, len(i.snake_body)+1):
                         if i.snake_body[j]==[snake.x, snake.y]: 
                             snake.scene='dead'
 
-        for j in range(1, len(snake.snake_body)+1):
-            if snake.snake_body[j]==[snake.x, snake.y]: 
+        for j in range(1, len(snake1.snake_body)+1):
+            if snake1.snake_body[j]==[snake.x, snake.y]: 
                 snake.scene='dead'
 
-    return snake
+    return snake, snake1
 
 
 

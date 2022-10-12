@@ -730,7 +730,7 @@ class snake:
 
 
     ### tick
-    def tick(self):         ### двигает змею
+    def tick(self, snake1):         ### двигает змею
         if self.scene == 'game':
 
             if self.robot_snake==True:
@@ -738,7 +738,7 @@ class snake:
             if (datetime.datetime.now()-self.timer).microseconds>=290000: # 290000
                 self.timer=datetime.datetime.now()
                 self=move_head(self)
-                self=move_body(self)
+                self, snake1=move_body(self, snake1)
 
         if self.scene=='dead':
             if (datetime.datetime.now()-self.timer).microseconds>=290000:
@@ -769,13 +769,13 @@ class snake:
                         self.robot_snake=False
                 else:
                     if key==curses.KEY_LEFT:
-                        self.rotate_snake('left')
+                        self=rotate_snake(self, 'left')
                     elif key==curses.KEY_RIGHT:
-                        self.rotate_snake('right')
+                        self=rotate_snake(self, 'right')
                     elif key==curses.KEY_DOWN:
-                        self.rotate_snake('down')
+                        self=rotate_snake(self, 'down')
                     elif key==curses.KEY_UP:
-                        self.rotate_snake('up')
+                        self=rotate_snake(self, 'up')
 
                     if key==ord('a') or key==ord('A'):
                         self.screen.clear()
@@ -1034,7 +1034,6 @@ def run_game(screen):
 
 
 
-
     ############################################# 
     #
     #
@@ -1090,7 +1089,7 @@ def run_game(screen):
 
 
             draw(i)
-            i.tick()
+            i.tick(snake1)
 
                 
         for i in snake1.snakes_list: ########
