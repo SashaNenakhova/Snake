@@ -653,48 +653,6 @@ class snake:
 
 
 
-
-
-
-
-
-
-    # ### auto snake
-    # def auto_move_snake(self):
-
-    #     if self.path[1][1]<self.x:
-    #         if self.direction!='right':
-    #             self=rotate_snake(self, 'left')
-    #         else:
-    #             self=rotate_snake(self, 'down')
-    #     elif self.path[1][1]>self.x:
-    #         if self.direction!='left':
-    #             self=rotate_snake(self, 'right')
-    #         else:
-    #             self=rotate_snake(self, 'up')
-    #     elif self.path[1][0]<self.y:
-    #         if self.direction!='down':
-    #             self=rotate_snake(self, 'up')
-    #         else:
-    #             self=rotate_snake(self, 'left')
-    #     elif self.path[1][0]>self.y:
-    #         if self.direction!='up':
-    #             self=rotate_snake(self, 'down')
-    #         else:
-    #             self=rotate_snake(self, 'right')
-
-
-
-
-
-
-
-
-
-
-
-
-
     ### add new snake
     def add_snake(self):
         new_snake=object 
@@ -812,7 +770,7 @@ def run_game(screen):
     snake1.screen=screen
     snake1.screen_dimensions=snake1.screen.getmaxyx()
 
-    screen.nodelay(True, snake1)
+    screen.nodelay(True)#, snake1)
 
 
 
@@ -825,7 +783,11 @@ def run_game(screen):
     #############################################
 
     while True:
-        snake1=getinput(snake1)
+        getinput(snake1)
+
+
+
+
 
         if snake1.robot_snake==True or len(snake1.snakes_list)>1:
             snake1.wave()
@@ -842,8 +804,11 @@ def run_game(screen):
 
 
 
+
         
         for i in snake1.snakes_list:
+
+
             ##################
             #
             #   RABBITS
