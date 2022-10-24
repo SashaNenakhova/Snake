@@ -44,8 +44,8 @@ def move_body(snake, snake1):
     # кролик
     if snake1.matrix[snake.y][snake.x]==2:
         snake.snake_body[len(snake.snake_body)+1]=snake.snake_body[len(snake.snake_body)]
-        snake1.rabbit()
-        #snake1.delete_rabbits()
+        # snake1.rabbit()
+        snake1.delete_rabbit(snake.x, snake.y)
 
     # движение
     for i in range(len(snake.snake_body), 1, -1):

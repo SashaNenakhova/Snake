@@ -35,6 +35,7 @@ class snake:
     second_snake=False
     deadcount=0
 
+
     wave_algorithm=False
 
     ### initiation
@@ -73,10 +74,18 @@ class snake:
         else:
             self.x = 15        
             self.y = 15
-            self.delete_rabbits()
+
+
+            self.matrix = [[ 0 for i in range(30)] for _ in range(30)]
+            ## add borders
+            for i in range(len(self.matrix)):
+                for j in range(len(self.matrix[i])):
+                    if i==0 or i==len(self.matrix)-1 or j==0 or j==len(self.matrix[i])-1:
+                        self.matrix[i][j]=1
+
+
             self.robot_snake=False
             self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 15)}
-
             self.snakes_list=[snake1]
 
 
@@ -138,29 +147,27 @@ class snake:
 
 
     ### delete rabbits
-    def delete_rabbits(self):
-        for i in range(len(self.matrix)):
-            for j in range(len(self.matrix[i])):
-                if self.matrix[i][j]==2:
-                    self.matrix[i][j]=0
+    def delete_rabbit(self, x, y):
+        snake1.matrix[y][x]=0
 
     ### generate rabbits
     def rabbit(self):
-        self.delete_rabbits()
+        # self.delete_rabbits()
 
         if self.second_snake==False:
 
             y, x=random.randint(1, 28), random.randint(1, 28)
 
-            if self.matrix[y][x]==1:
+            if self.matrix[y][x]==1: # если стена
                 self.rabbit()
             else:
                 self.matrix[y][x]=2
 
 
-            for i in snake1.snakes_list:
+            for i in snake1.snakes_list: # если змея
                 for j in range(1, len(i.snake_body)+1):
                     if i.snake_body[j]==[x, y]:
+                        self.delete_rabbit(x, y)
                         self.rabbit()
         
 
@@ -168,7 +175,8 @@ class snake:
 
             for i in range(1, len(self.snake_body)+1):     
                 if self.snake_body[i]==[x, y]:
-                    snake1.rabbit()
+                    # snake1.rabbit()
+                    snake1.delete_rabbit(x, y)
 
             for i in range(len(snake1.matrix)):
                 for j in range(len(snake1.matrix[i])):
@@ -735,7 +743,7 @@ class snake:
             snake1.snakes_list[1].snake_body={1: [17, 15], 2: [16, 15], 3: [15, 15], 4: [14, 15], 5: [13, 15], 6: [12, 15], 7: [11, 15]}
             snake1.snake_body={1: [21, 20], 2: [20, 20], 3: [19, 20], 4: [19, 19], 5: [19, 18], 6: [19, 17], 7: [19, 16], 8: [19, 15], 9: [19, 14], 10: [20, 14], 11: [21, 14], 12: [22, 14], 13: [23, 14], 14: [24, 14], 15: [24, 15], 16: [25, 15]}
             
-            snake1.delete_rabbits()
+            # snake1.delete_rabbits()
             snake1.matrix[15][22]=2
         except:
             pass
@@ -783,38 +791,40 @@ def run_game(screen):
     #############################################
 
     while True:
+
+            ### GET INPUT
         getinput(snake1)
 
 
 
 
-
+            ### AUTO SNAKE
         if snake1.robot_snake==True or len(snake1.snakes_list)>1:
             snake1.wave()
 
-        # ##### RABITTS
-        # for i in range(len(snake1.matrix)):
-        #     for j in range(len(snake1.matrix[i])):
-        #         if snake1.matrix[i][j]==2:
-        #             pass
+
+
+            ### RABITTS
+        count_rabbits=0
+
+        for i in range(len(snake1.matrix)):
+            for j in range(len(snake1.matrix[i])):
+                if snake1.matrix[i][j]==2:
+                    pass
+                    count_rabbits+=1
         #     else:
         #         pass
         # else:
         #     snake1.rabbit()
+        if count_rabbits==0:
+            snake1.rabbit()
+
 
 
 
 
         
         for i in snake1.snakes_list:
-
-
-            ##################
-            #
-            #   RABBITS
-            #
-            ##################
-
 
             i.path=i.find_path()
             draw(i)

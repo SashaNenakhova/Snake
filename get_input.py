@@ -1,5 +1,6 @@
 import curses
 from move_snake import *
+from records_functions import *
 
 ### get input
 def getinput(snake):
@@ -133,8 +134,6 @@ def getinput(snake):
             for i in snake.snakes_list:
                 if i.scene!='dead':
                     i.scene=snake.scene
-
-  #  return snake
 
 
 
