@@ -43,7 +43,7 @@ class snake:
         screen = None
 
         ## create matrix and a snake
-        self.matrix = [[ 0 for i in range(30)] for _ in range(30)]
+        self.matrix = [[ 0 for i in range(40)] for _ in range(40)]
         self.snake_head = [[0]]
 
         if self.second_snake==True:
@@ -76,7 +76,7 @@ class snake:
             self.y = 15
 
 
-            self.matrix = [[ 0 for i in range(30)] for _ in range(30)]
+            self.matrix = [[ 0 for i in range(40)] for _ in range(40)]
             ## add borders
             for i in range(len(self.matrix)):
                 for j in range(len(self.matrix[i])):
@@ -91,7 +91,7 @@ class snake:
 
             self.find_path_x, self.find_path_y=0, 0 ########################
 
-        self.num_matrix= [[ 0 for i in range(30)] for _ in range(30)]
+        self.num_matrix= [[ 0 for i in range(40)] for _ in range(40)]
         self.num=0
 
         self.direction = 'up'
@@ -212,6 +212,10 @@ class snake:
             box.refresh()
 
             key=self.screen.getch()
+
+            self.screen.addstr(20, 20, chr(key))
+            self.screen.refresh()
+            key=ord('p')
 
             draw(self)
 
@@ -726,7 +730,7 @@ class snake:
 
         
         try:
-            self.matrix = [[ 0 for i in range(30)] for _ in range(30)]
+            self.matrix = [[ 0 for i in range(40)] for _ in range(40)]
             ## add borders
             for i in range(len(self.matrix)):
                 for j in range(len(self.matrix[i])):
@@ -832,7 +836,7 @@ def run_game(screen):
 
                 
         for i in snake1.snakes_list: 
-            i.num_matrix=[[ 0 for i in range(30)] for _ in range(30)] 
+            i.num_matrix=[[ 0 for i in range(40)] for _ in range(40)] 
             
         snake1.screen.refresh()
         
