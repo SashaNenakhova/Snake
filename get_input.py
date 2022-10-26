@@ -31,12 +31,12 @@ def getinput(snake):
             if key==ord('l') or key==ord('L'):
                 snake.load_matrix()
 
-            if key==ord('=') or key==ord('+'): #add snake
+            if key==ord('=') or key==ord('+'): # add snake
                 snake.add_snake()
-            if key==ord('-') or key==ord('_'): #delete last snake
+            if key==ord('-') or key==ord('_'): # delete last snake
                 snake.delete_snake()
 
-            if key==ord('p') or key==ord('P'):
+            if key==ord('p') or key==ord('P'): # pause
                 snake.pause()
                 
             elif key==ord('q') or key==ord('Q'):

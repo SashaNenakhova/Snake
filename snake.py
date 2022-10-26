@@ -204,7 +204,7 @@ class snake:
         self.screen.nodelay(False)
 
         key=0
-        while key!=ord('p') or key!=ord('P'):
+        while True:
             box = curses.newwin(3, 10, self.screen.getmaxyx()[0]//2, self.screen.getmaxyx()[1]//2)
             box.box()
             box.bkgd(' ', curses.color_pair(16))    
@@ -213,9 +213,11 @@ class snake:
 
             key=self.screen.getch()
 
-            self.screen.addstr(20, 20, chr(key))
-            self.screen.refresh()
-            key=ord('p')
+            # self.screen.addstr(20, 20, chr(key))
+            # self.screen.refresh()
+            # key=ord('p')
+            if key==ord('p') or key==ord('P'):
+                break
 
             draw(self)
 
@@ -629,7 +631,7 @@ class snake:
              ## draw matrix
             for i in range(len(self.num_matrix)):
                 for j in range(len(self.num_matrix[i])):
-                    self.screen.move(self.top_corner + i, 5 + j * 3)
+                    self.screen.move(self.top_corner + i, j * 3)
                     if self.num_matrix[i][j] == 0:
                         self.screen.addstr(' 0 ')
                     if self.num_matrix[i][j] == 999:
@@ -820,8 +822,9 @@ def run_game(screen):
         #         pass
         # else:
         #     snake1.rabbit()
-        if count_rabbits==0:
+        if count_rabbits<2:
             snake1.rabbit()
+
 
 
 
