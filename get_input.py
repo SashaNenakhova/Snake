@@ -14,14 +14,40 @@ def getinput(snake):
                     snake.screen.clear()
                     snake.robot_snake=False
             else:
-                if key==curses.KEY_LEFT:
-                    snake=rotate_snake(snake, 'left')
-                elif key==curses.KEY_RIGHT:
-                    snake=rotate_snake(snake, 'right')
-                elif key==curses.KEY_DOWN:
-                    snake=rotate_snake(snake, 'down')
-                elif key==curses.KEY_UP:
-                    snake=rotate_snake(snake, 'up')
+
+                if snake.rotate_keys.count(0)<2:
+                    if key==curses.KEY_LEFT:
+                        snake.rotate_keys[1]='left'
+                    elif key==curses.KEY_RIGHT:
+                        snake.rotate_keys[1]='right'
+                    elif key==curses.KEY_DOWN:
+                       snake.rotate_keys[1]='down'
+                    elif key==curses.KEY_UP:
+                        snake.rotate_keys[1]='up'
+                else:
+                    if key==curses.KEY_LEFT:
+                        snake.rotate_keys[0]='left'
+                    elif key==curses.KEY_RIGHT:
+                        snake.rotate_keys[0]='right'
+                    elif key==curses.KEY_DOWN:
+                       snake.rotate_keys[0]='down'
+                    elif key==curses.KEY_UP:
+                        snake.rotate_keys[0]='up'
+
+
+                try:
+                    snake=rotate_snake(snake, snake.rotate_keys[0])
+                except:
+                    pass
+
+
+
+                # elif key==curses.KEY_RIGHT:
+                #     snake=rotate_snake(snake, 'right')
+                # elif key==curses.KEY_DOWN:
+                #     snake=rotate_snake(snake, 'down')
+                # elif key==curses.KEY_UP:
+                #     snake=rotate_snake(snake, 'up')
 
                 if key==ord('a') or key==ord('A'):
                     snake.screen.clear()

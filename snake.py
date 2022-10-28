@@ -24,6 +24,7 @@ class snake:
     records_lst=[' Back ', ' Clear results ']
     records_item=0
     new_name=''
+    rotate_keys=[0, 0]
 
     top_corner=0
     left_corner=0
@@ -34,6 +35,7 @@ class snake:
     robot_snake=False
     second_snake=False
     deadcount=0
+
 
 
     wave_algorithm=False
@@ -212,10 +214,6 @@ class snake:
             box.refresh()
 
             key=self.screen.getch()
-
-            # self.screen.addstr(20, 20, chr(key))
-            # self.screen.refresh()
-            # key=ord('p')
             if key==ord('p') or key==ord('P'):
                 break
 
@@ -703,6 +701,13 @@ class snake:
                 self=move_head(self)
                 self, snake1=move_body(self, snake1)
 
+                try:
+                    snake1.rotate_keys=snake1.rotate_keys[1:]
+                    snake1.rotate_keys.append(0)
+                except:
+                    snake1.rotate_keys=[0, 0]
+
+
         if self.scene=='dead':
             if (datetime.datetime.now()-self.timer).microseconds>=290000:
                 draw_game(self)
@@ -836,6 +841,7 @@ def run_game(screen):
             i.path=i.find_path()
             draw(i)
             i.tick(snake1)
+
 
                 
         for i in snake1.snakes_list: 
