@@ -104,27 +104,30 @@ def __can_move(snake, new_x, new_y):
 
 ### auto snake
 def auto_move_snake(snake):
+    try:
 
-    if snake.path[1][1]<snake.x:
-        if snake.direction!='right':
-            snake=rotate_snake(snake, 'left')
-        else:
-            snake=rotate_snake(snake, 'down')
-    elif snake.path[1][1]>snake.x:
-        if snake.direction!='left':
-            snake=rotate_snake(snake, 'right')
-        else:
-            snake=rotate_snake(snake, 'up')
-    elif snake.path[1][0]<snake.y:
-        if snake.direction!='down':
-            snake=rotate_snake(snake, 'up')
-        else:
-            snake=rotate_snake(snake, 'left')
-    elif snake.path[1][0]>snake.y:
-        if snake.direction!='up':
-            snake=rotate_snake(snake, 'down')
-        else:
-            snake=rotate_snake(snake, 'right')
+        if snake.path[1][1]<snake.x:
+            if snake.direction!='right':
+                snake=rotate_snake(snake, 'left')
+            else:
+                snake=rotate_snake(snake, 'down')
+        elif snake.path[1][1]>snake.x:
+            if snake.direction!='left':
+                snake=rotate_snake(snake, 'right')
+            else:
+                snake=rotate_snake(snake, 'up')
+        elif snake.path[1][0]<snake.y:
+            if snake.direction!='down':
+                snake=rotate_snake(snake, 'up')
+            else:
+                snake=rotate_snake(snake, 'left')
+        elif snake.path[1][0]>snake.y:
+            if snake.direction!='up':
+                snake=rotate_snake(snake, 'down')
+            else:
+                snake=rotate_snake(snake, 'right')
+    except KeyError:
+        pass
 
     return snake
 

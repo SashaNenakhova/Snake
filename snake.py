@@ -810,7 +810,7 @@ def run_game(screen):
 
 
             ### AUTO SNAKE
-        if snake1.robot_snake==True or len(snake1.snakes_list)>1:
+        if snake1.scene=='game' and (snake1.robot_snake==True or len(snake1.snakes_list)>1):  ############
             snake1.wave()
 
 
@@ -821,12 +821,8 @@ def run_game(screen):
         for i in range(len(snake1.matrix)):
             for j in range(len(snake1.matrix[i])):
                 if snake1.matrix[i][j]==2:
-                    pass
                     count_rabbits+=1
-        #     else:
-        #         pass
-        # else:
-        #     snake1.rabbit()
+
         if count_rabbits<2:
             snake1.rabbit()
 
@@ -837,8 +833,8 @@ def run_game(screen):
 
         
         for i in snake1.snakes_list:
-
-            i.path=i.find_path()
+            if snake1.scene=='game':                                              ###################
+                i.path=i.find_path()
             draw(i)
             i.tick(snake1)
 
