@@ -803,6 +803,10 @@ def run_game(screen):
 
     while True:
 
+
+
+
+
             ### GET INPUT
         getinput(snake1)
 
@@ -837,6 +841,16 @@ def run_game(screen):
                 i.path=i.find_path()
             draw(i)
             i.tick(snake1)
+            for i in snake1.snakes_list:
+
+                i.path=i.find_path()
+                draw(i)
+                i.tick(snake1)
+
+                if snake1.scene!='game':
+                    snake1.snakes_list=[snake1]
+
+
 
 
                 

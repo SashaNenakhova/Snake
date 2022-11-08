@@ -1,5 +1,5 @@
 import curses
-from move_snake import *
+from move_ssnake import *
 from records_functions import *
 
 ### get input
@@ -119,7 +119,7 @@ def getinput(snake):
             # запись имени
             if key==curses.KEY_ENTER or key == 10 or key == 13:
 
-                ### добавление рекорда
+                                                                        ### добавление рекорда
                 add_records(snake, [snake.new_name, len(snake.snake_body)])
                 update_file(snake)
 
@@ -135,6 +135,8 @@ def getinput(snake):
                         
 
         elif snake.scene == 'game over':
+
+
             # records
             if len(snake.records_top)<10:
                 snake.new_name=''
