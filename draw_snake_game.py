@@ -71,19 +71,17 @@ def draw_game(snake):
                 snake.screen.move(snake.top_corner+snake.y, snake.left_corner+snake.x*2)
                 snake.screen.addstr('  ', curses.color_pair(3))
 
-
-
-        ################
-        #
-        #
-        #
-        snake.screen.addstr(10, 10, str(snake.rotate_keys)+'           ')
-        #
-        #
-        #
-        ##########################
-
     else:
+        # ## draw second snake
+        # for i in range(2, len(snake.snake_body)+1):
+        #     snake1.screen.move(snake1.top_corner+snake.snake_body[i][1], snake1.left_corner+snake.snake_body[i][0]*2)
+        #     snake1.screen.addstr('  ', curses.color_pair(22))
+        # ## draw second snake head
+        # for i in range(len(snake.snake_head)):
+        #     for j in range(len(snake.snake_head[i])):
+        #         snake1.screen.move(snake1.top_corner+snake.y, snake1.left_corner+snake.x*2)
+        #         snake1.screen.addstr('  ', curses.color_pair(33))
+
         ## draw second snake
         for i in range(2, len(snake.snake_body)+1):
             snake.screen.move(snake.top_corner+snake.snake_body[i][1], snake.left_corner+snake.snake_body[i][0]*2)
@@ -93,9 +91,6 @@ def draw_game(snake):
             for j in range(len(snake.snake_head[i])):
                 snake.screen.move(snake.top_corner+snake.y, snake.left_corner+snake.x*2)
                 snake.screen.addstr('  ', curses.color_pair(33))
-
-
-
 
 
 
