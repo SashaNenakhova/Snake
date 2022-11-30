@@ -389,7 +389,7 @@ class snake:
                         # нижняя клетка
                         if snake1.num_matrix[l+1][j]<998 and snake1.num_matrix[l+1][j]>0: 
                             found=True
-                            if snake1.num_matrix[l+1][j]<value: # поиск наименьшего значения 
+                            if snake1.num_matrix[l+1][j]<value: # поиск наименьшего значения  
                                 value = snake1.num_matrix[l+1][j]
 
                         # левая клетка
@@ -403,6 +403,7 @@ class snake:
                             found=True
                             if snake1.num_matrix[l][j+1]<value: # поиск наименьшего значения 
                                 value = snake1.num_matrix[l][j+1]
+
 
 
 
@@ -837,7 +838,7 @@ def run_game(screen):
 
         
         for i in snake1.snakes_list:
-            if snake1.scene=='game':                                              ###################
+            if snake1.scene=='game':                                              ##################
                 i.path=i.find_path()
             draw(i)
             i.tick(snake1)
