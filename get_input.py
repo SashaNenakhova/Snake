@@ -1,5 +1,5 @@
 import curses
-from move_ssnake import *
+from move_snake import *
 from records_functions import *
 
 ### get input
@@ -40,21 +40,15 @@ def getinput(snake):
                 except:
                     pass
 
-
-
-                # elif key==curses.KEY_RIGHT:
-                #     snake=rotate_snake(snake, 'right')
-                # elif key==curses.KEY_DOWN:
-                #     snake=rotate_snake(snake, 'down')
-                # elif key==curses.KEY_UP:
-                #     snake=rotate_snake(snake, 'up')
-
                 if key==ord('a') or key==ord('A'):
                     snake.screen.clear()
                     snake.robot_snake=True
 
-            #####
-            if key==ord('l') or key==ord('L'):
+            if key==ord('c'): # statistic
+                    snake.counting=True
+
+            
+            if key==ord('l') or key==ord('L'): # загрузить стакан
                 snake.load_matrix()
 
             if key==ord('=') or key==ord('+'): # add snake
@@ -65,7 +59,7 @@ def getinput(snake):
             if key==ord('p') or key==ord('P'): # pause
                 snake.pause()
                 
-            elif key==ord('q') or key==ord('Q'):
+            elif key==ord('q') or key==ord('Q'): # exit
                 snake.screen.clear()
                 snake.scene='menu'
 
@@ -119,7 +113,7 @@ def getinput(snake):
             # запись имени
             if key==curses.KEY_ENTER or key == 10 or key == 13:
 
-                                                                        ### добавление рекорда
+                ### добавление рекорда
                 add_records(snake, [snake.new_name, len(snake.snake_body)])
                 update_file(snake)
 

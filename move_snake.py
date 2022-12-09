@@ -22,6 +22,9 @@ def rotate_snake(snake, command):     ### изменяет направлени�
 
     return snake
 
+
+
+
 ### changes x and y of snake head
 def move_head(snake):
     if snake.direction=='left':
@@ -39,15 +42,18 @@ def move_head(snake):
 
     return snake
 
-### move body//game over if head doesn't move//snake grow if eat rabbits
+
+
+
+### move body       //     game over if head doesn't move      //    snake grow if eat rabbits
 def move_body(snake, snake1):
     # кролик
     if snake1.matrix[snake.y][snake.x]==2:
-        snake.snake_body[len(snake.snake_body)+1]=snake.snake_body[len(snake.snake_body)]
+        # snake.snake_body[len(snake.snake_body)+1]=snake.snake_body[len(snake.snake_body)] ###################
         # snake1.rabbit()
         snake1.delete_rabbit(snake.x, snake.y)
 
-    # движение
+    # двигает хвост змеи на 1 вперед
     for i in range(len(snake.snake_body), 1, -1):
         snake.snake_body[i]=snake.snake_body[i-1] 
 
@@ -55,7 +61,8 @@ def move_body(snake, snake1):
     for i in range(2, len(snake.snake_body)+1):
         if snake.snake_body[i]==[snake.x, snake.y]: 
             if snake.second_snake==False:
-                snake.scene='game over'
+                # snake.scene='game over' ########################
+                pass
                 
             else:
                 snake.scene='dead'
@@ -68,7 +75,8 @@ def move_body(snake, snake1):
                 if i!=snake:
                     for j in range(1, len(i.snake_body)+1):
                         if i.snake_body[j]==[snake.x, snake.y]: 
-                            snake.scene='game over'
+                            # snake.scene='game over' ##################################
+                            pass
 
     else:
         if len(snake1.snakes_list)>2:
@@ -126,7 +134,7 @@ def auto_move_snake(snake):
                 snake=rotate_snake(snake, 'down')
             else:
                 snake=rotate_snake(snake, 'right')
-    except KeyError:
+    except:
         pass
 
     return snake

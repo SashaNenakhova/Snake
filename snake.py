@@ -36,7 +36,12 @@ class snake:
     second_snake=False
     deadcount=0
 
+    steps_count=0 ##################### statistic #################################
+    counting=False
+    timer2=0
+    count_time=0
 
+    count_rabbits=0
 
     wave_algorithm=False
 
@@ -87,8 +92,10 @@ class snake:
 
 
             self.robot_snake=False
+            self.robot_snake=True ############ stat
             self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 15)}
             self.snakes_list=[snake1]
+            self.count_rabbits=0
 
 
             self.find_path_x, self.find_path_y=0, 0 ########################
@@ -154,8 +161,6 @@ class snake:
 
     ### generate rabbits
     def rabbit(self):
-        # self.delete_rabbits()
-
         if self.second_snake==False:
 
             y, x=random.randint(1, 28), random.randint(1, 28)
@@ -248,7 +253,7 @@ class snake:
 
     def path_not_found(self):
 
-        self.num_matrix[self.y][self.x]=1###
+        self.num_matrix[self.y][self.x]=1
 
         num=0
         while num<30:
@@ -312,10 +317,12 @@ class snake:
 
 
 
-
+    ## сюда попадает только основная змея
     #### numbered matrix
     def wave(self):
-        # self.num_matrix = [[ 0 for i in range(30)] for _ in range(30)]
+
+        if snake1.counting==True:               ########################################
+            snake1.timer2=datetime.datetime.now()
 
         # aaa
         for i in snake1.snakes_list:
@@ -408,7 +415,6 @@ class snake:
 
 
                         # увеличить значение в центральной клетке до наименьшего+1
-                        # if found==True and value<snake1.num and snake1.num_matrix[l][j]==0:
                         if found==True and value<snake1.num and snake1.num_matrix[l][j]==0:
                             snake1.num_matrix[l][j]=value+1
 
@@ -418,7 +424,6 @@ class snake:
                         # проверить если путь найден
                         for i in snake1.snakes_list:
                             if l==i.y and j==i.x and found==True:
-                            # if (snake1.num_matrix[i.y-1][i.x]>0 and snake1.num_matrix[i.y-1][i.x]<999) or (snake1.num_matrix[i.y+1][i.x]>0 and snake1.num_matrix[i.y+1][i.x]<999) or (snake1.num_matrix[i.y][i.x-1]>0 and snake1.num_matrix[i.y][i.x-1]<999) or (snake1.num_matrix[i.y][i.x+1]>0 and snake1.num_matrix[i.y][i.x+1]<999):
                                 i.wave_algorithm=True
                                 i.num=snake1.num
 
@@ -429,50 +434,36 @@ class snake:
                             pathfound=True
 
             snake1.num+=1
-            if snake1.num>100:
+            if snake1.num>60 or snake1.count_rabbits==0:
                 pathnotfound=True
                 pathfound=True
 
+
+
+        #########################################
+
         # на пути хвост
         # if pathnotfound==True:
-        for i in snake1.snakes_list:
-            if i.wave_algorithm!=True:
-                i.path_not_found() ##################
+        # for i in snake1.snakes_list:
+        #     if i.wave_algorithm!=True:
+        #         i.path_not_found()            ###################################### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if snake1.wave_algorithm==False and snake1.count_rabbits>0: ###
+            snake1.path_not_found()
+        #########################
 
 
-            # поиск пути к наибольшему значению (самой дальней клетке)
-
-            # pass # новая функция где волна распространяется от змеи
-
-        # else:
-        #     ###############
-        #     for i in range(len(snake1.num_matrix)):
-        #         for j in range(len(snake1.num_matrix[i])):
-        #             if snake1.num_matrix[i][j]==1:
-        #                 end_y, end_x=i, j
 
 
-        # if self==snake1:
-        #      ## draw matrix
-        #     for i in range(len(self.num_matrix)):
-        #         for j in range(len(self.num_matrix[i])):
-        #             self.screen.move(5 + i, 5 + j * 2)
-        #             if self.num_matrix[i][j] == 0:
-        #                 self.screen.addstr('0 ')
-        #             if self.num_matrix[i][j] == 999:
-        #                 self.screen.addstr('  ', curses.color_pair(1))
-        #             elif self.num_matrix[i][j] == 998:
-        #                 self.screen.addstr('98')
-        #             else:
-        #                 self.screen.addstr(str(self.num_matrix[i][j])+' ')
-        
-        
-        ###############
+
         for i in snake1.snakes_list:
             i.wave_algorithm=False
 
-
         snake1.find_path_x, snake1.find_path_y=end_x, end_y
+
+        ################# statisctic ##############################################
+        if snake1.counting==True:
+            snake1.count_time+=(datetime.datetime.now()-snake1.timer2).microseconds
+        ###########################################################################    
 
 
 
@@ -490,6 +481,10 @@ class snake:
 
     # find path
     def find_path(self): # -screen, self
+
+        if snake1.counting==True:               ########################################
+            snake1.timer2=datetime.datetime.now()
+
 
         j, l=self.x, self.y ###
 
@@ -542,7 +537,6 @@ class snake:
         # path lenght = num
         # j, l= end_x, end_y
         path={}
-        # for i in range(snake1.num-2, 0, -1):
         for i in range(1, self.num+1):
 
             a = [] # список значений из numbered matrix
@@ -586,45 +580,37 @@ class snake:
 
                 break
 
-            # l = b[a.index(min(a))][0]
-            # j = b[a.index(min(a))][1]
 
-     
-            # self.screen.refresh()
+        ############# robot snake path ###############################################
+        # if self!=snake1:
+        #     f=open('robot_snake_path.txt', 'a')
+        #     f.write(str(datetime.datetime.now())+'\n'*2)
+        #     f.write(str(path)+'  path snake2'+ '\n')
+        #     f.write(str(self.direction)+'  snake2 direction'+'\n')
+        #     # f.write(str(path)+'  path snake2'+ '\n')
+        #     # f.write(str(self.direction)+'  snake2 direction'+'\n')
 
-   #############
+        #     f.write(str(snake1.robot_snake)+' snake1 robot snake'+'\n')
+        #     f.write(str(self.num)+'  snake2 num'+'\n')
 
-        if self!=snake1:
-            f=open('robot_snake_path.txt', 'a')
-            f.write(str(datetime.datetime.now())+'\n'*2)
-            f.write(str(path)+'  path snake2'+ '\n')
-            f.write(str(self.direction)+'  snake2 direction'+'\n')
-            # f.write(str(path)+'  path snake2'+ '\n')
-            # f.write(str(self.direction)+'  snake2 direction'+'\n')
-
-            f.write(str(snake1.robot_snake)+' snake1 robot snake'+'\n')
-            f.write(str(self.num)+'  snake2 num'+'\n')
-
-            ###
-            f.write('snake1 body: '+str(snake1.snake_body)+'\n')
-            f.write('snake2 body: '+str(snake1.snakes_list[1].snake_body)+'\n')
-            for i in self.num_matrix:
-                for j in range(len(i)):
-                    if i[j] ==999:
-                        f.write(' 99')
-                    elif i[j]==998:
-                        f.write(' 98')
-                    else:
-                        if len(str(i[j]))==1:
-                            f.write('  '+str(i[j]))
-                        else:
-                            f.write(' '+ str(i[j]))
-                f.write('\n')
-
-            f.write('\n')
-            f.close()
-
-    ################
+        #     ###
+        #     f.write('snake1 body: '+str(snake1.snake_body)+'\n')
+        #     f.write('snake2 body: '+str(snake1.snakes_list[1].snake_body)+'\n')
+        #     for i in self.num_matrix:
+        #         for j in range(len(i)):
+        #             if i[j] ==999:
+        #                 f.write(' 99')
+        #             elif i[j]==998:
+        #                 f.write(' 98')
+        #             else:
+        #                 if len(str(i[j]))==1:
+        #                     f.write('  '+str(i[j]))
+        #                 else:
+        #                     f.write(' '+ str(i[j]))
+        #         f.write('\n')
+        #     f.write('\n')
+        #     f.close()
+        #######################################################################
     
         if self!=snake1:
              ## draw matrix
@@ -658,6 +644,34 @@ class snake:
         if self==snake1:
             snake1.screen.addstr(3, 0, str(path)+'                    '*20)
 
+
+
+        ############################## statisctic ###############################################
+        if snake1.counting==True:
+            snake1.count_time+=(datetime.datetime.now()-snake1.timer2).microseconds
+            if self==snake1:
+                snake1.steps_count+=1
+                try:
+                    f=open('snakestat'+str(len(snake1.snakes_list)), 'a')
+                except FileNotFoundError:
+                    f=open('snakestat'+str(len(snake1.snakes_list), 'w'))
+                f.write(str(snake1.count_time)+'\n')
+                snake1.count_time=0
+                if snake1.steps_count==500:
+                    
+                    snake1.steps_count=0
+                    # snake1.counting=False
+                    snake1.add_snake()
+
+                    snake1.screen.addstr(1, 0, '                                  ')
+                    snake1.screen.addstr(0, 0, '                                      ')
+                    snake1.screen.addstr(2, 0, '                                        ')
+
+            snake1.screen.addstr(1, 0, 'counting='+str(snake1.counting)+'   ')
+            snake1.screen.addstr(0, 0, 'steps count='+str(snake1.steps_count)+'   ')
+            snake1.screen.addstr(2, 0, 'snakes: '+str(len(snake1.snakes_list))+'   ')
+        ##########################################################################################
+
         return path
 
 
@@ -678,6 +692,7 @@ class snake:
         new_snake.initiation()
         new_snake.screen_dimensions=new_snake.screen.getmaxyx()
         snake1.snakes_list.append(new_snake)
+
     ### delete last snake
     def delete_snake(self):
         if len(snake1.snakes_list)>1:
@@ -697,7 +712,7 @@ class snake:
 
             if self.robot_snake==True:
                 self=auto_move_snake(self)
-            if (datetime.datetime.now()-self.timer).microseconds>=290000: # 290000
+            if (datetime.datetime.now()-self.timer).microseconds>=100: # 290000
                 self.timer=datetime.datetime.now()
                 self=move_head(self)
                 self, snake1=move_body(self, snake1)
@@ -710,9 +725,9 @@ class snake:
 
 
         if self.scene=='dead':
-            if (datetime.datetime.now()-self.timer).microseconds>=290000:
+            if (datetime.datetime.now()-self.timer).microseconds>=100:
                 draw_game(self)
-            if (datetime.datetime.now()-self.timer).microseconds>=580000: # 580000
+            if (datetime.datetime.now()-self.timer).microseconds>=200: # 580000
                 self.timer=datetime.datetime.now()
                 self.deadcount+=1
             if self.deadcount==5:
@@ -730,35 +745,35 @@ class snake:
 
 
 
-    ##########
-    def load_matrix(self):
-        # snake1 body: {1: [21, 20], 2: [20, 20], 3: [19, 20], 4: [19, 19], 5: [19, 18], 6: [19, 17], 7: [19, 16], 8: [19, 15], 9: [19, 14], 10: [20, 14], 11: [21, 14], 12: [22, 14], 13: [23, 14], 14: [24, 14], 15: [24, 15], 16: [25, 15]}
-        # snake2 body: {1: [17, 15], 2: [16, 15], 3: [15, 15], 4: [14, 15], 5: [13, 15], 6: [12, 15], 7: [11, 15]}
-        # rabbit 15 y 22x 
+    # ##########
+    # def load_matrix(self):
+    #     # snake1 body: {1: [21, 20], 2: [20, 20], 3: [19, 20], 4: [19, 19], 5: [19, 18], 6: [19, 17], 7: [19, 16], 8: [19, 15], 9: [19, 14], 10: [20, 14], 11: [21, 14], 12: [22, 14], 13: [23, 14], 14: [24, 14], 15: [24, 15], 16: [25, 15]}
+    #     # snake2 body: {1: [17, 15], 2: [16, 15], 3: [15, 15], 4: [14, 15], 5: [13, 15], 6: [12, 15], 7: [11, 15]}
+    #     # rabbit 15 y 22x 
 
         
-        try:
-            self.matrix = [[ 0 for i in range(40)] for _ in range(40)]
-            ## add borders
-            for i in range(len(self.matrix)):
-                for j in range(len(self.matrix[i])):
-                    if i==0 or i==len(self.matrix)-1 or j==0 or j==len(self.matrix[i])-1:
-                        self.matrix[i][j]=1
+    #     try:
+    #         self.matrix = [[ 0 for i in range(40)] for _ in range(40)]
+    #         ## add borders
+    #         for i in range(len(self.matrix)):
+    #             for j in range(len(self.matrix[i])):
+    #                 if i==0 or i==len(self.matrix)-1 or j==0 or j==len(self.matrix[i])-1:
+    #                     self.matrix[i][j]=1
 
 
-            self.x, self.y=21, 20
-            snake1.snakes_list[1].x, snake1.snakes_list[1].y, snake1.snakes_list[1].direction=17, 15, 'right'
+    #         self.x, self.y=21, 20
+    #         snake1.snakes_list[1].x, snake1.snakes_list[1].y, snake1.snakes_list[1].direction=17, 15, 'right'
 
-            snake1.snakes_list[1].scene='game'
+    #         snake1.snakes_list[1].scene='game'
 
         
-            snake1.snakes_list[1].snake_body={1: [17, 15], 2: [16, 15], 3: [15, 15], 4: [14, 15], 5: [13, 15], 6: [12, 15], 7: [11, 15]}
-            snake1.snake_body={1: [21, 20], 2: [20, 20], 3: [19, 20], 4: [19, 19], 5: [19, 18], 6: [19, 17], 7: [19, 16], 8: [19, 15], 9: [19, 14], 10: [20, 14], 11: [21, 14], 12: [22, 14], 13: [23, 14], 14: [24, 14], 15: [24, 15], 16: [25, 15]}
+    #         snake1.snakes_list[1].snake_body={1: [17, 15], 2: [16, 15], 3: [15, 15], 4: [14, 15], 5: [13, 15], 6: [12, 15], 7: [11, 15]}
+    #         snake1.snake_body={1: [21, 20], 2: [20, 20], 3: [19, 20], 4: [19, 19], 5: [19, 18], 6: [19, 17], 7: [19, 16], 8: [19, 15], 9: [19, 14], 10: [20, 14], 11: [21, 14], 12: [22, 14], 13: [23, 14], 14: [24, 14], 15: [24, 15], 16: [25, 15]}
             
-            # snake1.delete_rabbits()
-            snake1.matrix[15][22]=2
-        except:
-            pass
+    #         # snake1.delete_rabbits()
+    #         snake1.matrix[15][22]=2
+    #     except:
+    #         pass
 
         
 
@@ -821,14 +836,14 @@ def run_game(screen):
 
 
             ### RABITTS
-        count_rabbits=0
+        snake1.count_rabbits=0 ############
 
         for i in range(len(snake1.matrix)):
             for j in range(len(snake1.matrix[i])):
                 if snake1.matrix[i][j]==2:
-                    count_rabbits+=1
+                    snake1.count_rabbits+=1
 
-        if count_rabbits<2:
+        if snake1.count_rabbits<1: # количество кроликов
             snake1.rabbit()
 
 
@@ -836,20 +851,18 @@ def run_game(screen):
 
 
 
-        
+            ### GAME
         for i in snake1.snakes_list:
-            if snake1.scene=='game':                                              ##################
+
+            if snake1.scene=='game':                                              
                 i.path=i.find_path()
             draw(i)
             i.tick(snake1)
-            for i in snake1.snakes_list:
 
-                i.path=i.find_path()
-                draw(i)
-                i.tick(snake1)
 
-                if snake1.scene!='game':
-                    snake1.snakes_list=[snake1]
+
+            if snake1.scene!='game':
+                snake1.snakes_list=[snake1]
 
 
 
