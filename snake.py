@@ -321,9 +321,6 @@ class snake:
     #### numbered matrix
     def wave(self):
 
-        if snake1.counting==True:               ########################################
-            snake1.timer2=datetime.datetime.now()
-
         # aaa
         for i in snake1.snakes_list:
             i.wave_algorithm=False
@@ -460,11 +457,6 @@ class snake:
 
         snake1.find_path_x, snake1.find_path_y=end_x, end_y
 
-        ################# statisctic ##############################################
-        if snake1.counting==True:
-            snake1.count_time+=(datetime.datetime.now()-snake1.timer2).microseconds
-        ###########################################################################    
-
 
 
 
@@ -579,38 +571,6 @@ class snake:
                     path[1]=[self.y, self.x-1]
 
                 break
-
-
-        ############# robot snake path ###############################################
-        # if self!=snake1:
-        #     f=open('robot_snake_path.txt', 'a')
-        #     f.write(str(datetime.datetime.now())+'\n'*2)
-        #     f.write(str(path)+'  path snake2'+ '\n')
-        #     f.write(str(self.direction)+'  snake2 direction'+'\n')
-        #     # f.write(str(path)+'  path snake2'+ '\n')
-        #     # f.write(str(self.direction)+'  snake2 direction'+'\n')
-
-        #     f.write(str(snake1.robot_snake)+' snake1 robot snake'+'\n')
-        #     f.write(str(self.num)+'  snake2 num'+'\n')
-
-        #     ###
-        #     f.write('snake1 body: '+str(snake1.snake_body)+'\n')
-        #     f.write('snake2 body: '+str(snake1.snakes_list[1].snake_body)+'\n')
-        #     for i in self.num_matrix:
-        #         for j in range(len(i)):
-        #             if i[j] ==999:
-        #                 f.write(' 99')
-        #             elif i[j]==998:
-        #                 f.write(' 98')
-        #             else:
-        #                 if len(str(i[j]))==1:
-        #                     f.write('  '+str(i[j]))
-        #                 else:
-        #                     f.write(' '+ str(i[j]))
-        #         f.write('\n')
-        #     f.write('\n')
-        #     f.close()
-        #######################################################################
     
         if self!=snake1:
              ## draw matrix
@@ -644,33 +604,6 @@ class snake:
         if self==snake1:
             snake1.screen.addstr(3, 0, str(path)+'                    '*20)
 
-
-
-        ############################## statisctic ###############################################
-        if snake1.counting==True:
-            snake1.count_time+=(datetime.datetime.now()-snake1.timer2).microseconds
-            if self==snake1:
-                snake1.steps_count+=1
-                try:
-                    f=open('snakestat'+str(len(snake1.snakes_list)), 'a')
-                except FileNotFoundError:
-                    f=open('snakestat'+str(len(snake1.snakes_list), 'w'))
-                f.write(str(snake1.count_time)+'\n')
-                snake1.count_time=0
-                if snake1.steps_count==500:
-                    
-                    snake1.steps_count=0
-                    # snake1.counting=False
-                    snake1.add_snake()
-
-                    snake1.screen.addstr(1, 0, '                                  ')
-                    snake1.screen.addstr(0, 0, '                                      ')
-                    snake1.screen.addstr(2, 0, '                                        ')
-
-            snake1.screen.addstr(1, 0, 'counting='+str(snake1.counting)+'   ')
-            snake1.screen.addstr(0, 0, 'steps count='+str(snake1.steps_count)+'   ')
-            snake1.screen.addstr(2, 0, 'snakes: '+str(len(snake1.snakes_list))+'   ')
-        ##########################################################################################
 
         return path
 
@@ -736,55 +669,6 @@ class snake:
 
         
 
-
-
-
-
-
-
-
-
-
-    # ##########
-    # def load_matrix(self):
-    #     # snake1 body: {1: [21, 20], 2: [20, 20], 3: [19, 20], 4: [19, 19], 5: [19, 18], 6: [19, 17], 7: [19, 16], 8: [19, 15], 9: [19, 14], 10: [20, 14], 11: [21, 14], 12: [22, 14], 13: [23, 14], 14: [24, 14], 15: [24, 15], 16: [25, 15]}
-    #     # snake2 body: {1: [17, 15], 2: [16, 15], 3: [15, 15], 4: [14, 15], 5: [13, 15], 6: [12, 15], 7: [11, 15]}
-    #     # rabbit 15 y 22x 
-
-        
-    #     try:
-    #         self.matrix = [[ 0 for i in range(40)] for _ in range(40)]
-    #         ## add borders
-    #         for i in range(len(self.matrix)):
-    #             for j in range(len(self.matrix[i])):
-    #                 if i==0 or i==len(self.matrix)-1 or j==0 or j==len(self.matrix[i])-1:
-    #                     self.matrix[i][j]=1
-
-
-    #         self.x, self.y=21, 20
-    #         snake1.snakes_list[1].x, snake1.snakes_list[1].y, snake1.snakes_list[1].direction=17, 15, 'right'
-
-    #         snake1.snakes_list[1].scene='game'
-
-        
-    #         snake1.snakes_list[1].snake_body={1: [17, 15], 2: [16, 15], 3: [15, 15], 4: [14, 15], 5: [13, 15], 6: [12, 15], 7: [11, 15]}
-    #         snake1.snake_body={1: [21, 20], 2: [20, 20], 3: [19, 20], 4: [19, 19], 5: [19, 18], 6: [19, 17], 7: [19, 16], 8: [19, 15], 9: [19, 14], 10: [20, 14], 11: [21, 14], 12: [22, 14], 13: [23, 14], 14: [24, 14], 15: [24, 15], 16: [25, 15]}
-            
-    #         # snake1.delete_rabbits()
-    #         snake1.matrix[15][22]=2
-    #     except:
-    #         pass
-
-        
-
-
-
-
-
-
-
-
-
 def run_game(screen):
     curses.curs_set(0)
     curses.start_color()
@@ -820,58 +704,90 @@ def run_game(screen):
     while True:
 
 
+#input #interface #rabbits #find path #tick
 
 
-
-            ### GET INPUT
+            ### INPUT
         getinput(snake1)
 
 
+            ### INTERFACE
+        for i in snake1.snakes_list:
+            draw(i)
 
 
-            ### AUTO SNAKE
-        if snake1.scene=='game' and (snake1.robot_snake==True or len(snake1.snakes_list)>1):  ############
-            snake1.wave()
-
-
-
-            ### RABITTS
-        snake1.count_rabbits=0 ############
-
+            ### RABBITS
+        snake1.count_rabbits=0
         for i in range(len(snake1.matrix)):
             for j in range(len(snake1.matrix[i])):
                 if snake1.matrix[i][j]==2:
                     snake1.count_rabbits+=1
-
         if snake1.count_rabbits<1: # количество кроликов
             snake1.rabbit()
 
 
+            ### FIND PATH
+        if snake1.scene=='game' and (snake1.robot_snake==True or len(snake1.snakes_list)>1):  ############
+             snake1.wave()                 ###### wave1() wave2() ...
+        if snake1.scene=='game':
+            for i in snake1.snakes_list:
+                i.path=i.find_path()       ###### find_path1() find_path2() ...
 
 
-
-
-            ### GAME
+            ### TICK
         for i in snake1.snakes_list:
-
-            if snake1.scene=='game':                                              
-                i.path=i.find_path()
-            draw(i)
             i.tick(snake1)
 
 
-
-            if snake1.scene!='game':
-                snake1.snakes_list=[snake1]
-
-
-
-
-                
         for i in snake1.snakes_list: 
             i.num_matrix=[[ 0 for i in range(40)] for _ in range(40)] 
-            
         snake1.screen.refresh()
+
+
+
+
+
+
+
+
+
+        #     ### AUTO SNAKE
+        # if snake1.scene=='game' and (snake1.robot_snake==True or len(snake1.snakes_list)>1):  ############
+        #     snake1.wave()
+
+        #     ### RABBITS
+        # snake1.count_rabbits=0 ############
+
+        # for i in range(len(snake1.matrix)):
+        #     for j in range(len(snake1.matrix[i])):
+        #         if snake1.matrix[i][j]==2:
+        #             snake1.count_rabbits+=1
+
+        # if snake1.count_rabbits<1: # количество кроликов
+        #     snake1.rabbit()
+
+        #     ### GAME
+        # for i in snake1.snakes_list:
+
+        #     if snake1.scene=='game':                                              
+        #         i.path=i.find_path()
+        #     draw(i)
+        #     i.tick(snake1)
+
+
+
+        # for i in snake1.snakes_list: 
+        #     i.num_matrix=[[ 0 for i in range(40)] for _ in range(40)] 
+            
+        # snake1.screen.refresh()
+
+
+
+
+
+
+
+
         
 
 snake1 = snake()
@@ -893,7 +809,31 @@ curses.wrapper(run_game)
 
 
 
+        # ############################## statisctic ###############################################
+        # if snake1.counting==True:
+        #     snake1.count_time+=(datetime.datetime.now()-snake1.timer2).microseconds
+        #     if self==snake1:
+        #         snake1.steps_count+=1
+        #         try:
+        #             f=open('snakestat'+str(len(snake1.snakes_list)), 'a')
+        #         except FileNotFoundError:
+        #             f=open('snakestat'+str(len(snake1.snakes_list), 'w'))
+        #         f.write(str(snake1.count_time)+'\n')
+        #         snake1.count_time=0
+        #         if snake1.steps_count==500:
+                    
+        #             snake1.steps_count=0
+        #             # snake1.counting=False
+        #             snake1.add_snake()
 
+        #             snake1.screen.addstr(1, 0, '                                  ')
+        #             snake1.screen.addstr(0, 0, '                                      ')
+        #             snake1.screen.addstr(2, 0, '                                        ')
+
+        #     snake1.screen.addstr(1, 0, 'counting='+str(snake1.counting)+'   ')
+        #     snake1.screen.addstr(0, 0, 'steps count='+str(snake1.steps_count)+'   ')
+        #     snake1.screen.addstr(2, 0, 'snakes: '+str(len(snake1.snakes_list))+'   ')
+        # ##########################################################################################
 
 
 
