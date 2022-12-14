@@ -195,21 +195,6 @@ from get_input import *                     #getinput
 #                         self.matrix[y][x]=2
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #  ### pause
 #     def pause(self):
 #         self.screen.nodelay(False)
@@ -233,6 +218,69 @@ from get_input import *                     #getinput
 #         box.refresh()
 
 #         self.screen.nodelay(True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -317,13 +365,13 @@ def path_not_found(self):
 
 
 
+
+
+
+
+
 #### numbered matrix
-def wave(self):
-    # self.num_matrix = [[ 0 for i in range(30)] for _ in range(30)]
-
-    if snake1.counting==True:               ########################################
-       snake1.timer2=datetime.datetime.now()
-
+def wave3(self):
 
     # aaa
     for i in snake1.snakes_list:
@@ -453,10 +501,9 @@ def wave(self):
 
 
 
-     ################# statisctic ##############################################
-    if snake1.counting==True:
-        snake1.count_time+=(datetime.datetime.now()-snake1.timer2).microseconds
-    ###########################################################################   
+
+
+
 
 
 
@@ -473,11 +520,7 @@ def wave(self):
 
 
 # find path
-def find_path(self): # -screen, self
-
-    if snake1.counting==True:               ########################################
-       snake1.timer2=datetime.datetime.now()
-
+def find_path3(self): # -screen, self
     j, l=self.x, self.y ###
 
     # ### second snakes matrix (snakes bodies + snake1.num_matrix)
@@ -486,7 +529,6 @@ def find_path(self): # -screen, self
             for t in range(len(snake1.num_matrix[i])):
                 if snake1.num_matrix[i][t]<999:
                     self.num_matrix[i][t]=snake1.num_matrix[i][t]
-
         # snake body
         steps=0
         a1, b1=0, 0
@@ -604,40 +646,46 @@ def find_path(self): # -screen, self
     if self==snake1:
         snake1.screen.addstr(3, 0, str(path)+'                    '*20)
 
-
-
-
-    ############################## statisctic ###############################################
-    if snake1.counting==True:
-        
-        snake1.count_time+=(datetime.datetime.now()-snake1.timer2).microseconds
-        if self==snake1:
-            snake1.steps_count+=1
-            try:
-                f=open('snakestat'+str(len(snake1.snakes_list)), 'a')
-            except FileNotFoundError:
-                f=open('snakestat'+str(len(snake1.snakes_list), 'w'))
-            f.write(str(snake1.count_time)+'\n')
-            snake1.count_time=0
-            if snake1.steps_count==500:
-                
-                snake1.steps_count=0
-                # snake1.counting=False
-                snake1.add_snake()
-
-                snake1.screen.addstr(1, 0, '                                  ')
-                snake1.screen.addstr(0, 0, '                                      ')
-                snake1.screen.addstr(2, 0, '                                        ')
-
-        snake1.screen.addstr(1, 0, 'counting='+str(snake1.counting)+'                      ')
-        snake1.screen.addstr(0, 0, 'steps count='+str(snake1.steps_count)+'                 ')
-        snake1.screen.addstr(2, 0, 'snakes: '+str(len(snake1.snakes_list))+'                 ')
-
-        snake1.screen.refresh()
-    ##########################################################################################
-
-
     return path
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

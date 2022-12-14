@@ -210,12 +210,6 @@ import random
 
 
 
-
-
-
-
-
-
 #  ### draw records
 #     def draw_records(self):
 #         self.screen.addstr(self.screen.getmaxyx()[0]//2-12, self.screen.getmaxyx()[1]//2-14+8, '  Top records')
@@ -245,15 +239,6 @@ import random
 #         box2.addstr(3, 1, 'Please, type your name:'+self.new_name, curses.color_pair(16))
 #         self.screen.move(self.top_corner+18, self.left_corner+44)
 #         box2.refresh()
-
-
-
-
-
-
-
-
-
 
 
 
@@ -424,8 +409,56 @@ import random
 #         self.screen.nodelay(True)
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # find path
-def find_path(self, matrix): # -screen, self
+def find_path1(self, matrix): # -screen, self
+    matrix=snake1.matrix
+
+
+
+
+    #####
+
+
     num_matrix = [[ 0 for i in range(30)] for _ in range(30)]
 
 
@@ -505,11 +538,6 @@ def find_path(self, matrix): # -screen, self
                     num_matrix[other_snake[j][1]][other_snake[j][0]]=999                                  
 
    
-
-
-
-
-
 
 
 
@@ -645,6 +673,58 @@ def find_path(self, matrix): # -screen, self
         f.write(str(i)+'\n')
 
     return path
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

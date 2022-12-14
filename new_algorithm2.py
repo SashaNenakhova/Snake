@@ -156,6 +156,62 @@ from get_input import *                     #getinput
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def path_not_found(self):
     self.num_matrix[self.y][self.x]=1
     num=0
@@ -216,21 +272,7 @@ def path_not_found(self):
 
 ## сюда попадает только основная змея
 #### numbered matrix
-def wave(self):
-
-
-
-
-
-    if snake1.counting==True:               ########################################
-        snake1.timer2=datetime.datetime.now()
-
-
-
-
-
-
-
+def wave4(self):
     # aaa
     for i in snake1.snakes_list:
         i.wave_algorithm=False
@@ -344,7 +386,7 @@ def wave(self):
 
 
 # find path
-def find_path(self): # -screen, self
+def find_path4(self): # -screen, self
 
     j, l=self.x, self.y ###
     # ### second snakes matrix (snakes bodies + snake1.num_matrix)
@@ -456,6 +498,68 @@ def find_path(self): # -screen, self
     if self==snake1:
         snake1.screen.addstr(3, 0, str(path)+'                    '*20)
     return path
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

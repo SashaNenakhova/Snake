@@ -2,10 +2,17 @@ import curses
 import datetime
 import random
 
-from draw_snake_game import *               #draw, draw_menu, draw_game
-from move_snake import *                    #rotate_snake, move_head, move_body, __can_move, auto_move_snake
-from records_functions import *             #update_file, read_file, add_records, clear_records
-from get_input import *                     #getinput
+from draw_snake_game import *               # draw, draw_menu, draw_game
+from move_snake import *                    # rotate_snake, move_head, move_body, __can_move, auto_move_snake
+from records_functions import *             # update_file, read_file, add_records, clear_records
+from get_input import *                     # getinput
+
+from original_algorithm import *            # find_path1
+from new_algorithm import *                 # find_path2
+from algorithm2 import *                    # find_path3, wave3
+from new_algorithm2 import*                 # find_path4, wave4
+
+
 
 
 class snake:
@@ -189,6 +196,16 @@ class snake:
                 for j in range(len(snake1.matrix[i])):
                     if snake1.matrix[i][j]==2:
                         self.matrix[y][x]=2
+
+    ### manage rabbits (count and create rabbits)
+    def manage_rabbits(self):
+        snake1.count_rabbits=0
+        for i in range(len(snake1.matrix)):
+            for j in range(len(snake1.matrix[i])):
+                if snake1.matrix[i][j]==2:
+                    snake1.count_rabbits+=1
+        if snake1.count_rabbits<1: # количество кроликов
+            snake1.rabbit()
 
 
 
@@ -716,14 +733,16 @@ def run_game(screen):
             draw(i)
 
 
-            ### RABBITS
-        snake1.count_rabbits=0
-        for i in range(len(snake1.matrix)):
-            for j in range(len(snake1.matrix[i])):
-                if snake1.matrix[i][j]==2:
-                    snake1.count_rabbits+=1
-        if snake1.count_rabbits<1: # количество кроликов
-            snake1.rabbit()
+            ### RABBITS.        убрать цикл в функцию manage rabbits !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        snake1.manage_rabbits()
+
+
+
+
+
+
+            ### COUNT TIME
+        snake1.timer2=datetime.datetime.now()
 
 
             ### FIND PATH
@@ -732,6 +751,39 @@ def run_game(screen):
         if snake1.scene=='game':
             for i in snake1.snakes_list:
                 i.path=i.find_path()       ###### find_path1() find_path2() ...
+
+
+            ### WRITE TIME
+        if snake1.counting==True:
+            snake1.count_time+=(datetime.datetime.now()-snake1.timer2).microseconds
+
+            snake1.steps_count+=1
+            try:
+                f=open('snakestat'+str(len(snake1.snakes_list)), 'a')
+            except FileNotFoundError:
+                f=open('snakestat'+str(len(snake1.snakes_list), 'w'))
+            f.write(str(snake1.count_time)+'\n')
+            snake1.count_time=0
+            if snake1.steps_count==500:
+                
+                snake1.steps_count=0
+                # snake1.counting=False
+                snake1.add_snake()
+
+                snake1.screen.addstr(1, 0, '                                  ')
+                snake1.screen.addstr(0, 0, '                                      ')
+                snake1.screen.addstr(2, 0, '                                        ')
+
+            snake1.screen.addstr(1, 0, 'counting='+str(snake1.counting)+'   ')
+            snake1.screen.addstr(0, 0, 'steps count='+str(snake1.steps_count)+'   ')
+            snake1.screen.addstr(2, 0, 'snakes: '+str(len(snake1.snakes_list))+'   ')
+        ##########################################################################################
+
+
+
+
+
+
 
 
             ### TICK
@@ -747,48 +799,6 @@ def run_game(screen):
 
 
 
-
-
-
-
-        #     ### AUTO SNAKE
-        # if snake1.scene=='game' and (snake1.robot_snake==True or len(snake1.snakes_list)>1):  ############
-        #     snake1.wave()
-
-        #     ### RABBITS
-        # snake1.count_rabbits=0 ############
-
-        # for i in range(len(snake1.matrix)):
-        #     for j in range(len(snake1.matrix[i])):
-        #         if snake1.matrix[i][j]==2:
-        #             snake1.count_rabbits+=1
-
-        # if snake1.count_rabbits<1: # количество кроликов
-        #     snake1.rabbit()
-
-        #     ### GAME
-        # for i in snake1.snakes_list:
-
-        #     if snake1.scene=='game':                                              
-        #         i.path=i.find_path()
-        #     draw(i)
-        #     i.tick(snake1)
-
-
-
-        # for i in snake1.snakes_list: 
-        #     i.num_matrix=[[ 0 for i in range(40)] for _ in range(40)] 
-            
-        # snake1.screen.refresh()
-
-
-
-
-
-
-
-
-        
 
 snake1 = snake()
 snake1.snakes_list.append(snake1)

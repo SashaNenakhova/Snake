@@ -434,8 +434,51 @@ import random
 #         self.screen.nodelay(True)
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # find path
-def find_path(self, matrix): # -screen, self
+def find_path2(self, matrix): # -screen, self
     self.num_matrix = [[ 0 for i in range(30)] for _ in range(30)]
 
     # rabbit
@@ -653,6 +696,51 @@ def find_path(self, matrix): # -screen, self
   
 
     return path
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
