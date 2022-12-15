@@ -721,7 +721,7 @@ def run_game(screen):
     while True:
 
 
-#input #interface #rabbits #find path #tick
+            #input #interface #rabbits #find path #tick
 
 
             ### INPUT
@@ -733,7 +733,7 @@ def run_game(screen):
             draw(i)
 
 
-            ### RABBITS.        убрать цикл в функцию manage rabbits !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            ### RABBITS
         snake1.manage_rabbits()
 
 
@@ -742,20 +742,24 @@ def run_game(screen):
 
 
             ### COUNT TIME
-        snake1.timer2=datetime.datetime.now()
+        if snake1.counting==True:
+            timer2=datetime.datetime.now()
 
 
             ### FIND PATH
         if snake1.scene=='game' and (snake1.robot_snake==True or len(snake1.snakes_list)>1):  ############
-             snake1.wave()                 ###### wave1() wave2() ...
+             ### snake1.wave()                 ###### wave3() wave4() ...
+             # snake1=wave3(snake1)
+             pass
         if snake1.scene=='game':
             for i in snake1.snakes_list:
-                i.path=i.find_path()       ###### find_path1() find_path2() ...
+                # i.path=i.find_path()       ###### find_path1() find_path2() ...
+                i.path=find_path1(i, snake1)
 
 
             ### WRITE TIME
         if snake1.counting==True:
-            snake1.count_time+=(datetime.datetime.now()-snake1.timer2).microseconds
+            snake1.count_time+=(datetime.datetime.now()-timer2).microseconds
 
             snake1.steps_count+=1
             try:
@@ -777,7 +781,6 @@ def run_game(screen):
             snake1.screen.addstr(1, 0, 'counting='+str(snake1.counting)+'   ')
             snake1.screen.addstr(0, 0, 'steps count='+str(snake1.steps_count)+'   ')
             snake1.screen.addstr(2, 0, 'snakes: '+str(len(snake1.snakes_list))+'   ')
-        ##########################################################################################
 
 
 

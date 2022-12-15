@@ -450,7 +450,7 @@ import random
 
 
 # find path
-def find_path1(self, matrix): # -screen, self
+def find_path1(self, snake1): # -screen, self
     matrix=snake1.matrix
 
 
@@ -459,7 +459,7 @@ def find_path1(self, matrix): # -screen, self
     #####
 
 
-    num_matrix = [[ 0 for i in range(30)] for _ in range(30)]
+    num_matrix = [[ 0 for i in range(40)] for _ in range(40)]
 
 
     # borders
