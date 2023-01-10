@@ -8,9 +8,9 @@ from records_functions import *             # update_file, read_file, add_record
 from get_input import *                     # getinput
 
 from original_algorithm import *            # find_path1
-from new_algorithm import *                 # find_path2
-from algorithm2 import *                    # find_path3, wave3
-from new_algorithm2 import*                 # find_path4, wave4
+from one_matrix import *                 # find_path2
+from reversed_algorithm import *                    # find_path3, wave3
+from reversed_algorithm2 import*                 # find_path4, wave4
 
 
 
@@ -686,6 +686,18 @@ class snake:
 
         
 
+
+
+
+
+
+
+
+
+
+
+        
+
 def run_game(screen):
     curses.curs_set(0)
     curses.start_color()
@@ -749,12 +761,12 @@ def run_game(screen):
             ### FIND PATH
         if snake1.scene=='game' and (snake1.robot_snake==True or len(snake1.snakes_list)>1):  ############
              ### snake1.wave()                 ###### wave3() wave4() ...
-             # snake1=wave3(snake1)
+             wave3(snake1)
              pass
         if snake1.scene=='game':
             for i in snake1.snakes_list:
                 # i.path=i.find_path()       ###### find_path1() find_path2() ...
-                i.path=find_path1(i, snake1)
+                i.path=find_path3(i, snake1)
 
 
             ### WRITE TIME
@@ -814,42 +826,6 @@ f.close()
 
 
 curses.wrapper(run_game)
-
-
-
-
-
-
-
-
-        # ############################## statisctic ###############################################
-        # if snake1.counting==True:
-        #     snake1.count_time+=(datetime.datetime.now()-snake1.timer2).microseconds
-        #     if self==snake1:
-        #         snake1.steps_count+=1
-        #         try:
-        #             f=open('snakestat'+str(len(snake1.snakes_list)), 'a')
-        #         except FileNotFoundError:
-        #             f=open('snakestat'+str(len(snake1.snakes_list), 'w'))
-        #         f.write(str(snake1.count_time)+'\n')
-        #         snake1.count_time=0
-        #         if snake1.steps_count==500:
-                    
-        #             snake1.steps_count=0
-        #             # snake1.counting=False
-        #             snake1.add_snake()
-
-        #             snake1.screen.addstr(1, 0, '                                  ')
-        #             snake1.screen.addstr(0, 0, '                                      ')
-        #             snake1.screen.addstr(2, 0, '                                        ')
-
-        #     snake1.screen.addstr(1, 0, 'counting='+str(snake1.counting)+'   ')
-        #     snake1.screen.addstr(0, 0, 'steps count='+str(snake1.steps_count)+'   ')
-        #     snake1.screen.addstr(2, 0, 'snakes: '+str(len(snake1.snakes_list))+'   ')
-        # ##########################################################################################
-
-
-
 
 
 
