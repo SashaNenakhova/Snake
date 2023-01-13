@@ -683,8 +683,50 @@ class snake:
             if self.deadcount==5:
                 self.deadcount=0
                 self.initiation()
+         
 
-        
+
+
+# original algorithm
+def find_path_1():
+     if snake1.scene=='game':
+            for i in snake1.snakes_list:
+                # i.path=i.find_path()       ###### find_path1() find_path2() ...
+                i.path=find_path1(i, snake1)
+    pass        
+
+
+def find_path_2():
+    pass
+
+
+def find_path_3():
+    pass
+
+def find_path_4():
+    pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -733,45 +775,74 @@ def run_game(screen):
     while True:
 
 
+
+        # input()
+        # draw()
+        # rabbits()
+
+        # get_timer1
+
+        # find_path()
+        # #find_path2()
+
+
+
+        # gettimer2
+        # savetimetofile
+
+
+        # tick()
+
+
+
             #input #interface #rabbits #find path #tick
 
 
-            ### INPUT
+        ### INPUT
         getinput(snake1)
 
 
-            ### INTERFACE
+        ### INTERFACE
         for i in snake1.snakes_list:
             draw(i)
 
 
-            ### RABBITS
+        ### RABBITS
         snake1.manage_rabbits()
 
 
 
-
-
-
-            ### COUNT TIME
+        ### COUNT TIME
         if snake1.counting==True:
             timer2=datetime.datetime.now()
 
 
-            ### FIND PATH
+        ### FIND PATH
         if snake1.scene=='game' and (snake1.robot_snake==True or len(snake1.snakes_list)>1):  ############
              ### snake1.wave()                 ###### wave3() wave4() ...
-             wave3(snake1)
+             # wave3(snake1)
              pass
         if snake1.scene=='game':
             for i in snake1.snakes_list:
                 # i.path=i.find_path()       ###### find_path1() find_path2() ...
-                i.path=find_path3(i, snake1)
+                i.path=find_path1(i, snake1)
 
 
-            ### WRITE TIME
+        ### WRITE TIME
         if snake1.counting==True:
-            snake1.count_time+=(datetime.datetime.now()-timer2).microseconds
+
+
+
+
+
+
+            # snake1.count_time+=(datetime.datetime.now()-timer2).microseconds
+            snake1.count_time+=(datetime.datetime.now()-timer2).seconds*1000000+(datetime.datetime.now()-timer2).microseconds
+
+
+
+
+
 
             snake1.steps_count+=1
             try:
@@ -779,12 +850,15 @@ def run_game(screen):
             except FileNotFoundError:
                 f=open('snakestat'+str(len(snake1.snakes_list), 'w'))
             f.write(str(snake1.count_time)+'\n')
+            snake1.screen.addstr(4, 0, 'snake1.count_time:      '+str(snake1.count_time))
             snake1.count_time=0
             if snake1.steps_count==500:
                 
                 snake1.steps_count=0
                 # snake1.counting=False
                 snake1.add_snake()
+                if len(snake1.snakes_list)==31:
+                    sys.exit()
 
                 snake1.screen.addstr(1, 0, '                                  ')
                 snake1.screen.addstr(0, 0, '                                      ')
