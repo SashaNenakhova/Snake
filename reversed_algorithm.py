@@ -320,37 +320,38 @@ def find_path3(snake, snake1): # -screen, self
                 path[1]=[snake.y, snake.x-1]
 
             break
-    if snake!=snake1:
-         ## draw matrix
-        for i in range(len(snake.num_matrix)):
-            for j in range(len(snake.num_matrix[i])):
-                snake.screen.move(snake.top_corner + i, j * 3)
-                if snake.num_matrix[i][j] == 0:
-                    snake.screen.addstr(' 0 ')
-                if snake.num_matrix[i][j] == 999:
-                    snake.screen.addstr('99 ')
-                elif snake.num_matrix[i][j] == 998:
-                    snake.screen.addstr('98 ')
-                else:
-                    snake.screen.addstr(str(snake.num_matrix[i][j])+' ')
-    if snake!=snake1:
-         # draw path
-        for i in range(1, len(path)+1):
-            snake.screen.move(snake.top_corner+path[i][0], 5+path[i][1]*3)
-            snake.screen.addstr('   ', curses.color_pair(2))
+    # if snake!=snake1:
+    #      ## draw matrix
+    #     for i in range(len(snake.num_matrix)):
+    #         for j in range(len(snake.num_matrix[i])):
+    #             snake.screen.move(snake.top_corner + i, j * 3)
+    #             if snake.num_matrix[i][j] == 0:
+    #                 snake.screen.addstr(' 0 ')
+    #             if snake.num_matrix[i][j] == 999:
+    #                 snake.screen.addstr('99 ')
+    #             elif snake.num_matrix[i][j] == 998:
+    #                 snake.screen.addstr('98 ')
+    #             else:
+    #                 snake.screen.addstr(str(snake.num_matrix[i][j])+' ')
+    # if snake!=snake1:
+    #      # draw path
+    #     for i in range(1, len(path)+1):
+    #         snake.screen.move(snake.top_corner+path[i][0], 5+path[i][1]*3)
+    #         snake.screen.addstr('   ', curses.color_pair(2))
 
-        snake.screen.addstr(0, 0, str(path)+'                    '*20)
+    #     snake.screen.addstr(0, 0, str(path)+'                    '*20)
 
-        # draw snakes
-        for i in snake1.snakes_list:
-            for j in range(1, len(i.snake_body)+1):
-                snake.screen.move(snake.top_corner+i.snake_body[j][1], 5+i.snake_body[j][0]*3)
-                snake.screen.addstr('  ', curses.color_pair(22))
-                snake.screen.move(snake.top_corner+i.y, 5+i.x*3)
-                snake.screen.addstr('  ', curses.color_pair(33))
+    #     # draw snakes
+    #     for i in snake1.snakes_list:
+    #         for j in range(1, len(i.snake_body)+1):
+    #             snake.screen.move(snake.top_corner+i.snake_body[j][1], 5+i.snake_body[j][0]*3)
+    #             snake.screen.addstr('  ', curses.color_pair(22))
+    #             snake.screen.move(snake.top_corner+i.y, 5+i.x*3)
+    #             snake.screen.addstr('  ', curses.color_pair(33))
 
-    if snake==snake1:
-        snake1.screen.addstr(3, 0, str(path)+'                    '*20)
+    # if snake==snake1:
+    #     snake1.screen.addstr(3, 0, str(path)+'                    '*20)
+
 
     return path
 

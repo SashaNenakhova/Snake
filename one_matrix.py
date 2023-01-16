@@ -14,8 +14,7 @@ def find_path2(self, snake1): # -screen, self
         for j in range(len(matrix)):
             if matrix[l][j]==2:
                 snake1.num_matrix[l][j]=1
-                # end_x=j
-                # end_y=l
+
 
     # snake body
     steps=0
@@ -189,37 +188,29 @@ def find_path2(self, snake1): # -screen, self
             path[i] = b[a.index(min(a))]
             l = b[a.index(min(a))][0]
             j = b[a.index(min(a))][1]  
-    # if len(path)==0:
-    #     path[1]=[end_y, end_x]
+   
 
 
 
+    # if self==snake1:
+    #     ## draw matrix
+    #     for i in range(len(self.num_matrix)):
+    #         for j in range(len(self.num_matrix[i])):
+    #             self.screen.move(5 + i, 5 + j * 2)
+    #             if self.num_matrix[i][j] == 0:
+    #                 self.screen.addstr(' 0')
+    #             if self.num_matrix[i][j] == 999:
+    #                 self.screen.addstr('99')
+    #             elif self.num_matrix[i][j] == 998:
+    #                 self.screen.addstr('98')
+    #             else:
+    #                 self.screen.addstr(str(self.num_matrix[i][j])+' ')
+    #     # draw path
+    #     for i in range(1, len(path)+1):
+    #         self.screen.move(5+path[i][0], 5+path[i][1]*2)
+    #         self.screen.addstr('  ', curses.color_pair(2))
 
-
-
-
-
-
-
-    if self==snake1:
-        ## draw matrix
-        for i in range(len(self.num_matrix)):
-            for j in range(len(self.num_matrix[i])):
-                self.screen.move(5 + i, 5 + j * 2)
-                if self.num_matrix[i][j] == 0:
-                    self.screen.addstr(' 0')
-                if self.num_matrix[i][j] == 999:
-                    self.screen.addstr('99')
-                elif self.num_matrix[i][j] == 998:
-                    self.screen.addstr('98')
-                else:
-                    self.screen.addstr(str(self.num_matrix[i][j])+' ')
-        # draw path
-        for i in range(1, len(path)+1):
-            self.screen.move(5+path[i][0], 5+path[i][1]*2)
-            self.screen.addstr('  ', curses.color_pair(2))
-
-        self.screen.addstr(0, 0, str(pathfound)+' '+str(snake1.num)+'  '+str(pathnotfound) + ' '+str(path)+'                    '*20)
+    #     self.screen.addstr(0, 0, str(pathfound)+' '+str(snake1.num)+'  '+str(pathnotfound) + ' '+str(path)+'                    '*20)
 
   
 

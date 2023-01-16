@@ -90,6 +90,8 @@ def move_body(snake, snake1):
             if snake1.snake_body[j]==[snake.x, snake.y]: 
                 snake.scene='dead'
 
+    snake.num_matrix=[[ 0 for i in range(40)] for _ in range(40)] 
+
     return snake, snake1
 
 

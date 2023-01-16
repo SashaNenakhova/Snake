@@ -3,31 +3,32 @@ import curses
 
 
 ### draw
-def draw(snake):
-    ## corners
-    snake.left_corner = (snake.screen.getmaxyx()[1])//2 - len(snake.matrix[0])-15 # ширина. (-36)
-    snake.top_corner = (snake.screen.getmaxyx()[0])//2 - len(snake.matrix)//2 # высота. (-14)
-    snake.has_screen_changed()
+def draw(snake1):
+    for snake in snake1.snakes_list:
+        ## corners
+        snake.left_corner = (snake.screen.getmaxyx()[1])//2 - len(snake.matrix[0])-15 # ширина. (-36)
+        snake.top_corner = (snake.screen.getmaxyx()[0])//2 - len(snake.matrix)//2 # высота. (-14)
+        snake.has_screen_changed()
 
 
 
-    ## draw scenes
-    if snake.second_snake==True:
-        if snake.scene=="game":
-            draw_game(snake)
-
-    else:
         ## draw scenes
-        if snake.scene == 'menu':
-            draw_menu(snake)
-        elif snake.scene == 'game':
-            draw_game(snake)
-        elif snake.scene == 'game over':
-            draw_game_over(snake)
-        elif snake.scene == 'save record':
-            draw_saving_record(snake)
-        elif snake.scene == 'records':
-            draw_records(snake)
+        if snake.second_snake==True:
+            if snake.scene=="game":
+                draw_game(snake)
+
+        else:
+            ## draw scenes
+            if snake.scene == 'menu':
+                draw_menu(snake)
+            elif snake.scene == 'game':
+                draw_game(snake)
+            elif snake.scene == 'game over':
+                draw_game_over(snake)
+            elif snake.scene == 'save record':
+                draw_saving_record(snake)
+            elif snake.scene == 'records':
+                draw_records(snake)
     
 
     
@@ -70,18 +71,6 @@ def draw_game(snake):
             for j in range(len(snake.snake_head[i])):
                 snake.screen.move(snake.top_corner+snake.y, snake.left_corner+snake.x*2)
                 snake.screen.addstr('  ', curses.color_pair(3))
-
-
-
-        ################
-        #
-        #
-        #
-        snake.screen.addstr(10, 10, str(snake.rotate_keys)+'           ')
-        #
-        #
-        #
-        ##########################
 
     else:
         ## draw second snake

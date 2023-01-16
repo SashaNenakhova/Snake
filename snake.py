@@ -45,7 +45,6 @@ class snake:
 
     steps_count=0 ##################### statistic #################################
     counting=False
-    timer2=0
     count_time=0
 
     count_rabbits=0
@@ -687,51 +686,83 @@ class snake:
 
 
 
-# original algorithm
-def find_path_1():
-     if snake1.scene=='game':
+# find path
+def find_path(x):
+
+    if x==1:
+        if snake1.scene=='game':
             for i in snake1.snakes_list:
                 # i.path=i.find_path()       ###### find_path1() find_path2() ...
                 i.path=find_path1(i, snake1)
-    pass        
 
+    elif x==2:
+        if snake1.scene=='game':
+            for i in snake1.snakes_list:
+                # i.path=i.find_path()       ###### find_path1() find_path2() ...
+                i.path=find_path2(i, snake1)
 
-def find_path_2():
-    pass
+    elif x==3:
+        if snake1.scene=='game' and (snake1.robot_snake==True or len(snake1.snakes_list)>1):  ############
+             wave3(snake1)
 
+        if snake1.scene=='game':
+            for i in snake1.snakes_list:
+                i.path=find_path3(i, snake1)
+   
 
-def find_path_3():
-    pass
+    elif x==4:
+        if snake1.scene=='game' and (snake1.robot_snake==True or len(snake1.snakes_list)>1):  ############
+             wave4(snake1)
 
-def find_path_4():
-    pass
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        if snake1.scene=='game':
+            for i in snake1.snakes_list:
+                i.path=find_path4(i, snake1)
 
 
 
+# get timer
+def get_timer():
+    if snake1.counting==True:
+            timer=datetime.datetime.now()
+            return timer
+
+
+# save time
+def save_time_to_file(timer1, timer2):
+    if snake1.counting==True:
+
+        # snake1.count_time+=(datetime.datetime.now()-timer1).seconds*1000000+(datetime.datetime.now()-timer1).microseconds
+        snake1.count_time+=(timer2-timer1).seconds*1000000+(timer2-timer1).microseconds
+        snake1.steps_count+=1
+
+        try:
+            f=open('snakestat'+str(len(snake1.snakes_list)), 'a')
+        except FileNotFoundError:
+            f=open('snakestat'+str(len(snake1.snakes_list), 'w'))
+        f.write(str(snake1.count_time)+'\n')
+        snake1.screen.addstr(4, 0, 'snake1.count_time:      '+str(snake1.count_time))
+        snake1.count_time=0
+        if snake1.steps_count==500:
+            
+            snake1.steps_count=0
+            # snake1.counting=False
+            snake1.add_snake()
+            if len(snake1.snakes_list)==31:
+                sys.exit()
+
+            snake1.screen.addstr(1, 0, '                                  ')
+            snake1.screen.addstr(0, 0, '                                      ')
+            snake1.screen.addstr(2, 0, '                                        ')
+
+        snake1.screen.addstr(1, 0, 'counting='+str(snake1.counting)+'   ')
+        snake1.screen.addstr(0, 0, 'steps count='+str(snake1.steps_count)+'   ')
+        snake1.screen.addstr(2, 0, 'snakes: '+str(len(snake1.snakes_list))+'   ')
 
 
 
 
 
-
-
-
-
-
+        
 
 
 
@@ -775,114 +806,35 @@ def run_game(screen):
     while True:
 
 
-
-        # input()
-        # draw()
-        # rabbits()
-
-        # get_timer1
-
-        # find_path()
-        # #find_path2()
-
-
-
-        # gettimer2
-        # savetimetofile
-
-
-        # tick()
-
-
-
-            #input #interface #rabbits #find path #tick
-
-
         ### INPUT
         getinput(snake1)
 
-
         ### INTERFACE
-        for i in snake1.snakes_list:
-            draw(i)
-
+        draw(snake1)
 
         ### RABBITS
         snake1.manage_rabbits()
 
 
-
-        ### COUNT TIME
-        if snake1.counting==True:
-            timer2=datetime.datetime.now()
+        ### GET TIMER1
+        timer1=get_timer()
 
 
         ### FIND PATH
-        if snake1.scene=='game' and (snake1.robot_snake==True or len(snake1.snakes_list)>1):  ############
-             ### snake1.wave()                 ###### wave3() wave4() ...
-             # wave3(snake1)
-             pass
-        if snake1.scene=='game':
-            for i in snake1.snakes_list:
-                # i.path=i.find_path()       ###### find_path1() find_path2() ...
-                i.path=find_path1(i, snake1)
+        find_path(2)
 
 
-        ### WRITE TIME
-        if snake1.counting==True:
+        ### GET TIMER2
+        timer2=get_timer()
+        ### SAVE TIME TO FILE
+        save_time_to_file(timer1, timer2)
+       
 
-
-
-
-
-
-            # snake1.count_time+=(datetime.datetime.now()-timer2).microseconds
-            snake1.count_time+=(datetime.datetime.now()-timer2).seconds*1000000+(datetime.datetime.now()-timer2).microseconds
-
-
-
-
-
-
-            snake1.steps_count+=1
-            try:
-                f=open('snakestat'+str(len(snake1.snakes_list)), 'a')
-            except FileNotFoundError:
-                f=open('snakestat'+str(len(snake1.snakes_list), 'w'))
-            f.write(str(snake1.count_time)+'\n')
-            snake1.screen.addstr(4, 0, 'snake1.count_time:      '+str(snake1.count_time))
-            snake1.count_time=0
-            if snake1.steps_count==500:
-                
-                snake1.steps_count=0
-                # snake1.counting=False
-                snake1.add_snake()
-                if len(snake1.snakes_list)==31:
-                    sys.exit()
-
-                snake1.screen.addstr(1, 0, '                                  ')
-                snake1.screen.addstr(0, 0, '                                      ')
-                snake1.screen.addstr(2, 0, '                                        ')
-
-            snake1.screen.addstr(1, 0, 'counting='+str(snake1.counting)+'   ')
-            snake1.screen.addstr(0, 0, 'steps count='+str(snake1.steps_count)+'   ')
-            snake1.screen.addstr(2, 0, 'snakes: '+str(len(snake1.snakes_list))+'   ')
-
-
-
-
-
-
-
-
-            ### TICK
+        ### TICK
         for i in snake1.snakes_list:
             i.tick(snake1)
 
 
-        for i in snake1.snakes_list: 
-            i.num_matrix=[[ 0 for i in range(40)] for _ in range(40)] 
-        snake1.screen.refresh()
 
 
 
