@@ -57,7 +57,6 @@ def path_not_found(snake):
 
 
                     # увеличить значение в центральной клетке до наименьшего+1
-                    # if found==True and value<snake1.num and snake1.num_matrix[l][j]==0:
                     if found==True and value<snake.num and snake.num_matrix[l][j]==0:
                         snake.num_matrix[l][j]=value+1
         num+=1
@@ -113,7 +112,7 @@ def wave3(snake1):
             steps=len(snake_body)+1-j # через сколько шагов хвост пропадет
             if steps>=a1 and steps>=b1:
                 snake1.num_matrix[snake_body[j][1]][snake_body[j][0]]=999  
-            snake1.num_matrix[i.y][i.x]=998### 
+            snake1.num_matrix[i.y][i.x]=998
 
     # snake head
     snake1.num_matrix[snake1.y][snake1.x]=998
@@ -157,7 +156,6 @@ def wave3(snake1):
                     # нижняя клетка
                     if snake1.num_matrix[l+1][j]<998 and snake1.num_matrix[l+1][j]>0: 
                         found=True
-                        # if snake1.num_matrix[l+1][j]<value: # поиск наименьшего значения 
                         if snake1.num_matrix[l+1][j]<value: # поиск наименьшего значения  
                             value = snake1.num_matrix[l+1][j]
 
@@ -177,7 +175,6 @@ def wave3(snake1):
 
 
                     # увеличить значение в центральной клетке до наименьшего+1
-                    # if found==True and value<snake1.num and snake1.num_matrix[l][j]==0:
                     if found==True and value<snake1.num and snake1.num_matrix[l][j]==0:
                         snake1.num_matrix[l][j]=value+1
 
@@ -187,7 +184,6 @@ def wave3(snake1):
                     # проверить если путь найден
                     for i in snake1.snakes_list:
                         if l==i.y and j==i.x and found==True:
-                        # if (snake1.num_matrix[i.y-1][i.x]>0 and snake1.num_matrix[i.y-1][i.x]<999) or (snake1.num_matrix[i.y+1][i.x]>0 and snake1.num_matrix[i.y+1][i.x]<999) or (snake1.num_matrix[i.y][i.x-1]>0 and snake1.num_matrix[i.y][i.x-1]<999) or (snake1.num_matrix[i.y][i.x+1]>0 and snake1.num_matrix[i.y][i.x+1]<999):
                             i.wave_algorithm=True
                             i.num=snake1.num
 
@@ -200,11 +196,11 @@ def wave3(snake1):
         if snake1.num>100:
             pathnotfound=True
             pathfound=True
+
     # на пути хвост
-    # if pathnotfound==True:
     for i in snake1.snakes_list:
         if i.wave_algorithm!=True:
-            i.path_not_found() ##################
+            i.path_not_found()
     for i in snake1.snakes_list:
         i.wave_algorithm=False
     snake1.find_path_x, snake1.find_path_y=end_x, end_y
@@ -227,9 +223,9 @@ def wave3(snake1):
 
 # find path
 def find_path3(snake, snake1): # -screen, self
-    j, l=snake.x, snake.y ###
+    j, l=snake.x, snake.y
 
-    # ### second snakes matrix (snakes bodies + snake1.num_matrix)
+    # second snakes matrix (snakes bodies + snake1.num_matrix)
     if snake!=snake1:
         for i in range(len(snake1.num_matrix)):
             for t in range(len(snake1.num_matrix[i])):
@@ -241,7 +237,7 @@ def find_path3(snake, snake1): # -screen, self
         snake_body=0 
         for i in snake1.snakes_list:
             snake_body=i.snake_body
-            snake.num_matrix[i.y][i.x]=998 ###   
+            snake.num_matrix[i.y][i.x]=998
             for k in range(1, len(snake_body)+1):
                 if snake_body[k][1]>snake.y: # расстояние y
                     a1=snake_body[k][1]-snake.y
@@ -255,9 +251,8 @@ def find_path3(snake, snake1): # -screen, self
                 if steps>=a1 and steps>=b1:
                     snake.num_matrix[snake_body[k][1]][snake_body[k][0]]=999
 
-        snake.num_matrix[snake.y][snake.x]=998####
+        snake.num_matrix[snake.y][snake.x]=998
 
-        ##########
         for i in range(len(snake.num_matrix)):
             for k in range(len(snake.num_matrix[i])):
                 if snake.num_matrix[i][k]==2:
@@ -320,39 +315,7 @@ def find_path3(snake, snake1): # -screen, self
                 path[1]=[snake.y, snake.x-1]
 
             break
-    # if snake!=snake1:
-    #      ## draw matrix
-    #     for i in range(len(snake.num_matrix)):
-    #         for j in range(len(snake.num_matrix[i])):
-    #             snake.screen.move(snake.top_corner + i, j * 3)
-    #             if snake.num_matrix[i][j] == 0:
-    #                 snake.screen.addstr(' 0 ')
-    #             if snake.num_matrix[i][j] == 999:
-    #                 snake.screen.addstr('99 ')
-    #             elif snake.num_matrix[i][j] == 998:
-    #                 snake.screen.addstr('98 ')
-    #             else:
-    #                 snake.screen.addstr(str(snake.num_matrix[i][j])+' ')
-    # if snake!=snake1:
-    #      # draw path
-    #     for i in range(1, len(path)+1):
-    #         snake.screen.move(snake.top_corner+path[i][0], 5+path[i][1]*3)
-    #         snake.screen.addstr('   ', curses.color_pair(2))
-
-    #     snake.screen.addstr(0, 0, str(path)+'                    '*20)
-
-    #     # draw snakes
-    #     for i in snake1.snakes_list:
-    #         for j in range(1, len(i.snake_body)+1):
-    #             snake.screen.move(snake.top_corner+i.snake_body[j][1], 5+i.snake_body[j][0]*3)
-    #             snake.screen.addstr('  ', curses.color_pair(22))
-    #             snake.screen.move(snake.top_corner+i.y, 5+i.x*3)
-    #             snake.screen.addstr('  ', curses.color_pair(33))
-
-    # if snake==snake1:
-    #     snake1.screen.addstr(3, 0, str(path)+'                    '*20)
-
-
+   
     return path
 
 

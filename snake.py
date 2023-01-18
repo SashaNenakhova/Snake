@@ -98,13 +98,9 @@ class snake:
 
 
             self.robot_snake=False
-            self.robot_snake=True ############ stat
             self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 15)}
             self.snakes_list=[snake1]
             self.count_rabbits=0
-
-
-            self.find_path_x, self.find_path_y=0, 0 ########################
 
         self.num_matrix= [[ 0 for i in range(40)] for _ in range(40)]
         self.num=0
@@ -188,7 +184,6 @@ class snake:
 
             for i in range(1, len(self.snake_body)+1):     
                 if self.snake_body[i]==[x, y]:
-                    # snake1.rabbit()
                     snake1.delete_rabbit(x, y)
 
             for i in range(len(snake1.matrix)):
@@ -320,7 +315,7 @@ class snake:
 
 
 
-        self.num_matrix[self.y][self.x]=998 ###
+        self.num_matrix[self.y][self.x]=998
 
 
 
@@ -365,7 +360,7 @@ class snake:
                 steps=len(snake_body)+1-j # через сколько шагов хвост пропадет
                 if steps>=a1 and steps>=b1:
                     self.num_matrix[snake_body[j][1]][snake_body[j][0]]=999  
-                self.num_matrix[i.y][i.x]=998### 
+                self.num_matrix[i.y][i.x]=998
 
         # snake head
         self.num_matrix[self.y][self.x]=998
@@ -395,7 +390,6 @@ class snake:
 
                         found = False # если не найдено заполненых клеток
                         value=999
-
 
                         ## поиск клеток со значением больше 0; не стены
                         ## поиск наименьшего значения (расстояния от кролика)
@@ -452,20 +446,8 @@ class snake:
                 pathfound=True
 
 
-
-        #########################################
-
-        # на пути хвост
-        # if pathnotfound==True:
-        # for i in snake1.snakes_list:
-        #     if i.wave_algorithm!=True:
-        #         i.path_not_found()            ###################################### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if snake1.wave_algorithm==False and snake1.count_rabbits>0: ###
             snake1.path_not_found()
-        #########################
-
-
-
 
 
         for i in snake1.snakes_list:
@@ -488,15 +470,15 @@ class snake:
 
 
     # find path
-    def find_path(self): # -screen, self
+    def find_path(self):
 
-        if snake1.counting==True:               ########################################
+        if snake1.counting==True: 
             snake1.timer2=datetime.datetime.now()
 
 
         j, l=self.x, self.y ###
 
-        # ### second snakes matrix (snakes bodies + snake1.num_matrix)
+        # second snakes matrix (snakes bodies + snake1.num_matrix)
         if self!=snake1:
             for i in range(len(snake1.num_matrix)):
                 for t in range(len(snake1.num_matrix[i])):
@@ -509,7 +491,7 @@ class snake:
             snake_body=0 
             for i in snake1.snakes_list:
                 snake_body=i.snake_body
-                self.num_matrix[i.y][i.x]=998 ###   
+                self.num_matrix[i.y][i.x]=998
                 for k in range(1, len(snake_body)+1):
                     if snake_body[k][1]>self.y: # расстояние y
                         a1=snake_body[k][1]-self.y
@@ -523,9 +505,8 @@ class snake:
                     if steps>=a1 and steps>=b1:
                         self.num_matrix[snake_body[k][1]][snake_body[k][0]]=999
 
-            self.num_matrix[self.y][self.x]=998####
+            self.num_matrix[self.y][self.x]=998
 
-            ##########
             for i in range(len(self.num_matrix)):
                 for k in range(len(self.num_matrix[i])):
                     if self.num_matrix[i][k]==2:
@@ -652,19 +633,17 @@ class snake:
 
 
 
+# tick
+def tick(snake1):         ### двигает змею
+    for snake in snake1.snakes_list:
+        if snake.scene == 'game':
 
-
-
-    ### tick
-    def tick(self, snake1):         ### двигает змею
-        if self.scene == 'game':
-
-            if self.robot_snake==True:
-                self=auto_move_snake(self)
-            if (datetime.datetime.now()-self.timer).microseconds>=100: # 290000
-                self.timer=datetime.datetime.now()
-                self=move_head(self)
-                self, snake1=move_body(self, snake1)
+            if snake.robot_snake==True:
+                snake=auto_move_snake(snake)
+            if (datetime.datetime.now()-snake.timer).microseconds>=290000:
+                snake.timer=datetime.datetime.now()
+                snake=move_head(snake)
+                snake, snake1=move_body(snake, snake1)
 
                 try:
                     snake1.rotate_keys=snake1.rotate_keys[1:]
@@ -673,17 +652,16 @@ class snake:
                     snake1.rotate_keys=[0, 0]
 
 
-        if self.scene=='dead':
-            if (datetime.datetime.now()-self.timer).microseconds>=100:
-                draw_game(self)
-            if (datetime.datetime.now()-self.timer).microseconds>=200: # 580000
-                self.timer=datetime.datetime.now()
-                self.deadcount+=1
-            if self.deadcount==5:
-                self.deadcount=0
-                self.initiation()
+        elif snake.scene=='dead':
+            if (datetime.datetime.now()-snake.timer).microseconds>=290000:
+                draw_game(snake)
+            if (datetime.datetime.now()-snake.timer).microseconds>=580000:
+                snake.timer=datetime.datetime.now()
+                snake.deadcount+=1
+            if snake.deadcount==5:
+                snake.deadcount=0
+            snake.initiation()
          
-
 
 
 # find path
@@ -692,17 +670,15 @@ def find_path(x):
     if x==1:
         if snake1.scene=='game':
             for i in snake1.snakes_list:
-                # i.path=i.find_path()       ###### find_path1() find_path2() ...
                 i.path=find_path1(i, snake1)
 
     elif x==2:
         if snake1.scene=='game':
             for i in snake1.snakes_list:
-                # i.path=i.find_path()       ###### find_path1() find_path2() ...
                 i.path=find_path2(i, snake1)
 
     elif x==3:
-        if snake1.scene=='game' and (snake1.robot_snake==True or len(snake1.snakes_list)>1):  ############
+        if snake1.scene=='game' and (snake1.robot_snake==True or len(snake1.snakes_list)>1): 
              wave3(snake1)
 
         if snake1.scene=='game':
@@ -711,7 +687,7 @@ def find_path(x):
    
 
     elif x==4:
-        if snake1.scene=='game' and (snake1.robot_snake==True or len(snake1.snakes_list)>1):  ############
+        if snake1.scene=='game' and (snake1.robot_snake==True or len(snake1.snakes_list)>1): 
              wave4(snake1)
 
         if snake1.scene=='game':
@@ -731,7 +707,6 @@ def get_timer():
 def save_time_to_file(timer1, timer2):
     if snake1.counting==True:
 
-        # snake1.count_time+=(datetime.datetime.now()-timer1).seconds*1000000+(datetime.datetime.now()-timer1).microseconds
         snake1.count_time+=(timer2-timer1).seconds*1000000+(timer2-timer1).microseconds
         snake1.steps_count+=1
 
@@ -791,7 +766,7 @@ def run_game(screen):
     snake1.screen=screen
     snake1.screen_dimensions=snake1.screen.getmaxyx()
 
-    screen.nodelay(True)#, snake1)
+    screen.nodelay(True)
 
 
 
@@ -816,7 +791,7 @@ def run_game(screen):
         snake1.manage_rabbits()
 
 
-        ### GET TIMER1
+        # GET TIMER1
         timer1=get_timer()
 
 
@@ -824,15 +799,15 @@ def run_game(screen):
         find_path(2)
 
 
-        ### GET TIMER2
+        # GET TIMER2
         timer2=get_timer()
-        ### SAVE TIME TO FILE
+
+        # SAVE TIME TO FILE
         save_time_to_file(timer1, timer2)
        
 
         ### TICK
-        for i in snake1.snakes_list:
-            i.tick(snake1)
+        tick(snake1)
 
 
 

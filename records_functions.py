@@ -1,7 +1,4 @@
-
-########### RECORDS ###########
-
-### updating file
+# updating file
 def update_file(snake):
     file = open('records.txt', 'w')
     strings = []
@@ -14,7 +11,7 @@ def update_file(snake):
         file.write(i+'\n')
     file.close()
 
-### copy file to records_top
+# copy file to records_top
 def read_file(snake):
     read=[]
     try:
@@ -30,7 +27,7 @@ def read_file(snake):
     file.close()
     return read
 
-### add record to records_top
+# add record to records_top
 def add_records(snake, record):
     if snake.records_top==[]:   # если список пустой
         snake.records_top.append(record)
@@ -48,7 +45,7 @@ def add_records(snake, record):
 
     return snake
 
-### clear records
+# clear records
 def clear_records(snake):
     file=open('records.txt', 'w')
     file.write('')

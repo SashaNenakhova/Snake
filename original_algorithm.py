@@ -8,14 +8,7 @@ import random
 def find_path1(self, snake1): # -screen, self
     matrix=snake1.matrix
 
-
-
-
-    #####
-
-
     num_matrix = [[ 0 for i in range(40)] for _ in range(40)]
-
 
     # borders
     for l in range(len(matrix)):

@@ -38,15 +38,11 @@ def find_path2(self, snake1): # -screen, self
             if steps>=a1 and steps>=b1:
                 self.num_matrix[snake_body[j][1]][snake_body[j][0]]=999  
 
-
-
-
-
-
         # snake head
         self.num_matrix[self.y][self.x]=998
         end_x=self.x
         end_y=self.y
+
 
     if self==snake1:
 
@@ -56,9 +52,6 @@ def find_path2(self, snake1): # -screen, self
                 if matrix[l][j]==1:
                     snake1.num_matrix[l][j]=999
 
-
-        # # snake head
-        # snake1.num_matrix[self.y][self.x]=998
 
         pathfound=False
         pathnotfound=False
@@ -108,13 +101,11 @@ def find_path2(self, snake1): # -screen, self
 
 
                         # проверить если путь найден
-                        # if end_y==l and end_x==j and found==True:
                         if snake1.num>50:
                             pathfound=True
 
 
                         # увеличить значение в центральной клетке до наименьшего+1
-                        # if found==True and value<snake1.num and snake1.num_matrix[l][j]==0:
                         if found==True and snake1.num_matrix[l][j]==0:
                             snake1.num_matrix[l][j]=value+1
 
@@ -139,7 +130,7 @@ def find_path2(self, snake1): # -screen, self
 
 
 
-    ### second snakes matrix (snakes bodies + snake1.num_matrix)
+    # second snakes matrix (snakes bodies + snake1.num_matrix)
     if self!=snake1:
         for i in range(len(self.num_matrix)):
             for j in range(len(self.num_matrix)):
@@ -188,31 +179,6 @@ def find_path2(self, snake1): # -screen, self
             path[i] = b[a.index(min(a))]
             l = b[a.index(min(a))][0]
             j = b[a.index(min(a))][1]  
-   
-
-
-
-    # if self==snake1:
-    #     ## draw matrix
-    #     for i in range(len(self.num_matrix)):
-    #         for j in range(len(self.num_matrix[i])):
-    #             self.screen.move(5 + i, 5 + j * 2)
-    #             if self.num_matrix[i][j] == 0:
-    #                 self.screen.addstr(' 0')
-    #             if self.num_matrix[i][j] == 999:
-    #                 self.screen.addstr('99')
-    #             elif self.num_matrix[i][j] == 998:
-    #                 self.screen.addstr('98')
-    #             else:
-    #                 self.screen.addstr(str(self.num_matrix[i][j])+' ')
-    #     # draw path
-    #     for i in range(1, len(path)+1):
-    #         self.screen.move(5+path[i][0], 5+path[i][1]*2)
-    #         self.screen.addstr('  ', curses.color_pair(2))
-
-    #     self.screen.addstr(0, 0, str(pathfound)+' '+str(snake1.num)+'  '+str(pathnotfound) + ' '+str(path)+'                    '*20)
-
-  
 
     return path
 
