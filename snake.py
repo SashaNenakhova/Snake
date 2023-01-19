@@ -2,6 +2,8 @@ import curses
 import datetime
 import random
 
+import os 
+
 from draw_snake_game import *               # draw, draw_menu, draw_game
 from move_snake import *                    # rotate_snake, move_head, move_body, __can_move, auto_move_snake
 from records_functions import *             # update_file, read_file, add_records, clear_records
@@ -824,6 +826,10 @@ snake1.snakes_list.append(snake1)
 f = open('robot_snake_path.txt', 'w')
 f.write(' ')
 f.close()
+
+# console window size
+cmd = 'mode 150,700'
+os.system(cmd)
 
 
 curses.wrapper(run_game)
