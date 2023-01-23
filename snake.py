@@ -2,7 +2,8 @@ import curses
 import datetime
 import random
 
-import os 
+import os
+import sys
 
 from draw_snake_game import *               # draw, draw_menu, draw_game
 from move_snake import *                    # rotate_snake, move_head, move_body, __can_move, auto_move_snake
@@ -13,8 +14,6 @@ from original_algorithm import *            # find_path1
 from one_matrix import *                 # find_path2
 from reversed_algorithm import *                    # find_path3, wave3
 from reversed_algorithm2 import*                 # find_path4, wave4
-
-
 
 
 class snake:
@@ -827,9 +826,15 @@ f = open('robot_snake_path.txt', 'w')
 f.write(' ')
 f.close()
 
-# console window size
-cmd = 'mode 150,700'
-os.system(cmd)
+# console window size (windows)
+if os.name=='Windows':
+    cmd = 'mode 150,700'
+    os.system(cmd)
+
+# console window size (macos)
+if os.name=='posix':
+    sys.stdout.write("\x1b[8;{rows};{cols}t".format(rows=50, cols=150))
+    sys.stdout.flush()
 
 
 curses.wrapper(run_game)
