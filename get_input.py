@@ -1,6 +1,7 @@
 import curses
 from move_snake import *
 from records_functions import *
+import sys
 
 ### get input
 def getinput(snake):
@@ -78,7 +79,8 @@ def getinput(snake):
                     snake.menu_item=1
             elif key == curses.KEY_ENTER or key == 10 or key == 13:
                 if snake.menu_item==3:       # exit
-                    sys.exit(0)
+                    raise SystemExit()
+
                 elif snake.menu_item==1:     # start
                     snake.screen.clear()
                     snake.initiation()
