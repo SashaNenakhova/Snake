@@ -2,11 +2,9 @@ Snake is a console based game developed using Python 3.
 
 [Repository on GitHub](https://github.com/SashaNenakhova/Snake)
 
-# Game
+## Functions
 
-### Menu
-
-### Functions
+##### Menu
 
 ##### Pause
 
@@ -16,3 +14,4 @@ Snake is a console based game developed using Python 3.
 
 ##### Top records
 
+## Download exe
