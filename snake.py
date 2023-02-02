@@ -4,6 +4,7 @@ import random
 
 import os
 import sys
+import subprocess ##
 
 from draw_snake_game import *               # draw, draw_menu, draw_game
 from move_snake import *                    # rotate_snake, move_head, move_body, __can_move, auto_move_snake
@@ -11,9 +12,9 @@ from records_functions import *             # update_file, read_file, add_record
 from get_input import *                     # getinput
 
 from original_algorithm import *            # find_path1
-from one_matrix import *                 # find_path2
-from reversed_algorithm import *                    # find_path3, wave3
-from reversed_algorithm2 import*                 # find_path4, wave4
+from one_matrix import *                    # find_path2
+from reversed_algorithm import *            # find_path3, wave3
+from reversed_algorithm2 import*            # find_path4, wave4
 
 
 class snake:
@@ -43,10 +44,6 @@ class snake:
     robot_snake=False
     second_snake=False
     deadcount=0
-
-    steps_count=0 ##################### statistic #################################
-    counting=False
-    count_time=0
 
     count_rabbits=0
 
@@ -82,7 +79,7 @@ class snake:
     ### new game
     def initiation(self):
         if self.second_snake==True:
-            self.x, self.y=random.randint(1, 28), random.randint(1, 28)
+            self.x, self.y=random.randint(1, 38), random.randint(1, 38)
             self.snake_body={i:[self.x, self.y] for i in range(1, 8)}
 
         else:
@@ -99,7 +96,7 @@ class snake:
 
 
             self.robot_snake=False
-            self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 15)}
+            self.snake_body={i:[self.x, self.y+i-1] for i in range(1, 8)}
             self.snakes_list=[snake1]
             self.count_rabbits=0
 
@@ -697,45 +694,6 @@ def find_path(x):
 
 
 
-# get timer
-def get_timer():
-    if snake1.counting==True:
-            timer=datetime.datetime.now()
-            return timer
-
-
-# save time
-def save_time_to_file(timer1, timer2):
-    if snake1.counting==True:
-
-        snake1.count_time+=(timer2-timer1).seconds*1000000+(timer2-timer1).microseconds
-        snake1.steps_count+=1
-
-        try:
-            f=open('snakestat'+str(len(snake1.snakes_list)), 'a')
-        except FileNotFoundError:
-            f=open('snakestat'+str(len(snake1.snakes_list), 'w'))
-        f.write(str(snake1.count_time)+'\n')
-        snake1.screen.addstr(4, 0, 'snake1.count_time:      '+str(snake1.count_time))
-        snake1.count_time=0
-        if snake1.steps_count==500:
-            
-            snake1.steps_count=0
-            # snake1.counting=False
-            snake1.add_snake()
-            if len(snake1.snakes_list)==31:
-                sys.exit()
-
-            snake1.screen.addstr(1, 0, '                                  ')
-            snake1.screen.addstr(0, 0, '                                      ')
-            snake1.screen.addstr(2, 0, '                                        ')
-
-        snake1.screen.addstr(1, 0, 'counting='+str(snake1.counting)+'   ')
-        snake1.screen.addstr(0, 0, 'steps count='+str(snake1.steps_count)+'   ')
-        snake1.screen.addstr(2, 0, 'snakes: '+str(len(snake1.snakes_list))+'   ')
-
-
-
 
 
         
@@ -791,22 +749,9 @@ def run_game(screen):
         ### RABBITS
         snake1.manage_rabbits()
 
-
-        # GET TIMER1
-        timer1=get_timer()
-
-
         ### FIND PATH
         find_path(2)
-
-
-        # GET TIMER2
-        timer2=get_timer()
-
-        # SAVE TIME TO FILE
-        save_time_to_file(timer1, timer2)
        
-
         ### TICK
         tick(snake1)
 
@@ -820,22 +765,10 @@ def run_game(screen):
 snake1 = snake()
 snake1.snakes_list.append(snake1)
 
-
-#txt robot snake path
-f = open('robot_snake_path.txt', 'w')
-f.write(' ')
-f.close()
-
 # console window size (windows)
 if os.name=='Windows':
     cmd = 'mode 150,700'
     os.system(cmd)
-
-# console window size (macos)
-if os.name=='posix':
-    sys.stdout.write("\x1b[8;{rows};{cols}t".format(rows=50, cols=150))
-    sys.stdout.flush()
-
 
 curses.wrapper(run_game)
 

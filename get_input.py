@@ -45,12 +45,6 @@ def getinput(snake):
                     snake.screen.clear()
                     snake.robot_snake=True
 
-            if key==ord('c'): # statistic
-                    snake.counting=True
-
-            
-            if key==ord('l') or key==ord('L'): # загрузить стакан
-                snake.load_matrix()
 
             if key==ord('=') or key==ord('+'): # add snake
                 snake.add_snake()
