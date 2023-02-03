@@ -17,3 +17,5 @@ Snake is a console based game developed using Python 3.
 ## Download exe
 
 [Snake for macOS](https://github.com/SashaNenakhova/Snake/raw/main/snake)
+
+[Snake for Windows](https://github.com/SashaNenakhova/Snake/raw/main/snake_windows.exe)
