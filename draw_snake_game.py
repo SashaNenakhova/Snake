@@ -55,7 +55,7 @@ def draw_game(snake):
                 elif snake.matrix[i][j]==2:
                     snake.screen.addstr('  ', curses.color_pair(4))
         ## lenght
-        snake.screen.addstr(snake.top_corner+2, snake.left_corner+len(snake.matrix)*2+9, ' Lenght ', curses.color_pair(17))
+        snake.screen.addstr(snake.top_corner+2, snake.left_corner+len(snake.matrix)*2+9, ' Length ', curses.color_pair(17))
         snake.screen.addstr(snake.top_corner+4, snake.left_corner+len(snake.matrix)*2+12, str(len(snake.snake_body)))
         ## auto snake
         if snake.robot_snake==True:
