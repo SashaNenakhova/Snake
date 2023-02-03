@@ -766,9 +766,11 @@ snake1 = snake()
 snake1.snakes_list.append(snake1)
 
 # console window size (windows)
-if os.name=='Windows':
-    cmd = 'mode 150,700'
+try:
+    cmd = 'mode 160,700'
     os.system(cmd)
+except:
+    pass
 
 curses.wrapper(run_game)
 
