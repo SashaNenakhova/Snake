@@ -2,6 +2,28 @@ Snake is a console based game developed using Python 3.
 
 [Repository on GitHub](https://github.com/SashaNenakhova/Snake)
 
+## Download exe
+
+[Snake for macOS](https://github.com/SashaNenakhova/Snake/raw/main/snake_macos)
+
+[Snake for Windows](https://github.com/SashaNenakhova/Snake/raw/main/snake_windows.exe)
+
+___
+
+### Contents
+
+[Menu](https://sashanenakhova.github.io/Snake/#menu)
+
+[Game](https://sashanenakhova.github.io/Snake/#game)
+
+[Pause](https://sashanenakhova.github.io/Snake/#pause)
+
+[Auto snake](https://sashanenakhova.github.io/Snake/#auto-snake)
+
+[More snakes](https://sashanenakhova.github.io/Snake/#more-snakes)
+
+[Top records](https://sashanenakhova.github.io/Snake/#top-records)
+
 ## Functions
 
 ### Menu
@@ -27,9 +49,3 @@ Snake is a console based game developed using Python 3.
 ### Top records
 
 ![Top records](https://user-images.githubusercontent.com/86903922/217521044-feb3978e-c18d-4bed-aa87-cd1b8f2e607e.png)
-
-## Download exe
-
-[Snake for macOS](https://github.com/SashaNenakhova/Snake/raw/main/snake_macos)
-
-[Snake for Windows](https://github.com/SashaNenakhova/Snake/raw/main/snake_windows.exe)
