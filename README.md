@@ -6,27 +6,27 @@ Snake is a console based game developed using Python 3.
 
 ### Menu
 
-![Menu](https://user-images.githubusercontent.com/86903922/216590625-1b715e94-dc3d-4c3b-92f5-c10d669e8411.png)
+![Menu](https://user-images.githubusercontent.com/86903922/217520538-d7bdc088-2186-4bee-86eb-a8ffebe0ab88.png)
 
 ### Game
 
-![Game](https://user-images.githubusercontent.com/86903922/216590634-00d004d6-f86c-4a92-856c-477073a03b6e.png)
+![Game](https://user-images.githubusercontent.com/86903922/217520548-9d4cd6ad-92f5-40e6-bd97-2e576b051c5f.png)
 
 ### Pause
 
-![Pause](https://user-images.githubusercontent.com/86903922/216590629-86ecaffa-2de8-4dfe-8dc6-83cfee9b94c1.png)
+![Pause](https://user-images.githubusercontent.com/86903922/217520853-93cb40a1-6941-42b7-9758-07cd1cd9d33f.png)
 
 ### Auto snake
 
-![Auto snake](https://user-images.githubusercontent.com/86903922/216590612-c828cc5d-4f9b-496c-839a-24dd92f1d9aa.png)
+![Auto snake](https://user-images.githubusercontent.com/86903922/217520542-4d62def0-a9b3-4217-98ca-7b876a128675.png)
 
 ### More snakes
 
-![Robot snakes](https://user-images.githubusercontent.com/86903922/216590624-68319094-10e3-4db6-a7fa-fa1dc5bbb476.png)
+![Robot snakes](https://user-images.githubusercontent.com/86903922/217520547-7e292930-98fc-4d15-8d83-cffc0ed1f023.png)
 
 ### Top records
 
-![Top records](https://user-images.githubusercontent.com/86903922/216590631-9a750877-e3d4-49a5-a6cd-b8cd05170b00.png)
+![Top records](https://user-images.githubusercontent.com/86903922/217521044-feb3978e-c18d-4bed-aa87-cd1b8f2e607e.png)
 
 ## Download exe
 
